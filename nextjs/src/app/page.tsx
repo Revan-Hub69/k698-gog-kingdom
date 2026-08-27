@@ -107,9 +107,13 @@ export default function HomePage() {
   const fetchLeaderboard = async () => {
     try {
       const res = await fetch('/api/leaderboard');
+      if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
-      setLeaderboard(data.slice(0, 20)); // Top 20
-      setFilteredLeaderboard(data.slice(0, 20));
+      
+      // Ensure data is an array
+      const leaderboardData = Array.isArray(data) ? data : data.data || [];
+      setLeaderboard(leaderboardData.slice(0, 20)); // Top 20
+      setFilteredLeaderboard(leaderboardData.slice(0, 20));
       setLeaderboardLoading(false);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
@@ -440,34 +444,96 @@ export default function HomePage() {
                 No players found matching &quot;{leaderboardSearch}&quot;
               </div>
             ) : (
-              <table className="w-full">
-                <thead className="sticky top-0 bg-slate-800/60 backdrop-blur-sm">
-                  <tr className="border-b border-purple-500/30">
-                    <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('rank')}</th>
-                    <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('castleName')}</th>
-                    <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('historicalPower')}</th>
-                    <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('currentPower')}</th>
-                    <th className="px-4 py-4 text-center text-purple-300 font-bold text-sm">{t('screenshot')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredLeaderboard.map((entry) => (
-                    <tr key={entry.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition">
-                      <td className="px-4 py-4 text-white font-bold text-sm">#{entry.rank}</td>
-                      <td className="px-4 py-4 text-white text-sm font-medium">{entry.nickname}</td>
-                      <td className="px-4 py-4 text-right text-green-400 font-semibold text-sm">
-                        {entry.totalHistoricalPower.toLocaleString()}
-                      </td>
-                      <td className="px-4 py-4 text-right text-blue-400 font-semibold text-sm">
-                        {entry.totalCurrentPower.toLocaleString()}
-                      </td>
-                      <td className="px-4 py-4 text-center text-sm">
-                        <span className="text-green-400 font-bold">✓</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className="space-y-3">
+                {filteredLeaderboard.map((entry) => {
+                  const isTopThree = entry.rank <= 3;
+                  const rankColors = {
+                    1: 'from-yellow-600 to-yellow-500',
+                    2: 'from-slate-500 to-slate-400',
+                    3: 'from-orange-600 to-orange-500',
+                  };
+                  const rankEmoji = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+                  return (
+                    <div
+                      key={entry.id}
+                      className={`
+                        p-4 rounded-lg border transition-all duration-300 hover:scale-102 hover:shadow-lg
+                        ${isTopThree
+                          ? `bg-gradient-to-r ${rankColors[entry.rank as 1 | 2 | 3]}/10 border-yellow-500/30 hover:border-yellow-500/60 shadow-lg shadow-yellow-500/10`
+                          : 'bg-slate-800/40 border-slate-700/50 hover:bg-slate-800/60 hover:border-purple-500/50'
+                        }
+                      `}
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        {/* RANK + PLAYER */}
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`
+                            w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm
+                            ${isTopThree
+                              ? `bg-gradient-to-br ${rankColors[entry.rank as 1 | 2 | 3]} text-white`
+                              : 'bg-slate-700/50 text-slate-300'
+                            }
+                          `}>
+                            {isTopThree ? rankEmoji[entry.rank as 1 | 2 | 3] : `#${entry.rank}`}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className={`font-bold truncate ${isTopThree ? 'text-yellow-300' : 'text-white'}`}>
+                              {entry.nickname}
+                            </p>
+                            <p className="text-xs text-slate-400">
+                              {entry.totalCastles} castle{entry.totalCastles !== 1 ? 's' : ''}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* POWER VALUES */}
+                        <div className="hidden sm:flex items-center gap-6">
+                          <div className="text-right">
+                            <p className="text-xs text-slate-400">Historical</p>
+                            <p className="font-bold text-green-400">
+                              {(entry.totalHistoricalPower / 1000).toFixed(0)}k
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-xs text-slate-400">Current</p>
+                            <p className="font-bold text-blue-400">
+                              {(entry.totalCurrentPower / 1000).toFixed(0)}k
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* SCREENSHOT STATUS */}
+                        <div className="flex-shrink-0">
+                          <span className="text-xl">✓</span>
+                        </div>
+                      </div>
+
+                      {/* MOBILE POWER VALUES */}
+                      <div className="sm:hidden mt-3 flex gap-4 text-xs">
+                        <div className="flex-1">
+                          <p className="text-slate-400">Historical</p>
+                          <p className="font-bold text-green-400">{(entry.totalHistoricalPower / 1000).toFixed(0)}k</p>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-slate-400">Current</p>
+                          <p className="font-bold text-blue-400">{(entry.totalCurrentPower / 1000).toFixed(0)}k</p>
+                        </div>
+                      </div>
+
+                      {/* PROGRESS BAR */}
+                      <div className="mt-3 h-1 bg-slate-700/30 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${isTopThree ? 'bg-gradient-to-r from-yellow-500 to-yellow-400' : 'bg-gradient-to-r from-purple-500 to-blue-500'}`}
+                          style={{
+                            width: `${(entry.totalCurrentPower / entry.totalHistoricalPower) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
 

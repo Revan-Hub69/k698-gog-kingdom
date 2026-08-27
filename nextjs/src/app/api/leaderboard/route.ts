@@ -1,43 +1,47 @@
 import { prisma } from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    // Get leaderboard with total power per user
-    const leaderboard = await prisma.user.findMany({
-      select: {
-        id: true,
-        nickname: true,
-        castles: {
-          select: {
-            id: true,
-            castleName: true,
-            currentPower: true,
-            historicalMaxPower: true,
-            screenshotUrl: true,
-            lastPowerUpdate: true,
-          },
-        },
+    // Fetch all users with their castles and calculate totals
+    const users = await prisma.user.findMany({
+      include: {
+        castles: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 
-    // Calculate totals and rank by HISTORICAL POWER
-    const rankedLeaderboard = leaderboard
-      .map((user) => ({
-        id: user.id,
-        nickname: user.nickname,
-        totalCastles: user.castles.length,
-        totalCurrentPower: user.castles.reduce((sum, c) => sum + c.currentPower, 0),
-        totalHistoricalPower: user.castles.reduce((sum, c) => sum + c.historicalMaxPower, 0),
-        castles: user.castles,
-      }))
+    // Transform to leaderboard entries ranked by historical power
+    const leaderboard = users
+      .map((user, index) => {
+        const totalHistoricalPower = user.castles.reduce(
+          (sum, castle) => sum + castle.historicalMaxPower,
+          0
+        );
+        const totalCurrentPower = user.castles.reduce(
+          (sum, castle) => sum + castle.currentPower,
+          0
+        );
+
+        return {
+          id: user.id,
+          nickname: user.nickname || `User_${user.id}`,
+          totalCastles: user.castles.length,
+          totalCurrentPower,
+          totalHistoricalPower,
+          rank: index + 1,
+          castles: user.castles,
+        };
+      })
       .sort((a, b) => b.totalHistoricalPower - a.totalHistoricalPower)
-      .map((user, index) => ({
-        ...user,
+      .map((entry, index) => ({
+        ...entry,
         rank: index + 1,
       }));
 
-    return NextResponse.json(rankedLeaderboard, { status: 200 });
+    return NextResponse.json(leaderboard, { status: 200 });
   } catch (error) {
     console.error('Leaderboard error:', error);
     return NextResponse.json(
@@ -46,4 +50,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
