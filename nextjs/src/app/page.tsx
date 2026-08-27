@@ -12,20 +12,34 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      {/* LANGUAGE SELECTOR - Fixed Top */}
-      <div className="fixed top-0 right-0 z-[999] m-4">
-        <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value as typeof language)}
-          className="px-3 py-2 bg-slate-800 border border-purple-500/50 rounded text-sm text-white hover:border-purple-400 transition-colors cursor-pointer"
-        >
-          {LANGUAGES.map((lang) => (
-            <option key={lang} value={lang}>
-              {lang}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* HEADER */}
+      <header className="sticky top-0 z-[999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          {/* LOGO & BRANDING */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center font-black text-white">
+              K
+            </div>
+            <div>
+              <h1 className="font-black text-lg text-white tracking-tight">k698</h1>
+              <p className="text-xs text-purple-400">Kingdom Manager</p>
+            </div>
+          </div>
+
+          {/* LANGUAGE SELECTOR */}
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as typeof language)}
+            className="px-4 py-2 bg-slate-800/50 border border-purple-500/50 rounded-lg text-sm font-bold text-white hover:border-purple-400 transition-all cursor-pointer focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-500/30"
+          >
+            {LANGUAGES.map((lang) => (
+              <option key={lang} value={lang} className="bg-slate-900">
+                {lang}
+              </option>
+            ))}
+          </select>
+        </div>
+      </header>
 
       {/* HERO SECTION */}
       <section className="relative pt-24 pb-16 px-4 text-center overflow-hidden">
@@ -120,7 +134,7 @@ export default function HomePage() {
                     priority
                   />
                 </div>
-                <p className="text-slate-300">Guard Weapons management strategy for events</p>
+                <p className="text-slate-300">{t('guardWeaponsStrategy')}</p>
               </div>
             )}
             {activeTab === 'curiosities' && (
@@ -134,7 +148,7 @@ export default function HomePage() {
                     className="object-cover"
                   />
                 </div>
-                <p className="text-slate-300">Curiosities collection and management</p>
+                <p className="text-slate-300">{t('curiositiesManagement')}</p>
               </div>
             )}
             {activeTab === 'coa' && (
@@ -148,7 +162,7 @@ export default function HomePage() {
                     className="object-cover"
                   />
                 </div>
-                <p className="text-slate-300">Coats of Arms - New feature for spiritual power management</p>
+                <p className="text-slate-300">{t('coaNew')}</p>
               </div>
             )}
           </div>
@@ -157,7 +171,7 @@ export default function HomePage() {
 
       {/* EVENTS SECTION - Parallax Effect */}
       <section style={{ height: '200vh' }} className="relative pt-16">
-        <div className="sticky top-0 h-screen z-50 overflow-auto bg-gradient-to-b from-slate-900 via-slate-950 to-black">
+        <div className="sticky top-[73px] h-screen z-50 overflow-auto bg-gradient-to-b from-slate-900 via-slate-950 to-black">
           <div className="max-w-4xl mx-auto px-4 py-16">
             <h2 className="text-4xl font-black text-white mb-8">
               {t('eventsTitle')}
@@ -168,32 +182,32 @@ export default function HomePage() {
 
             <div className="space-y-8">
               <div className="bg-slate-800/50 border border-purple-500/30 rounded-lg p-6">
-                <h3 className="text-xl font-bold text-purple-300 mb-4">Guard Weapons Strategy</h3>
-                <p className="text-slate-300 mb-3">Keep spiritual power low during events by:</p>
+                <h3 className="text-xl font-bold text-purple-300 mb-4">{t('guardWeaponsStrategy')}</h3>
+                <p className="text-slate-300 mb-3">{t('guardWeaponsContent')}</p>
                 <ul className="text-slate-400 space-y-2 ml-4">
-                  <li>• Equipping Guard Weapons strategically</li>
-                  <li>• Managing troop formations (Distanza, Cavalleria, Fanteria)</li>
-                  <li>• Exception for leaders Cristian and Rasse</li>
+                  <li>• {t('equipStrategically')}</li>
+                  <li>• {t('manageTroops')}</li>
+                  <li>• {t('exceptionLeaders')}</li>
                 </ul>
               </div>
 
               <div className="bg-slate-800/50 border border-purple-500/30 rounded-lg p-6">
-                <h3 className="text-xl font-bold text-purple-300 mb-4">Curiosities Management</h3>
-                <p className="text-slate-300 mb-3">Optimize your collection:</p>
+                <h3 className="text-xl font-bold text-purple-300 mb-4">{t('curiositiesManagement')}</h3>
+                <p className="text-slate-300 mb-3">{t('optimizeCollection')}</p>
                 <ul className="text-slate-400 space-y-2 ml-4">
-                  <li>• Collect and combine Curiosities</li>
-                  <li>• Track spiritual power changes</li>
-                  <li>• Plan event-specific loadouts</li>
+                  <li>• {t('collectCombine')}</li>
+                  <li>• {t('trackPowerChanges')}</li>
+                  <li>• {t('planLoadouts')}</li>
                 </ul>
               </div>
 
               <div className="bg-slate-800/50 border border-purple-500/30 rounded-lg p-6">
-                <h3 className="text-xl font-bold text-amber-400 mb-4">⭐ Coats of Arms (New)</h3>
-                <p className="text-slate-300 mb-3">The newest feature for spiritual power control:</p>
+                <h3 className="text-xl font-bold text-amber-400 mb-4">⭐ {t('coaNew')}</h3>
+                <p className="text-slate-300 mb-3">{t('newestFeature')}</p>
                 <ul className="text-slate-400 space-y-2 ml-4">
-                  <li>• Apply Coats of Arms for bonus effects</li>
-                  <li>• Calculate combined spiritual power impact</li>
-                  <li>• Maximize event performance</li>
+                  <li>• {t('applyCoa')}</li>
+                  <li>• {t('calculateImpact')}</li>
+                  <li>• {t('maximizePerformance')}</li>
                 </ul>
               </div>
             </div>
@@ -202,7 +216,7 @@ export default function HomePage() {
       </section>
 
       <footer className="relative z-[30] py-6 text-center text-xs text-slate-600 border-t border-white/5 bg-slate-950">
-        © {new Date().getFullYear()} k698 · Guns of Glory
+        © {new Date().getFullYear()} k698 · {t('copyright')}
       </footer>
 
       <style jsx>{`
