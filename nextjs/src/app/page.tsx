@@ -50,37 +50,11 @@ export default function HomePage() {
       {/* HEADER - ELEGANT TIER 1 */}
       <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-lg shadow-2xl shadow-purple-950/30">
         <div className="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
-          {/* LOGO - ELEGANT GEOMETRIC k698 */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <svg className="w-9 h-9 sm:w-11 sm:h-11" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Outer circle */}
-              <circle cx="20" cy="20" r="18" stroke="url(#grad)" strokeWidth="1.5" opacity="0.6"/>
-              {/* Inner square rotated */}
-              <rect x="8" y="8" width="24" height="24" stroke="url(#grad)" strokeWidth="1.5" transform="rotate(45 20 20)" opacity="0.8"/>
-              {/* Center vertical line */}
-              <line x1="20" y1="10" x2="20" y2="30" stroke="url(#grad)" strokeWidth="1.2" opacity="0.9"/>
-              {/* Center horizontal line */}
-              <line x1="10" y1="20" x2="30" y2="20" stroke="url(#grad)" strokeWidth="1.2" opacity="0.9"/>
-              {/* Corner accents */}
-              <circle cx="14" cy="14" r="1.5" fill="url(#grad)"/>
-              <circle cx="26" cy="26" r="1.5" fill="url(#grad)"/>
-              <circle cx="14" cy="26" r="1.5" fill="url(#grad)"/>
-              <circle cx="26" cy="14" r="1.5" fill="url(#grad)"/>
-              <defs>
-                <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40">
-                  <stop offset="0%" stopColor="#a855f7"/>
-                  <stop offset="50%" stopColor="#7c3aed"/>
-                  <stop offset="100%" stopColor="#3b82f6"/>
-                </linearGradient>
-              </defs>
-            </svg>
-            <div className="flex flex-col gap-0.5">
-              <div className="flex items-baseline gap-1">
-                <h1 className="font-black text-sm sm:text-base text-white tracking-tighter leading-tight bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">k698</h1>
-                <span className="text-xs text-purple-500/60 font-bold tracking-widest">●</span>
-              </div>
-              <p className="text-xs text-purple-400/70 font-semibold tracking-wider leading-none">RENAISSANCE</p>
-            </div>
+          {/* LOGO - K698 INNOVATIVE TIER1 TEXT */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <h1 className="font-black text-lg sm:text-2xl bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent tracking-tight leading-none">k698</h1>
+            <span className="text-purple-500/40 font-bold">●</span>
+            <p className="text-xs sm:text-sm text-purple-400/80 font-semibold tracking-widest leading-none">{t('renaissance')}</p>
           </div>
 
           {/* LANGUAGE SELECTOR - TIER 1 ELEGANT */}

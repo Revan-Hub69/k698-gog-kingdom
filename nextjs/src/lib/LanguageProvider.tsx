@@ -8,6 +8,8 @@ const translations: Record<Language, Record<string, string>> = {
   EN: {
     headerBranding: 'Well Done! We\'re Champion Region!!',
     projectName: 'k698 - Renaissance Project',
+    renaissance: 'RENAISSANCE',
+    renaissance: 'RENAISSANCE',
     headerSubtitle: 'Now let\'s try to recover from the mistakes made before it\'s too late',
     spiritualPowerTitle: 'Spiritual Power Management',
     spiritualPowerBanner: 'SPOILER ALERT: This is not advice or a friendly request. This is a rule to follow.',
@@ -49,6 +51,7 @@ const translations: Record<Language, Record<string, string>> = {
   IT: {
     headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
     projectName: 'k698 - Progetto Rinascita',
+     renaissance: 'RINASCITA',
     headerSubtitle: 'Ora proviamo a recuperare agli errori commessi prima che sia troppo tardi',
     spiritualPowerTitle: 'Gestione del Potere Spirituale',
     spiritualPowerBanner: 'SPOILER ALERT: Questo non è un consiglio nè una richiesta amichevole. Questa è una regola da seguire.',
@@ -90,6 +93,7 @@ const translations: Record<Language, Record<string, string>> = {
   PL: {
     headerBranding: 'Świetnie! Jesteśmy Regionem Mistrzów!!',
     projectName: 'k698 - Projekt Odrodzenia',
+     renaissance: 'ODRODZENIE',
     headerSubtitle: 'Teraz spróbujmy naprawić błędy popełnione zanim będzie za późno',
     spiritualPowerTitle: 'Zarządzanie Mocą Duchową',
     spiritualPowerBanner: 'SPOILER ALERT: To nie jest porada ani przyjazna prośba. To zasada, którą należy stosować.',
@@ -172,6 +176,7 @@ const translations: Record<Language, Record<string, string>> = {
   DE: {
     headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
     projectName: 'k698 - Wiedergeburtsprojekt',
+     renaissance: 'WIEDERGEBURT',
     headerSubtitle: 'Jetzt versuchen wir, die Fehler zu beheben, bevor es zu spät ist',
     spiritualPowerTitle: 'Verwaltung der Spirituellen Kraft',
     spiritualPowerBanner: 'SPOILER ALERT: Dies ist kein Ratschlag und keine freundliche Bitte. Das ist eine Regel, die man befolgen muss.',
@@ -213,6 +218,7 @@ const translations: Record<Language, Record<string, string>> = {
   FR: {
     headerBranding: 'Bien Fait! Nous Sommes Région Championne!!',
     projectName: 'k698 - Projet Renaissance',
+     renaissance: 'RENAISSANCE',
     headerSubtitle: 'Maintenant, essayons de corriger les erreurs commises avant qu\'il ne soit trop tard',
     spiritualPowerTitle: 'Gestion du Pouvoir Spirituel',
     spiritualPowerBanner: 'SPOILER ALERT: Ce n\'est pas un conseil, ni une demande amicale. C\'est une règle à suivre.',
@@ -295,6 +301,7 @@ const translations: Record<Language, Record<string, string>> = {
   ES: {
     headerBranding: '¡Bien Hecho! ¡Somos la Región Campeona!!',
     projectName: 'k698 - Proyecto Renacimiento',
+     renaissance: 'RENACIMIENTO',
     headerSubtitle: 'Ahora intentemos recuperarnos de los errores cometidos antes de que sea demasiado tarde',
     spiritualPowerTitle: 'Gestión del Poder Espiritual',
     spiritualPowerBanner: 'ALERTA DE SPOILER: Esto no es un consejo, ni una solicitud amistosa. Es una regla que debe seguirse.',
