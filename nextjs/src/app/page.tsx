@@ -47,51 +47,59 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      {/* HEADER - COMPACT */}
-      <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-md shadow-lg shadow-slate-950/30">
-        <div className="w-full px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between">
-          {/* LOGO - SVG PREMIUM */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <svg className="w-8 h-8 sm:w-10 sm:h-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="2" y="2" width="20" height="20" rx="4" stroke="url(#grad)" strokeWidth="1.5"/>
-              <circle cx="12" cy="12" r="8" stroke="url(#grad)" strokeWidth="1.5" fill="none"/>
-              <path d="M12 8v8M8 12h8" stroke="url(#grad)" strokeWidth="1.5" strokeLinecap="round"/>
+      {/* HEADER - ELEGANT TIER 1 */}
+      <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-lg shadow-2xl shadow-purple-950/30">
+        <div className="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
+          {/* LOGO - PREMIUM SVG k698 */}
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <svg className="w-9 h-9 sm:w-11 sm:h-11" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* k */}
+              <path d="M 8 10 L 8 38 M 20 10 L 8 24 L 20 38" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* 6 */}
+              <path d="M 28 16 L 28 38 Q 28 30 35 30 Q 38 30 38 26 Q 38 18 32 18 Q 26 18 26 24 Q 26 30 32 30" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* 9 */}
+              <path d="M 42 32 L 42 10 Q 42 18 36 18 Q 32 18 32 22 Q 32 28 38 28 Q 42 28 42 24 L 42 38" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* 8 */}
+              <path d="M 42 26 Q 38 20 32 20 Q 26 20 26 24 Q 26 28 32 28 Q 38 28 38 32 Q 38 38 32 38 Q 26 38 26 34" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
               <defs>
-                <linearGradient id="grad" x1="0" y1="0" x2="24" y2="24">
+                <linearGradient id="grad" x1="0" y1="0" x2="48" y2="48">
                   <stop offset="0%" stopColor="#a855f7"/>
+                  <stop offset="50%" stopColor="#7c3aed"/>
                   <stop offset="100%" stopColor="#3b82f6"/>
                 </linearGradient>
               </defs>
             </svg>
-            <div className="hidden sm:block">
-              <h1 className="font-black text-sm text-white tracking-tight">{t('projectName')}</h1>
+            <div className="hidden sm:flex flex-col">
+              <h1 className="font-black text-xs sm:text-sm text-white tracking-widest">k698</h1>
+              <p className="text-xs text-purple-400 font-semibold">RENAISSANCE</p>
             </div>
           </div>
 
-          {/* LANGUAGE DROPDOWN */}
+          {/* LANGUAGE SELECTOR - TIER 1 ELEGANT */}
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xs sm:text-sm rounded-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
+              className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-lg border border-purple-500/40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 text-white font-bold text-xs hover:border-purple-500/60 hover:bg-purple-500/15 transition-all backdrop-blur-sm hover:shadow-lg hover:shadow-purple-500/20"
             >
-              <span>{language}</span>
-              <span className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}>▼</span>
+              <span className="text-sm sm:text-base">{language}</span>
             </button>
 
-            {/* DROPDOWN MENU */}
+            {/* DROPDOWN MENU - TIER 1 ELEGANT */}
             {dropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 bg-slate-800 border border-purple-500/50 rounded-lg shadow-2xl shadow-purple-600/30 z-50 min-w-32">
-                {LANGUAGES.map((lang) => (
+              <div className="absolute top-full right-0 mt-2.5 bg-gradient-to-b from-slate-800/95 to-slate-900/95 border border-purple-500/30 rounded-lg shadow-2xl shadow-purple-900/40 z-50 min-w-40 backdrop-blur-xl overflow-hidden">
+                {LANGUAGES.map((lang, idx) => (
                   <button
                     key={lang}
                     onClick={() => {
                       setLanguage(lang);
                       setDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2.5 text-sm font-bold transition-all ${
+                    className={`w-full px-4 py-3 text-sm font-semibold transition-all text-center ${
+                      idx !== 0 ? 'border-t border-purple-500/10' : ''
+                    } ${
                       language === lang
-                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                        ? 'bg-gradient-to-r from-purple-600/30 to-blue-600/30 text-white'
+                        : 'text-slate-300 hover:text-white hover:bg-purple-500/10'
                     }`}
                   >
                     {lang}
