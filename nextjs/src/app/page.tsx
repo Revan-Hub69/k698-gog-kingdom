@@ -286,7 +286,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
-                <Image src="/equipaggiamento.png" alt="Equipment" fill className="object-cover" />
+                <Image src="/images/guard-weapons.png" alt="Equipment" fill className="object-cover" />
               </div>
             </div>
 
@@ -304,7 +304,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
-                <Image src="/parti-della-nave.png" alt="Ship Parts" fill className="object-cover" />
+                <Image src="/images/curiosities.png" alt="Ship Parts" fill className="object-cover" />
               </div>
             </div>
 
