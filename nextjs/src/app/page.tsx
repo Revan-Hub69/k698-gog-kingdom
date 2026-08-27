@@ -35,6 +35,7 @@ const TAB_DATA: Record<TabType, { title: string; descKey: string; contentKey: st
 export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('guard');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Auto-detect browser language
   useEffect(() => {
@@ -60,21 +61,37 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* BOTTOM ROW: LANGUAGE SWITCHER */}
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 sm:gap-2 w-full">
-            {LANGUAGES.map((lang) => (
-              <button
-                key={lang}
-                onClick={() => setLanguage(lang)}
-                className={`py-1.5 sm:py-2 px-1 sm:px-2 rounded text-xs font-black transition-all ${
-                  language === lang
-                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
-                    : 'bg-slate-800/50 text-slate-400 hover:text-white hover:bg-slate-700/50'
-                }`}
-              >
-                {lang}
-              </button>
-            ))}
+          {/* BOTTOM ROW: LANGUAGE DROPDOWN */}
+          <div className="relative w-fit">
+            <button
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-sm rounded-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
+            >
+              <span>{language}</span>
+              <span className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}>▼</span>
+            </button>
+
+            {/* DROPDOWN MENU */}
+            {dropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 bg-slate-800 border border-purple-500/50 rounded-lg shadow-2xl shadow-purple-600/30 z-50">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      setLanguage(lang);
+                      setDropdownOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2.5 text-sm font-bold transition-all ${
+                      language === lang
+                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-700/50'
+                    }`}
+                  >
+                    {lang}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </header>
