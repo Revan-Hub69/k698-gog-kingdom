@@ -19,9 +19,9 @@ const TAB_DATA: Record<TabType, { title: string; descKey: string; contentKey: st
   curiosities: {
     title: 'curiosities',
     descKey: 'curiositiesManagement',
-    contentKey: 'guardWeaponsContent',
+    contentKey: 'curiositiesContent',
     image: '/images/Curiosities.png',
-    list: ['equipStrategically', 'manageTroops', 'exceptionLeaders'],
+    list: ['collectCombine', 'trackPowerChanges', 'planLoadouts'],
   },
   coa: {
     title: 'coatsOfArms',
