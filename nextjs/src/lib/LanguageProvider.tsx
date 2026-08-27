@@ -9,7 +9,6 @@ const translations: Record<Language, Record<string, string>> = {
     headerBranding: 'Well Done! We\'re Champion Region!!',
     projectName: 'k698 - Renaissance Project',
     renaissance: 'RENAISSANCE',
-    renaissance: 'RENAISSANCE',
     headerSubtitle: 'Now let\'s try to recover from the mistakes made before it\'s too late',
     spiritualPowerTitle: 'Spiritual Power Management',
     spiritualPowerBanner: 'SPOILER ALERT: This is not advice or a friendly request. This is a rule to follow.',
@@ -207,9 +206,48 @@ const translations: Record<Language, Record<string, string>> = {
      newestFeature: 'Zastąp Herbarze R17 w zależności od typu głównych wojsk:',
      applyCoa: 'Kawaleria: Zastąp Piechota i Dystans Herbarze R17',
      calculateImpact: 'Dystans: Zastąp Kawaleria i Piechota Herbarze R17',
-     maximizePerformance: 'Wyjątek: Rasse i Cristian są wyłączeni z tej strategii',
-      copyright: 'Guns of Glory',
-    },
+      maximizePerformance: 'Wyjątek: Rasse i Cristian są wyłączeni z tej strategii',
+      
+      // Leaderboard
+      leaderboardTitle: 'Tablica Liderów Królestwa',
+      leaderboardDesc: 'Rankingowany według Mocy Historycznej',
+      loginToView: 'Zaloguj się, aby zobaczyć tabelę liderów',
+      signIn: 'Zaloguj się',
+      signUp: 'Zarejestruj się',
+      refreshLeaderboard: 'Odśwież',
+      addCastle: '+ Dodaj Zamek',
+      myAccount: '👤 Moje Konto',
+      
+      // Leaderboard Table
+      rank: 'Ranking',
+      castleName: 'Nazwa Zamku',
+      historicalPower: 'Moc Historyczna',
+      currentPower: 'Aktualna Moc',
+      screenshot: 'Zrzut Ekranu',
+      lastUpdated: 'Ostatnia Aktualizacja',
+      
+      // Account Sheet
+      myKingdom: '👑 Moje Królestwo',
+      nickname: 'Pseudonim',
+      email: 'Email',
+      myCastles: '🏰 Moje Zamki',
+      settings: '⚙️ Ustawienia',
+      changeEmail: 'Zmień Email',
+      changePassword: 'Zmień Hasło',
+      save: 'Zapisz',
+      logout: 'Wyloguj się',
+      
+      // Auth
+      emailLabel: 'Email',
+      passwordLabel: 'Hasło',
+      nicknameLabel: 'Pseudonim',
+      registerTitle: 'Utwórz Konto',
+      loginTitle: 'Zaloguj się',
+       alreadyHaveAccount: 'Już masz konto?',
+       dontHaveAccount: 'Nie masz konta?',
+       
+       copyright: 'Guns of Glory',
+      },
   ZH: {
     headerBranding: '做得好！我们是冠军地区！！',
     projectName: 'k698 - 复兴计划',
@@ -248,9 +286,49 @@ const translations: Record<Language, Record<string, string>> = {
      newestFeature: '根据您的主要部队类型用R17替换纹章:',
      applyCoa: '骑兵: 用R17纹章替换步兵和远程',
      calculateImpact: '远程: 用R17纹章替换骑兵和步兵',
-     maximizePerformance: '例外: Rasse和Cristian被排除在此策略之外',
+      maximizePerformance: '例外: Rasse和Cristian被排除在此策略之外',
+      
+      // Leaderboard
+      leaderboardTitle: '王国排行榜',
+      leaderboardDesc: '按历史力量排名',
+      loginToView: '登录查看排行榜',
+      signIn: '登录',
+      signUp: '注册',
+      refreshLeaderboard: '刷新',
+      addCastle: '+ 添加城堡',
+      myAccount: '👤 我的账户',
+      
+      // Leaderboard Table
+      rank: '排名',
+      castleName: '城堡名称',
+      historicalPower: '历史力量',
+      currentPower: '当前力量',
+      screenshot: '截图',
+      lastUpdated: '上次更新',
+      
+      // Account Sheet
+      myKingdom: '👑 我的王国',
+      nickname: '昵称',
+      email: '邮箱',
+      myCastles: '🏰 我的城堡',
+      settings: '⚙️ 设置',
+      changeEmail: '更改邮箱',
+      changePassword: '更改密码',
+      save: '保存',
+      logout: '登出',
+      
+      // Auth
+      emailLabel: '邮箱',
+      passwordLabel: '密码',
+      nicknameLabel: '昵称',
+      registerTitle: '创建账户',
+      loginTitle: '登录',
+      alreadyHaveAccount: '已有账户?',
+      dontHaveAccount: '没有账户?',
+      
+      renaissance: '复兴',
       copyright: 'Guns of Glory',
-    },
+     },
   DE: {
     headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
     projectName: 'k698 - Wiedergeburtsprojekt',
@@ -290,9 +368,48 @@ const translations: Record<Language, Record<string, string>> = {
      newestFeature: 'Ersetzen Sie Wappen mit R17 basierend auf Ihrem Haupttruppentyp:',
      applyCoa: 'Kavallerie: Ersetzen Sie Infanterie und Distanz mit R17 Wappen',
      calculateImpact: 'Distanz: Ersetzen Sie Kavallerie und Infanterie mit R17 Wappen',
-     maximizePerformance: 'Ausnahme: Rasse und Cristian sind von dieser Strategie ausgeschlossen',
-     copyright: 'Guns of Glory',
-   },
+      maximizePerformance: 'Ausnahme: Rasse und Cristian sind von dieser Strategie ausgeschlossen',
+      
+      // Leaderboard
+      leaderboardTitle: 'Königreich Rangliste',
+      leaderboardDesc: 'Nach Historischer Kraft geordnet',
+      loginToView: 'Melden Sie sich an, um die Rangliste anzuzeigen',
+      signIn: 'Anmelden',
+      signUp: 'Registrieren',
+      refreshLeaderboard: 'Aktualisieren',
+      addCastle: '+ Schloss hinzufügen',
+      myAccount: '👤 Mein Konto',
+      
+      // Leaderboard Table
+      rank: 'Rang',
+      castleName: 'Schlossname',
+      historicalPower: 'Historische Kraft',
+      currentPower: 'Aktuelle Kraft',
+      screenshot: 'Screenshot',
+      lastUpdated: 'Zuletzt aktualisiert',
+      
+      // Account Sheet
+      myKingdom: '👑 Mein Königreich',
+      nickname: 'Spitzname',
+      email: 'E-Mail',
+      myCastles: '🏰 Meine Schlösser',
+      settings: '⚙️ Einstellungen',
+      changeEmail: 'E-Mail ändern',
+      changePassword: 'Passwort ändern',
+      save: 'Speichern',
+      logout: 'Abmelden',
+      
+      // Auth
+      emailLabel: 'E-Mail',
+      passwordLabel: 'Passwort',
+      nicknameLabel: 'Spitzname',
+      registerTitle: 'Konto erstellen',
+      loginTitle: 'Anmelden',
+      alreadyHaveAccount: 'Haben Sie bereits ein Konto?',
+       dontHaveAccount: 'Sie haben kein Konto?',
+       
+       copyright: 'Guns of Glory',
+      },
   FR: {
     headerBranding: 'Bien Fait! Nous Sommes Région Championne!!',
     projectName: 'k698 - Projet Renaissance',
@@ -332,10 +449,49 @@ const translations: Record<Language, Record<string, string>> = {
      newestFeature: 'Remplacez les Blasons par R17 selon votre type de troupes principales:',
      applyCoa: 'Cavalerie: Remplacez Infanterie et Distanza par Blasons R17',
      calculateImpact: 'Distanza: Remplacez Cavalerie et Infanterie par Blasons R17',
-     maximizePerformance: 'Exception: Rasse et Cristian sont exclus de cette stratégie',
-     copyright: 'Guns of Glory',
-   },
-  RU: {
+      maximizePerformance: 'Exception: Rasse et Cristian sont exclus de cette stratégie',
+      
+      // Leaderboard
+      leaderboardTitle: 'Classement du Royaume',
+      leaderboardDesc: 'Classé par Pouvoir Historique',
+      loginToView: 'Connectez-vous pour voir le classement',
+      signIn: 'Se Connecter',
+      signUp: 'S\'inscrire',
+      refreshLeaderboard: 'Actualiser',
+      addCastle: '+ Ajouter un Château',
+      myAccount: '👤 Mon Compte',
+      
+      // Leaderboard Table
+      rank: 'Classement',
+      castleName: 'Nom du Château',
+      historicalPower: 'Pouvoir Historique',
+      currentPower: 'Pouvoir Actuel',
+      screenshot: 'Capture d\'écran',
+      lastUpdated: 'Dernière mise à jour',
+      
+      // Account Sheet
+      myKingdom: '👑 Mon Royaume',
+      nickname: 'Surnom',
+      email: 'E-mail',
+      myCastles: '🏰 Mes Châteaux',
+      settings: '⚙️ Paramètres',
+      changeEmail: 'Modifier E-mail',
+      changePassword: 'Modifier Mot de passe',
+      save: 'Enregistrer',
+      logout: 'Déconnexion',
+      
+      // Auth
+      emailLabel: 'E-mail',
+      passwordLabel: 'Mot de passe',
+      nicknameLabel: 'Surnom',
+      registerTitle: 'Créer un compte',
+      loginTitle: 'Se Connecter',
+      alreadyHaveAccount: 'Vous avez déjà un compte?',
+       dontHaveAccount: 'Vous n\'avez pas de compte?',
+       
+       copyright: 'Guns of Glory',
+      },
+   RU: {
     headerBranding: 'Отлично Сделано! Мы - Чемпионский Регион!!',
     projectName: 'k698 - Проект Возрождения',
     headerSubtitle: 'Теперь давайте попытаемся исправить ошибки, допущенные до того, как будет слишком поздно',
@@ -373,9 +529,49 @@ const translations: Record<Language, Record<string, string>> = {
      newestFeature: 'Замените Гербы на R17 в зависимости от типа ваших основных войск:',
      applyCoa: 'Кавалерия: Замените Пехоту и Дальних на Гербы R17',
      calculateImpact: 'Дальние: Замените Кавалерию и Пехоту на Гербы R17',
-     maximizePerformance: 'Исключение: Rasse и Cristian исключены из этой стратегии',
-     copyright: 'Guns of Glory',
-   },
+      maximizePerformance: 'Исключение: Rasse и Cristian исключены из этой стратегии',
+      
+      // Leaderboard
+      leaderboardTitle: 'Рейтинг Королевства',
+      leaderboardDesc: 'Ранжировано по Исторической Силе',
+      loginToView: 'Войдите, чтобы просмотреть рейтинг',
+      signIn: 'Вход',
+      signUp: 'Регистрация',
+      refreshLeaderboard: 'Обновить',
+      addCastle: '+ Добавить Замок',
+      myAccount: '👤 Мой Аккаунт',
+      
+      // Leaderboard Table
+      rank: 'Рейтинг',
+      castleName: 'Название Замка',
+      historicalPower: 'Историческая Сила',
+      currentPower: 'Текущая Сила',
+      screenshot: 'Снимок экрана',
+      lastUpdated: 'Последнее обновление',
+      
+      // Account Sheet
+      myKingdom: '👑 Мое Королевство',
+      nickname: 'Прозвище',
+      email: 'Электронная почта',
+      myCastles: '🏰 Мои Замки',
+      settings: '⚙️ Настройки',
+      changeEmail: 'Изменить Email',
+      changePassword: 'Изменить Пароль',
+      save: 'Сохранить',
+      logout: 'Выход',
+      
+      // Auth
+      emailLabel: 'Электронная почта',
+      passwordLabel: 'Пароль',
+      nicknameLabel: 'Прозвище',
+      registerTitle: 'Создать аккаунт',
+      loginTitle: 'Вход',
+      alreadyHaveAccount: 'Уже есть аккаунт?',
+      dontHaveAccount: 'Нет аккаунта?',
+      
+      renaissance: 'ВОЗРОЖДЕНИЕ',
+      copyright: 'Guns of Glory',
+     },
   ES: {
     headerBranding: '¡Bien Hecho! ¡Somos la Región Campeona!!',
     projectName: 'k698 - Proyecto Renacimiento',
@@ -415,10 +611,49 @@ const translations: Record<Language, Record<string, string>> = {
      newestFeature: 'Reemplaza los Escudos de Armas con R17 según tu tipo de tropas principales:',
      applyCoa: 'Caballería: Reemplaza Infantería y Distancia con Escudos de Armas R17',
      calculateImpact: 'Distancia: Reemplaza Caballería e Infantería con Escudos de Armas R17',
-     maximizePerformance: 'Excepción: Rasse y Cristian están excluidos de esta estrategia',
-     copyright: 'Guns of Glory',
-   },
- };
+      maximizePerformance: 'Excepción: Rasse y Cristian están excluidos de esta estrategia',
+      
+      // Leaderboard
+      leaderboardTitle: 'Tabla de Clasificación del Reino',
+      leaderboardDesc: 'Clasificado por Poder Histórico',
+      loginToView: 'Inicia sesión para ver la tabla de clasificación',
+      signIn: 'Iniciar Sesión',
+      signUp: 'Registrarse',
+      refreshLeaderboard: 'Actualizar',
+      addCastle: '+ Añadir Castillo',
+      myAccount: '👤 Mi Cuenta',
+      
+      // Leaderboard Table
+      rank: 'Clasificación',
+      castleName: 'Nombre del Castillo',
+      historicalPower: 'Poder Histórico',
+      currentPower: 'Poder Actual',
+      screenshot: 'Captura de pantalla',
+      lastUpdated: 'Última actualización',
+      
+      // Account Sheet
+      myKingdom: '👑 Mi Reino',
+      nickname: 'Apodo',
+      email: 'Correo electrónico',
+      myCastles: '🏰 Mis Castillos',
+      settings: '⚙️ Configuración',
+      changeEmail: 'Cambiar Correo',
+      changePassword: 'Cambiar Contraseña',
+      save: 'Guardar',
+      logout: 'Cerrar Sesión',
+      
+      // Auth
+      emailLabel: 'Correo electrónico',
+      passwordLabel: 'Contraseña',
+      nicknameLabel: 'Apodo',
+      registerTitle: 'Crear Cuenta',
+      loginTitle: 'Iniciar Sesión',
+      alreadyHaveAccount: '¿Ya tienes una cuenta?',
+       dontHaveAccount: '¿No tienes una cuenta?',
+       
+       copyright: 'Guns of Glory',
+      },
+  };
 
 interface LanguageContextType {
   language: Language;

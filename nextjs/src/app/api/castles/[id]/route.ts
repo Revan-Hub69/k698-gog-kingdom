@@ -15,15 +15,16 @@ function verifyToken(req: NextRequest) {
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const decoded = verifyToken(req);
   if (!decoded) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const castleId = parseInt(params.id);
+    const castleId = parseInt(id);
     const { currentPower, screenshotUrl } = await req.json();
 
     // Verify ownership
@@ -66,15 +67,16 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const decoded = verifyToken(req);
   if (!decoded) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const castleId = parseInt(params.id);
+    const castleId = parseInt(id);
 
     // Verify ownership
     const castle = await prisma.castle.findUnique({

@@ -1,7 +1,6 @@
 'use client';
 
 import { useLanguage } from '@/lib/LanguageProvider';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 interface Castle {
