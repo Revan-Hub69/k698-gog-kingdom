@@ -136,9 +136,16 @@ export default function HomePage() {
       {/* SPIRITUAL POWER SECTION */}
       <section className="py-12 sm:py-16 md:py-24 px-4">
         <div className="max-w-6xl mx-auto w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-8 sm:mb-12 md:mb-16 text-center tracking-tight drop-shadow">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6 text-center tracking-tight drop-shadow">
             {t('spiritualPowerTitle')}
           </h2>
+          
+          {/* BANNER */}
+          <div className="mb-8 sm:mb-10 md:mb-12 bg-gradient-to-r from-red-600/20 to-red-700/20 border border-red-500/50 rounded-lg p-4 sm:p-5 md:p-6 backdrop-blur">
+            <p className="text-sm sm:text-base md:text-lg text-red-300 font-bold text-center leading-relaxed">
+              ⚠️ {t('spiritualPowerBanner')}
+            </p>
+          </div>
 
           {/* MOBILE: STACK + SCROLL TABS / DESKTOP: TABS LEFT + CONTENT RIGHT */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
