@@ -49,9 +49,9 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden">
       {/* HEADER */}
       <header className="sticky top-0 z-[999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/30 backdrop-blur">
-        <div className="w-full px-3 sm:px-4 py-4">
-          {/* TOP ROW: LOGO */}
-          <div className="flex items-center gap-2 sm:gap-3 mb-3">
+        <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
+          {/* LOGO - LEFT */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-white text-sm sm:text-lg shadow-lg shadow-purple-600/50">
               K
             </div>
@@ -61,8 +61,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* BOTTOM ROW: LANGUAGE DROPDOWN */}
-          <div className="relative w-fit">
+          {/* LANGUAGE DROPDOWN - RIGHT */}
+          <div className="relative flex-shrink-0">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-sm rounded-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
@@ -73,7 +73,7 @@ export default function HomePage() {
 
             {/* DROPDOWN MENU */}
             {dropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 bg-slate-800 border border-purple-500/50 rounded-lg shadow-2xl shadow-purple-600/30 z-50">
+              <div className="absolute top-full right-0 mt-2 bg-slate-800 border border-purple-500/50 rounded-lg shadow-2xl shadow-purple-600/30 z-50 min-w-32">
                 {LANGUAGES.map((lang) => (
                   <button
                     key={lang}
