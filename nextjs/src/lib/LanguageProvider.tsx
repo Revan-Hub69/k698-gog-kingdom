@@ -6,7 +6,7 @@ type Language = 'EN' | 'IT' | 'PL' | 'ZH' | 'DE' | 'FR' | 'RU' | 'ES';
 
 const translations: Record<Language, Record<string, string>> = {
   EN: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: 'Well Done! We\'re Champion Region!!',
     headerSubtitle: 'Master your kingdom\'s equipment strategy during events. Spiritual power management through Guard Weapons, Curiosities, and Coats of Arms.',
     spiritualPowerTitle: 'Spiritual Power Management',
     spiritualPowerDesc: 'Learn how to manage your kingdom\'s spiritual power during events',
@@ -62,7 +62,7 @@ const translations: Record<Language, Record<string, string>> = {
     copyright: 'Guns of Glory',
   },
   PL: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: 'Świetnie! Jesteśmy Regionem Mistrzów!!',
     headerSubtitle: 'Opanuj strategię uzbrojenia swojego królestwa podczas wydarzeń. Zarządzanie mocą duchową za pośrednictwem Broni Gwardii, Osobliwości i Herbarzy.',
     spiritualPowerTitle: 'Zarządzanie Mocą Duchową',
     spiritualPowerDesc: 'Dowiedz się, jak zarządzać mocą duchową swojego królestwa podczas wydarzeń',
@@ -90,7 +90,7 @@ const translations: Record<Language, Record<string, string>> = {
     copyright: 'Guns of Glory',
   },
   ZH: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: '做得好！我们是冠军地区！！',
     headerSubtitle: '在事件期间掌握您的王国装备策略。通过护卫武器、奇特物品和纹章管理精神力。',
     spiritualPowerTitle: '精神力管理',
     spiritualPowerDesc: '学习如何在事件期间管理您的王国精神力',
@@ -118,7 +118,7 @@ const translations: Record<Language, Record<string, string>> = {
     copyright: 'Guns of Glory',
   },
   DE: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
     headerSubtitle: 'Beherrsche die Ausrüstungsstrategie deines Königreichs während Events. Verwaltung der spirituellen Kraft durch Wachausrüstung, Kuriositäten und Wappen.',
     spiritualPowerTitle: 'Verwaltung der Spirituellen Kraft',
     spiritualPowerDesc: 'Lerne, wie du die spirituelle Kraft deines Königreichs während Events verwaltest',
@@ -146,7 +146,7 @@ const translations: Record<Language, Record<string, string>> = {
     copyright: 'Guns of Glory',
   },
   FR: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: 'Bien Fait! Nous Sommes Région Championne!!',
     headerSubtitle: 'Maîtrisez la stratégie d\'équipement de votre royaume pendant les événements. Gestion du pouvoir spirituel par les armes de la garde, les curiosités et les blasons.',
     spiritualPowerTitle: 'Gestion du Pouvoir Spirituel',
     spiritualPowerDesc: 'Apprenez à gérer le pouvoir spirituel de votre royaume pendant les événements',
@@ -174,7 +174,7 @@ const translations: Record<Language, Record<string, string>> = {
     copyright: 'Guns of Glory',
   },
   RU: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: 'Отлично Сделано! Мы - Чемпионский Регион!!',
     headerSubtitle: 'Овладейте стратегией вооружения вашего королевства во время событий. Управление духовной силой через оружие охраны, редкости и гербы.',
     spiritualPowerTitle: 'Управление Духовной Силой',
     spiritualPowerDesc: 'Узнайте, как управлять духовной силой вашего королевства во время событий',
@@ -202,7 +202,7 @@ const translations: Record<Language, Record<string, string>> = {
     copyright: 'Guns of Glory',
   },
   ES: {
-    headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    headerBranding: '¡Bien Hecho! ¡Somos la Región Campeona!!',
     headerSubtitle: 'Domina la estrategia de equipo de tu reino durante los eventos. Gestión del poder espiritual a través de armas de la guardia, curiosidades y escudos de armas.',
     spiritualPowerTitle: 'Gestión del Poder Espiritual',
     spiritualPowerDesc: 'Aprende cómo gestionar el poder espiritual de tu reino durante los eventos',
