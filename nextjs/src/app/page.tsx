@@ -143,21 +143,21 @@ export default function HomePage() {
           {/* MOBILE: STACK + SCROLL TABS / DESKTOP: TABS LEFT + CONTENT RIGHT */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* TABS */}
-            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit space-y-2 lg:space-y-3 w-full lg:w-auto max-w-xs mx-auto lg:mx-0 sm:max-w-none">
-              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-2 lg:gap-3 w-full">
+            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit w-full lg:w-auto">
+              <div className="flex flex-nowrap gap-2 lg:flex-col lg:gap-3 w-full lg:w-auto overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
                 {(Object.entries(TAB_DATA) as [TabType, typeof TAB_DATA['guard']][]).map(([tabKey, tabInfo]) => (
                   <button
                     key={tabKey}
                     onClick={() => setActiveTab(tabKey as TabType)}
-                    className={`px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-xs sm:text-sm md:text-base text-center sm:text-center lg:text-left transition-all duration-300 ${
+                    className={`flex-1 lg:flex-none px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap lg:whitespace-normal ${
                       activeTab === tabKey
-                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-2xl shadow-purple-500/50 scale-100 lg:scale-105'
+                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
                         : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
                     }`}
                   >
-                    <div className="line-clamp-2">{t(tabInfo.title)}</div>
+                    <div className="truncate lg:truncate-none">{t(tabInfo.title)}</div>
                     {tabKey === 'coa' && (
-                      <div className="text-xs text-amber-300 lg:mt-1 font-black">✦ {t('newBadge')} ✦</div>
+                      <div className="text-xs text-amber-300 font-black">✦ {t('newBadge')} ✦</div>
                     )}
                   </button>
                 ))}
@@ -176,15 +176,15 @@ export default function HomePage() {
                     <div className="h-0.5 sm:h-1 w-10 sm:w-12 md:w-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
                   </div>
 
-                  <p className="text-sm sm:text-base md:text-base text-slate-300 leading-relaxed">
+                  <p className="text-sm sm:text-base md:text-base text-slate-300 leading-7">
                     {t(TAB_DATA[activeTab].contentKey)}
                   </p>
 
                   <ul className="space-y-3 sm:space-y-4 md:space-y-4 w-full">
                     {TAB_DATA[activeTab].list.map((key, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-slate-200 text-sm sm:text-base md:text-base w-full">
+                      <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-slate-200 text-sm sm:text-base md:text-base leading-6 w-full">
                         <span className="text-purple-400 font-black text-lg sm:text-xl flex-shrink-0 mt-0.5">▸</span>
-                        <span className="word-wrap break-words">{t(key)}</span>
+                        <span className="word-wrap break-words leading-7">{t(key)}</span>
                       </li>
                     ))}
                   </ul>
