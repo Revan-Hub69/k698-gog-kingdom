@@ -224,13 +224,16 @@ export default function HomePage() {
       {/* SEPARATOR */}
       <div className="h-px sm:h-1 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent my-8 sm:my-12 md:my-16"></div>
 
-      {/* EVENTS SECTION */}
-      <section className="py-12 sm:py-16 md:py-24 px-4">
+      {/* EVENTS SECTION - BACKGROUND CHANGE */}
+      <section className="py-24 px-4 bg-gradient-to-b from-slate-900/50 via-purple-900/30 to-slate-950">
         <div className="max-w-5xl mx-auto w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 sm:mb-6 md:mb-8 text-center tracking-tight drop-shadow">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 sm:mb-4 text-center tracking-tight drop-shadow">
             {t('eventsTitle')}
           </h2>
-          <p className="text-lg sm:text-xl md:text-2xl text-slate-200 mb-8 sm:mb-12 md:mb-16 text-center font-medium w-full">
+          <p className="text-lg sm:text-xl md:text-2xl text-purple-300 mb-12 sm:mb-14 md:mb-16 text-center font-bold drop-shadow">
+            {t('eventsSubtitle')}
+          </p>
+          <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 md:mb-16 text-center">
             {t('eventsDesc')}
           </p>
 
