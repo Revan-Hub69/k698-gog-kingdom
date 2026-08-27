@@ -143,19 +143,19 @@ export default function HomePage() {
           {/* MOBILE: STACK + SCROLL TABS / DESKTOP: TABS LEFT + CONTENT RIGHT */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* TABS */}
-            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit space-y-2 lg:space-y-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
-              <div className="flex lg:flex-col gap-2 lg:gap-3 w-max lg:w-full">
+            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit space-y-2 lg:space-y-3 w-full lg:w-auto">
+              <div className="flex flex-col lg:flex-col gap-2 lg:gap-3 w-full">
                 {(Object.entries(TAB_DATA) as [TabType, typeof TAB_DATA['guard']][]).map(([tabKey, tabInfo]) => (
                   <button
                     key={tabKey}
                     onClick={() => setActiveTab(tabKey as TabType)}
-                    className={`px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-xs sm:text-sm md:text-base text-left transition-all duration-300 flex-shrink-0 lg:flex-shrink whitespace-nowrap lg:whitespace-normal ${
+                    className={`w-full px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-xs sm:text-sm md:text-base text-center lg:text-left transition-all duration-300 ${
                       activeTab === tabKey
                         ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-2xl shadow-purple-500/50 scale-100 lg:scale-105'
                         : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
                     }`}
                   >
-                    <div>{t(tabInfo.title)}</div>
+                    <div className="line-clamp-2">{t(tabInfo.title)}</div>
                     {tabKey === 'coa' && (
                       <div className="text-xs text-amber-300 lg:mt-1 font-black">✦ {t('newBadge')} ✦</div>
                     )}
