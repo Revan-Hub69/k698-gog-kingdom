@@ -47,7 +47,9 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabType>('guard');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [filteredLeaderboard, setFilteredLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+  const [leaderboardSearch, setLeaderboardSearch] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAccountSheet, setShowAccountSheet] = useState(false);
 
@@ -65,11 +67,26 @@ export default function HomePage() {
     checkAuth();
   }, []);
 
+  // Filter leaderboard based on search
+  useEffect(() => {
+    if (leaderboardSearch.trim() === '') {
+      setFilteredLeaderboard(leaderboard);
+    } else {
+      const search = leaderboardSearch.toLowerCase();
+      setFilteredLeaderboard(
+        leaderboard.filter((entry) =>
+          entry.nickname.toLowerCase().includes(search)
+        )
+      );
+    }
+  }, [leaderboardSearch, leaderboard]);
+
   const fetchLeaderboard = async () => {
     try {
       const res = await fetch('/api/leaderboard');
       const data = await res.json();
-      setLeaderboard(data.slice(0, 5)); // Top 5 only
+      setLeaderboard(data.slice(0, 10)); // Top 10
+      setFilteredLeaderboard(data.slice(0, 10));
       setLeaderboardLoading(false);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
@@ -398,42 +415,68 @@ export default function HomePage() {
                 </button>
               </div>
             </div>
-          ) : (
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg overflow-hidden">
-              {leaderboardLoading ? (
-                <div className="py-16 text-center text-slate-400">{t('leaderboardDesc')}</div>
-              ) : (
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-purple-500/30 bg-slate-800/40">
-                      <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('rank')}</th>
-                      <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('castleName')}</th>
-                      <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('historicalPower')}</th>
-                      <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('currentPower')}</th>
-                      <th className="px-4 py-4 text-center text-purple-300 font-bold text-sm">{t('screenshot')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {leaderboard.map((entry) => (
-                      <tr key={entry.id} className="border-b border-slate-800/50 hover:bg-slate-800/20 transition">
-                        <td className="px-4 py-4 text-white font-bold text-sm">#{entry.rank}</td>
-                        <td className="px-4 py-4 text-white text-sm">{entry.nickname}</td>
-                        <td className="px-4 py-4 text-right text-green-400 font-semibold text-sm">
-                          {entry.totalHistoricalPower.toLocaleString()}
-                        </td>
-                        <td className="px-4 py-4 text-right text-blue-400 font-semibold text-sm">
-                          {entry.totalCurrentPower.toLocaleString()}
-                        </td>
-                        <td className="px-4 py-4 text-center text-sm">
-                          <span className="text-green-400 font-bold">✓</span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
+           ) : (
+             <div className="space-y-4">
+               {/* SEARCH BAR */}
+               <div className="relative">
+                 <input
+                   type="text"
+                   placeholder="Search by nickname..."
+                   value={leaderboardSearch}
+                   onChange={(e) => setLeaderboardSearch(e.target.value)}
+                   className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/80 focus:ring-1 focus:ring-purple-500/30 transition"
+                 />
+                 <svg className="absolute right-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                 </svg>
+               </div>
+
+               {/* SCROLLABLE TABLE */}
+               <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg overflow-hidden max-h-[600px] overflow-y-auto custom-scrollbar">
+                 {leaderboardLoading ? (
+                   <div className="py-16 text-center text-slate-400">{t('leaderboardDesc')}</div>
+                 ) : filteredLeaderboard.length === 0 ? (
+                   <div className="py-12 text-center text-slate-400">
+                     No players found matching &quot;{leaderboardSearch}&quot;
+                   </div>
+                 ) : (
+                   <table className="w-full">
+                     <thead className="sticky top-0 bg-slate-800/60 backdrop-blur-sm">
+                       <tr className="border-b border-purple-500/30">
+                         <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('rank')}</th>
+                         <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('castleName')}</th>
+                         <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('historicalPower')}</th>
+                         <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('currentPower')}</th>
+                         <th className="px-4 py-4 text-center text-purple-300 font-bold text-sm">{t('screenshot')}</th>
+                       </tr>
+                     </thead>
+                     <tbody>
+                       {filteredLeaderboard.map((entry) => (
+                         <tr key={entry.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition">
+                           <td className="px-4 py-4 text-white font-bold text-sm">#{entry.rank}</td>
+                           <td className="px-4 py-4 text-white text-sm font-medium">{entry.nickname}</td>
+                           <td className="px-4 py-4 text-right text-green-400 font-semibold text-sm">
+                             {entry.totalHistoricalPower.toLocaleString()}
+                           </td>
+                           <td className="px-4 py-4 text-right text-blue-400 font-semibold text-sm">
+                             {entry.totalCurrentPower.toLocaleString()}
+                           </td>
+                           <td className="px-4 py-4 text-center text-sm">
+                             <span className="text-green-400 font-bold">✓</span>
+                           </td>
+                         </tr>
+                       ))}
+                     </tbody>
+                   </table>
+                 )}
+               </div>
+
+               {/* RESULTS COUNT */}
+               <div className="text-sm text-slate-400 text-right">
+                 Showing {filteredLeaderboard.length} of {leaderboard.length} players
+               </div>
+             </div>
+           )}
         </div>
       </section>
 
@@ -466,6 +509,24 @@ export default function HomePage() {
           50% {
             opacity: 0.5;
           }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(30, 41, 59, 0.3);
+          border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: linear-gradient(180deg, rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.6));
+          border-radius: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(180deg, rgba(147, 51, 234, 0.8), rgba(59, 130, 246, 0.8));
         }
       `}</style>
     </div>
