@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/LanguageProvider';
 
@@ -36,11 +36,19 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('guard');
 
+  // Auto-detect browser language
+  useEffect(() => {
+    const browserLang = navigator.language.split('-')[0].toUpperCase();
+    if (LANGUAGES.includes(browserLang as typeof LANGUAGES[0])) {
+      setLanguage(browserLang as typeof LANGUAGES[0]);
+    }
+  }, [setLanguage]);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden">
       {/* HEADER */}
       <header className="sticky top-0 z-[999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/30 backdrop-blur">
-        <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
+        <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-start gap-2">
           {/* LOGO */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-white text-sm sm:text-lg shadow-lg shadow-purple-600/50">
@@ -49,41 +57,6 @@ export default function HomePage() {
             <div className="hidden sm:block">
               <h1 className="font-black text-lg sm:text-xl text-white tracking-tight">k698</h1>
               <p className="text-xs text-purple-300">Kingdom Manager</p>
-            </div>
-          </div>
-
-          {/* LANGUAGE SELECTOR - MOBILE COMPACT */}
-          <div className="sm:hidden flex-shrink-0">
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as typeof language)}
-              className="px-2 py-1.5 bg-slate-800/80 border border-purple-500/50 rounded text-xs font-black text-white cursor-pointer focus:outline-none"
-            >
-              {LANGUAGES.map((lang) => (
-                <option key={lang} value={lang} className="bg-slate-900">
-                  {lang}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* LANGUAGE SELECTOR - DESKTOP */}
-          <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
-            <span className="text-xs text-slate-400 font-bold hidden md:inline">LANG:</span>
-            <div className="inline-flex bg-slate-800/80 border border-purple-500/50 rounded-lg p-1 gap-0.5 md:gap-1">
-              {LANGUAGES.map((lang) => (
-                <button
-                  key={lang}
-                  onClick={() => setLanguage(lang)}
-                  className={`px-1.5 md:px-2 py-1 text-xs font-black transition-all ${
-                    language === lang
-                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  {lang}
-                </button>
-              ))}
             </div>
           </div>
         </div>
@@ -258,9 +231,32 @@ export default function HomePage() {
         </div>
       </section>
 
-      <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center text-xs sm:text-sm text-slate-500 border-t border-purple-500/20 bg-slate-950">
-        <p>© {new Date().getFullYear()} k698 · {t('copyright')}</p>
-        <p className="text-xs text-slate-600 mt-2">Guns of Glory Kingdom Manager</p>
+      <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
+        {/* LANGUAGE SELECTOR GRID */}
+        <div className="max-w-5xl mx-auto mb-8">
+          <p className="text-xs text-slate-400 font-bold mb-4 uppercase tracking-widest">Language</p>
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 w-full">
+            {LANGUAGES.map((lang) => (
+              <button
+                key={lang}
+                onClick={() => setLanguage(lang)}
+                className={`py-2.5 sm:py-3 rounded-lg font-black text-xs sm:text-sm transition-all ${
+                  language === lang
+                    ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50 scale-105'
+                    : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
+                }`}
+              >
+                {lang}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* COPYRIGHT */}
+        <div className="border-t border-slate-700/30 pt-6">
+          <p className="text-xs sm:text-sm text-slate-500">© {new Date().getFullYear()} k698 · {t('copyright')}</p>
+          <p className="text-xs text-slate-600 mt-2">Guns of Glory Kingdom Manager</p>
+        </div>
       </footer>
 
       <style jsx>{`
