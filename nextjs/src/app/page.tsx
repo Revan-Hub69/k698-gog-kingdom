@@ -18,29 +18,6 @@ interface LeaderboardEntry {
   castles: { lastPowerUpdate: string; screenshotUrl?: string }[];
 }
 
-const MOCK_LEADERBOARD: LeaderboardEntry[] = [
-  { id: 1, nickname: 'DragonSlayer', rank: 1, totalCastles: 3, totalCurrentPower: 850000, totalHistoricalPower: 920000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 2, nickname: 'ShadowKing', rank: 2, totalCastles: 4, totalCurrentPower: 780000, totalHistoricalPower: 890000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 3, nickname: 'PhoenixRisen', rank: 3, totalCastles: 2, totalCurrentPower: 720000, totalHistoricalPower: 850000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 4, nickname: 'IceWizard', rank: 4, totalCastles: 5, totalCurrentPower: 680000, totalHistoricalPower: 800000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 5, nickname: 'ThunderLord', rank: 5, totalCastles: 3, totalCurrentPower: 650000, totalHistoricalPower: 750000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 6, nickname: 'SilentAssassin', rank: 6, totalCastles: 2, totalCurrentPower: 620000, totalHistoricalPower: 720000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 7, nickname: 'IronFist', rank: 7, totalCastles: 4, totalCurrentPower: 590000, totalHistoricalPower: 680000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 8, nickname: 'MysticSeer', rank: 8, totalCastles: 3, totalCurrentPower: 560000, totalHistoricalPower: 650000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 9, nickname: 'FrostByte', rank: 9, totalCastles: 2, totalCurrentPower: 530000, totalHistoricalPower: 620000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 10, nickname: 'InfernoBlaze', rank: 10, totalCastles: 3, totalCurrentPower: 500000, totalHistoricalPower: 590000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 11, nickname: 'VoidWalker', rank: 11, totalCastles: 2, totalCurrentPower: 470000, totalHistoricalPower: 560000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 12, nickname: 'StormChaser', rank: 12, totalCastles: 4, totalCurrentPower: 440000, totalHistoricalPower: 530000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 13, nickname: 'SilverArrow', rank: 13, totalCastles: 3, totalCurrentPower: 410000, totalHistoricalPower: 500000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 14, nickname: 'EchoKnight', rank: 14, totalCastles: 2, totalCurrentPower: 380000, totalHistoricalPower: 470000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 15, nickname: 'LunaEclipse', rank: 15, totalCastles: 3, totalCurrentPower: 350000, totalHistoricalPower: 440000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 16, nickname: 'NovaStar', rank: 16, totalCastles: 2, totalCurrentPower: 320000, totalHistoricalPower: 410000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 17, nickname: 'CrimsonEdge', rank: 17, totalCastles: 4, totalCurrentPower: 290000, totalHistoricalPower: 380000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 18, nickname: 'AzureWind', rank: 18, totalCastles: 3, totalCurrentPower: 260000, totalHistoricalPower: 350000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 19, nickname: 'ObsidianSoul', rank: 19, totalCastles: 2, totalCurrentPower: 230000, totalHistoricalPower: 320000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-  { id: 20, nickname: 'VenomFang', rank: 20, totalCastles: 3, totalCurrentPower: 200000, totalHistoricalPower: 290000, castles: [{ lastPowerUpdate: '2026-08-27' }] },
-];
-
 const TAB_DATA: Record<TabType, { title: string; descKey: string; contentKey: string; image: string; list: string[] }> = {
   guard: {
     title: 'guardWeapons',
@@ -127,10 +104,10 @@ export default function HomePage() {
       setFilteredLeaderboard(leaderboardData.slice(0, 20));
       setLeaderboardLoading(false);
     } catch (error) {
-      console.error('Error fetching leaderboard, using mock data:', error);
-      // Always use mock data as fallback
-      setLeaderboard(MOCK_LEADERBOARD);
-      setFilteredLeaderboard(MOCK_LEADERBOARD);
+      console.error('Error fetching leaderboard:', error);
+      // No mock fallback - show empty state for non-logged-in users
+      setLeaderboard([]);
+      setFilteredLeaderboard([]);
       setLeaderboardLoading(false);
     }
   };
@@ -433,19 +410,51 @@ export default function HomePage() {
             )}
           </div>
 
-          {/* SEARCH BAR */}
-          <div className="relative mb-4">
-            <input
-              type="text"
-              placeholder="Search by nickname..."
-              value={leaderboardSearch}
-              onChange={(e) => setLeaderboardSearch(e.target.value)}
-              className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/80 focus:ring-1 focus:ring-purple-500/30 transition"
-            />
-            <svg className="absolute right-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+          {!isLoggedIn ? (
+            <div className="space-y-6">
+              {/* INFO BOX - KVK RULES */}
+              <div className="bg-gradient-to-br from-orange-600/10 to-red-600/10 border border-orange-500/40 rounded-lg p-5 sm:p-6">
+                <div className="flex items-start gap-4">
+                  <div className="text-2xl flex-shrink-0">⚠️</div>
+                  <div>
+                    <h3 className="font-bold text-white text-lg mb-2">KvK Power Update Required</h3>
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      Players who do not submit or update their power data <strong>will not receive</strong> KvK rewards. 
+                      Regular updates ensure your kingdom is properly ranked and eligible for rewards. 
+                      Sign in to submit your power data and appear on the leaderboard.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* LOGIN PROMPT */}
+              <div className="text-center py-12">
+                <p className="text-slate-300 mb-6 text-lg font-semibold">{t('loginToView')}</p>
+                <div className="flex gap-3 justify-center">
+                  <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition">
+                    {t('signIn')}
+                  </button>
+                  <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
+                    {t('signUp')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* SEARCH BAR */}
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search by nickname..."
+                  value={leaderboardSearch}
+                  onChange={(e) => setLeaderboardSearch(e.target.value)}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/80 focus:ring-1 focus:ring-purple-500/30 transition"
+                />
+                <svg className="absolute right-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
 
           {/* SCROLLABLE TABLE */}
           <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg overflow-hidden max-h-[600px] overflow-y-auto custom-scrollbar">
@@ -531,9 +540,12 @@ export default function HomePage() {
           </div>
 
           {/* RESULTS COUNT */}
-          <div className="text-sm text-slate-400 text-right mt-4">
-            Showing {filteredLeaderboard.length} of {leaderboard.length} players
-          </div>
+           {/* RESULTS COUNT */}
+           <div className="text-sm text-slate-400 text-right">
+             Showing {filteredLeaderboard.length} of {leaderboard.length} players
+           </div>
+            </div>
+          )}
         </div>
       </section>
 
