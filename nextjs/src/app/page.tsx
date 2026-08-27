@@ -166,9 +166,9 @@ export default function HomePage() {
 
             {/* CONTENT */}
             <div className="order-1 lg:order-2 lg:col-span-3 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg md:rounded-2xl p-4 sm:p-5 md:p-8 lg:p-12 backdrop-blur w-full overflow-hidden min-h-[600px] sm:min-h-[700px] md:min-h-[500px]">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8 items-start w-full h-full">
-                {/* DESCRIPTION & LIST */}
-                <div className="md:col-span-1 space-y-4 sm:space-y-5 md:space-y-6 w-full">
+              <div className="grid grid-cols-1 gap-4 sm:gap-5 md:gap-6 lg:gap-8 items-start w-full h-full">
+                {/* DESCRIPTION & LIST - FULL WIDTH */}
+                <div className="space-y-4 sm:space-y-5 md:space-y-6 w-full">
                   <div>
                     <h3 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black text-white mb-3 sm:mb-4">
                       {t(TAB_DATA[activeTab].descKey)}
@@ -190,8 +190,8 @@ export default function HomePage() {
                   </ul>
                 </div>
 
-                {/* IMAGE */}
-                <div className="md:col-span-2 relative w-full aspect-video bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg md:rounded-xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-600/30">
+                {/* IMAGE - FULL WIDTH BELOW */}
+                <div className="relative w-full aspect-video bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg md:rounded-xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-600/30">
                   <Image
                     src={TAB_DATA[activeTab].image}
                     alt={t(TAB_DATA[activeTab].title)}
