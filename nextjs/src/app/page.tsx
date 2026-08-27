@@ -15,7 +15,7 @@ interface LeaderboardEntry {
   totalCurrentPower: number;
   totalHistoricalPower: number;
   rank: number;
-  castles: { lastPowerUpdate: string }[];
+  castles: { lastPowerUpdate: string; screenshotUrl?: string }[];
 }
 
 const MOCK_LEADERBOARD: LeaderboardEntry[] = [
@@ -456,50 +456,73 @@ export default function HomePage() {
               </div>
             ) : (
               <div className="space-y-2">
-                {filteredLeaderboard.map((entry) => (
-                  <div
-                    key={entry.id}
-                    className="p-3 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      {/* RANK + PLAYER */}
-                      <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-8 h-8 rounded flex items-center justify-center font-bold text-xs bg-slate-700/50 text-slate-300 flex-shrink-0">
-                          #{entry.rank}
-                        </div>
-                        <p className="font-semibold text-white truncate text-sm">
-                          {entry.nickname}
-                        </p>
-                      </div>
+                {filteredLeaderboard.map((entry) => {
+                  const lastUpdate = entry.castles[0]?.lastPowerUpdate 
+                    ? new Date(entry.castles[0].lastPowerUpdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
+                    : '-';
+                  const hasScreenshot = entry.castles.some(c => c.screenshotUrl);
 
-                      {/* POWER VALUES - COMPACT */}
-                      <div className="flex items-center gap-3 flex-shrink-0 text-xs">
-                        <div className="text-right">
-                          <p className="text-slate-400">Historical</p>
-                          <p className="font-bold text-green-400">
-                            {(entry.totalHistoricalPower / 1000).toFixed(0)}k
+                  return (
+                    <div
+                      key={entry.id}
+                      className="p-3 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50"
+                    >
+                      {/* ROW 1: RANK + NAME + SCREENSHOT + UPDATED */}
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <div className="w-8 h-8 rounded flex items-center justify-center font-bold text-xs bg-slate-700/50 text-slate-300 flex-shrink-0">
+                            #{entry.rank}
+                          </div>
+                          <p className="font-semibold text-white truncate text-sm">
+                            {entry.nickname}
                           </p>
                         </div>
-                        <div className="hidden sm:block text-right">
-                          <p className="text-slate-400">Current</p>
+
+                        <div className="flex items-center gap-2 flex-shrink-0 text-xs">
+                          {/* SCREENSHOT STATUS */}
+                          <span className={`font-bold ${hasScreenshot ? 'text-green-400' : 'text-red-400'}`}>
+                            {hasScreenshot ? '✓' : '✗'}
+                          </span>
+
+                          {/* LAST UPDATED */}
+                          <span className="text-slate-400 whitespace-nowrap">
+                            {lastUpdate}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* ROW 2: POWER VALUES */}
+                      <div className="flex items-center justify-between gap-3 text-xs">
+                        <div className="flex-1">
+                          <p className="text-slate-400">Attuale</p>
                           <p className="font-bold text-blue-400">
                             {(entry.totalCurrentPower / 1000).toFixed(0)}k
                           </p>
                         </div>
+
+                        <div className="flex-1">
+                          <p className="text-slate-400">Storico</p>
+                          <p className="font-bold text-green-400">
+                            {(entry.totalHistoricalPower / 1000).toFixed(0)}k
+                          </p>
+                        </div>
+
+                        {/* PROGRESS BAR INLINE */}
+                        <div className="flex-1">
+                          <p className="text-slate-400">Progresso</p>
+                          <div className="h-1.5 bg-slate-700/30 rounded-full overflow-hidden mt-0.5">
+                            <div
+                              className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
+                              style={{
+                                width: `${(entry.totalCurrentPower / entry.totalHistoricalPower) * 100}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-
-                    {/* PROGRESS BAR */}
-                    <div className="mt-2 h-1 bg-slate-700/30 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
-                        style={{
-                          width: `${(entry.totalCurrentPower / entry.totalHistoricalPower) * 100}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
