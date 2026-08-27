@@ -143,9 +143,9 @@ export default function HomePage() {
             {/* CONTENT (RIGHT SIDE) */}
             <div className="lg:col-span-3 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-2xl p-8 lg:p-12 backdrop-blur">
               {/* CONTENT GRID: Description Left + Image Right */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
                 {/* DESCRIPTION & LIST (LEFT) */}
-                <div className="space-y-6">
+                <div className="lg:col-span-1 space-y-6">
                   <div>
                     <h3 className="text-3xl font-black text-white mb-2">
                       {t(TAB_DATA[activeTab].descKey)}
@@ -153,14 +153,14 @@ export default function HomePage() {
                     <div className="h-1 w-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
                   </div>
 
-                  <p className="text-slate-300 text-lg leading-relaxed">
+                  <p className="text-slate-300 text-base leading-relaxed">
                     {t(TAB_DATA[activeTab].contentKey)}
                   </p>
 
-                  <ul className="space-y-3">
+                  <ul className="space-y-2.5">
                     {TAB_DATA[activeTab].list.map((key, idx) => (
-                      <li key={idx} className="flex items-start gap-3 text-slate-200">
-                        <span className="text-purple-400 font-black text-lg mt-0.5">▸</span>
+                      <li key={idx} className="flex items-start gap-2.5 text-slate-200 text-sm">
+                        <span className="text-purple-400 font-black text-lg mt-0">▸</span>
                         <span>{t(key)}</span>
                       </li>
                     ))}
@@ -168,12 +168,12 @@ export default function HomePage() {
                 </div>
 
                 {/* IMAGE (RIGHT) */}
-                <div className="relative w-full h-80 bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl overflow-hidden border border-purple-500/30 shadow-xl shadow-purple-600/20">
+                <div className="lg:col-span-2 relative w-full aspect-video bg-gradient-to-br from-slate-700 to-slate-900 rounded-xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-600/30">
                   <Image
                     src={TAB_DATA[activeTab].image}
                     alt={t(TAB_DATA[activeTab].title)}
                     fill
-                    className="object-cover"
+                    className="object-contain bg-slate-900"
                     priority={activeTab === 'guard'}
                   />
                 </div>
