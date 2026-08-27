@@ -140,11 +140,14 @@ export default function HomePage() {
             {t('spiritualPowerTitle')}
           </h2>
           
-          {/* BANNER - MOLTO SPAZIO SOPRA E SOTTO */}
-          <div className="mb-16 sm:mb-20 md:mb-28 bg-blue-900/20 border-2 border-red-500 rounded-lg p-6 sm:p-8 md:p-10 backdrop-blur-md">
-            <p className="text-sm sm:text-base md:text-lg text-red-400 font-bold text-center leading-relaxed">
-              ⚠️ {t('spiritualPowerBanner')}
-            </p>
+          {/* BANNER - GLASSMORPHISM ELEGANTE */}
+          <div className="mb-16 sm:mb-20 md:mb-28 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 border border-red-500/40 rounded-xl p-6 sm:p-8 md:p-10 backdrop-blur-xl shadow-2xl shadow-red-500/10">
+            <div className="flex items-start gap-4 sm:gap-5">
+              <div className="text-2xl sm:text-3xl md:text-4xl mt-1">⚠️</div>
+              <p className="text-sm sm:text-base md:text-lg text-slate-100 font-semibold text-center lg:text-left leading-relaxed">
+                {t('spiritualPowerBanner')}
+              </p>
+            </div>
           </div>
 
           {/* MOBILE: STACK + SCROLL TABS / DESKTOP: TABS LEFT + CONTENT RIGHT */}
