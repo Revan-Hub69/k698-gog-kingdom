@@ -7,6 +7,7 @@ type Language = 'EN' | 'IT' | 'PL' | 'ZH' | 'DE' | 'FR' | 'RU' | 'ES';
 const translations: Record<Language, Record<string, string>> = {
   EN: {
     headerBranding: 'Well Done! We\'re Champion Region!!',
+    projectName: 'k698 - Renaissance Project',
     headerSubtitle: 'Now let\'s try to recover from the mistakes made before it\'s too late',
     spiritualPowerTitle: 'Spiritual Power Management',
     spiritualPowerBanner: 'SPOILER ALERT: This is not advice or a friendly request. This is a rule to follow.',
@@ -37,6 +38,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   IT: {
     headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
+    projectName: 'k698 - Progetto Rinascita',
     headerSubtitle: 'Ora proviamo a recuperare agli errori commessi prima che sia troppo tardi',
     spiritualPowerTitle: 'Gestione del Potere Spirituale',
     spiritualPowerBanner: 'SPOILER ALERT: Questo non è un consiglio nè una richiesta amichevole. Questa è una regola da seguire.',
@@ -67,6 +69,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   PL: {
     headerBranding: 'Świetnie! Jesteśmy Regionem Mistrzów!!',
+    projectName: 'k698 - Projekt Odrodzenia',
     headerSubtitle: 'Teraz spróbujmy naprawić błędy popełnione zanim będzie za późno',
     spiritualPowerTitle: 'Zarządzanie Mocą Duchową',
     spiritualPowerBanner: 'SPOILER ALERT: To nie jest porada ani przyjazna prośba. To zasada, którą należy stosować.',
@@ -97,6 +100,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   ZH: {
     headerBranding: '做得好！我们是冠军地区！！',
+    projectName: 'k698 - 复兴计划',
     headerSubtitle: '现在让我们尝试纠正之前犯下的错误，趁还不晚',
     spiritualPowerTitle: '精神力管理',
     spiritualPowerBanner: '剧透警告: 这不是建议，也不是友好的请求。这是必须遵循的规则。',
@@ -127,6 +131,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   DE: {
     headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
+    projectName: 'k698 - Wiedergeburtsprojekt',
     headerSubtitle: 'Jetzt versuchen wir, die Fehler zu beheben, bevor es zu spät ist',
     spiritualPowerTitle: 'Verwaltung der Spirituellen Kraft',
     spiritualPowerBanner: 'SPOILER ALERT: Dies ist kein Ratschlag und keine freundliche Bitte. Das ist eine Regel, die man befolgen muss.',
@@ -157,6 +162,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   FR: {
     headerBranding: 'Bien Fait! Nous Sommes Région Championne!!',
+    projectName: 'k698 - Projet Renaissance',
     headerSubtitle: 'Maintenant, essayons de corriger les erreurs commises avant qu\'il ne soit trop tard',
     spiritualPowerTitle: 'Gestion du Pouvoir Spirituel',
     spiritualPowerBanner: 'SPOILER ALERT: Ce n\'est pas un conseil, ni une demande amicale. C\'est une règle à suivre.',
@@ -187,6 +193,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   RU: {
     headerBranding: 'Отлично Сделано! Мы - Чемпионский Регион!!',
+    projectName: 'k698 - Проект Возрождения',
     headerSubtitle: 'Теперь давайте попытаемся исправить ошибки, допущенные до того, как будет слишком поздно',
     spiritualPowerTitle: 'Управление Духовной Силой',
     spiritualPowerBanner: 'ВНИМАНИЕ СПОЙЛЕР: Это не совет и не дружеская просьба. Это правило, которое необходимо соблюдать.',
@@ -217,6 +224,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   ES: {
     headerBranding: '¡Bien Hecho! ¡Somos la Región Campeona!!',
+    projectName: 'k698 - Proyecto Renacimiento',
     headerSubtitle: 'Ahora intentemos recuperarnos de los errores cometidos antes de que sea demasiado tarde',
     spiritualPowerTitle: 'Gestión del Poder Espiritual',
     spiritualPowerBanner: 'ALERTA DE SPOILER: Esto no es un consejo, ni una solicitud amistosa. Es una regla que debe seguirse.',

@@ -47,25 +47,32 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
-      {/* HEADER - STICKY */}
-      <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/30 backdrop-blur-md shadow-lg shadow-slate-950/50 will-change-transform">
-        <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
-          {/* LOGO - LEFT */}
-          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center font-black text-white text-sm sm:text-lg shadow-lg shadow-purple-600/50">
-              K
-            </div>
+      {/* HEADER - COMPACT */}
+      <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-md shadow-lg shadow-slate-950/30">
+        <div className="w-full px-3 sm:px-4 py-2 sm:py-2.5 flex items-center justify-between">
+          {/* LOGO - SVG PREMIUM */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <svg className="w-8 h-8 sm:w-10 sm:h-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="4" stroke="url(#grad)" strokeWidth="1.5"/>
+              <circle cx="12" cy="12" r="8" stroke="url(#grad)" strokeWidth="1.5" fill="none"/>
+              <path d="M12 8v8M8 12h8" stroke="url(#grad)" strokeWidth="1.5" strokeLinecap="round"/>
+              <defs>
+                <linearGradient id="grad" x1="0" y1="0" x2="24" y2="24">
+                  <stop offset="0%" stopColor="#a855f7"/>
+                  <stop offset="100%" stopColor="#3b82f6"/>
+                </linearGradient>
+              </defs>
+            </svg>
             <div className="hidden sm:block">
-              <h1 className="font-black text-lg sm:text-xl text-white tracking-tight">k698</h1>
-              <p className="text-xs text-purple-300">Kingdom Manager</p>
+              <h1 className="font-black text-sm text-white tracking-tight">{t('projectName')}</h1>
             </div>
           </div>
 
-          {/* LANGUAGE DROPDOWN - RIGHT */}
+          {/* LANGUAGE DROPDOWN */}
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-sm rounded-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 sm:py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xs sm:text-sm rounded-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
             >
               <span>{language}</span>
               <span className={`transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}>▼</span>
@@ -97,21 +104,27 @@ export default function HomePage() {
       </header>
 
       {/* HERO SECTION */}
-      <section className="relative py-12 sm:py-20 md:py-32 px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 opacity-30 pointer-events-none">
-          <div className="absolute top-10 left-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-1/4 w-48 sm:w-96 h-48 sm:h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+      <section className="relative pt-16 sm:pt-20 md:pt-28 pb-16 sm:pb-20 md:pb-24 px-4 text-center overflow-hidden">
+        {/* GEOMETRIC BACKGROUND ELEMENTS */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-1/4 w-48 h-48 border border-purple-500/20 rounded-lg rotate-45 opacity-50"></div>
+          <div className="absolute bottom-1/4 left-1/3 w-32 h-32 border border-blue-500/20 rounded-full opacity-50"></div>
         </div>
 
-        <div className="relative max-w-4xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black text-white mb-4 sm:mb-6 tracking-tight drop-shadow-lg">
+        <div className="relative max-w-5xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg text-purple-300 font-bold mb-4 sm:mb-6 tracking-widest uppercase drop-shadow">
+            {t('projectName')}
+          </p>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tight drop-shadow-lg">
             {t('headerBranding')}
           </h1>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-200 mb-6 sm:mb-10 leading-relaxed max-w-2xl mx-auto font-medium drop-shadow">
+          <p className="text-lg sm:text-xl md:text-2xl text-slate-200 mb-10 leading-relaxed max-w-3xl mx-auto font-medium drop-shadow">
             {t('headerSubtitle')}
           </p>
           <div className="flex gap-4 justify-center">
-            <div className="h-1 sm:h-1.5 w-24 sm:w-32 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 rounded-full"></div>
+            <div className="h-1.5 w-32 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 rounded-full"></div>
           </div>
         </div>
       </section>
@@ -232,9 +245,6 @@ export default function HomePage() {
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl text-purple-300 mb-12 sm:mb-14 md:mb-16 text-center font-bold drop-shadow">
             {t('eventsSubtitle')}
-          </p>
-          <p className="text-base sm:text-lg text-slate-300 mb-12 sm:mb-14 md:mb-16 text-center">
-            {t('eventsDesc')}
           </p>
 
           <div className="space-y-4 sm:space-y-6 w-full">
