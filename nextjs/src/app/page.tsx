@@ -141,7 +141,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden">
       {/* HEADER - ELEGANT TIER 1 */}
       <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-lg shadow-2xl shadow-purple-950/30">
         <div className="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
@@ -308,6 +308,7 @@ export default function HomePage() {
                     fill
                     className="object-contain bg-slate-900"
                     priority={activeTab === 'guard'}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 50vw"
                   />
                 </div>
               </div>
@@ -348,7 +349,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
-                <Image src="/equipaggiamento.png" alt="Equipment" fill className="object-cover" />
+                <Image src="/equipaggiamento.png" alt="Equipment" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
             </div>
 
@@ -366,7 +367,7 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
-                <Image src="/parti-della-nave.png" alt="Ship Parts" fill className="object-cover" />
+                <Image src="/parti-della-nave.png" alt="Ship Parts" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
             </div>
 
