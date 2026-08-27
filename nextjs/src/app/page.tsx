@@ -106,18 +106,29 @@ export default function HomePage() {
 
   const fetchLeaderboard = async () => {
     try {
-      const res = await fetch('/api/leaderboard');
-      if (!res.ok) throw new Error('Failed to fetch');
+      const res = await fetch('/api/leaderboard', { 
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      
       const data = await res.json();
       
       // Ensure data is an array
       const leaderboardData = Array.isArray(data) ? data : data.data || [];
+      if (leaderboardData.length === 0) {
+        throw new Error('No data');
+      }
+      
       setLeaderboard(leaderboardData.slice(0, 20)); // Top 20
       setFilteredLeaderboard(leaderboardData.slice(0, 20));
       setLeaderboardLoading(false);
     } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-      // Use mock data on error
+      console.error('Error fetching leaderboard, using mock data:', error);
+      // Always use mock data as fallback
       setLeaderboard(MOCK_LEADERBOARD);
       setFilteredLeaderboard(MOCK_LEADERBOARD);
       setLeaderboardLoading(false);
@@ -444,64 +455,42 @@ export default function HomePage() {
                 No players found matching &quot;{leaderboardSearch}&quot;
               </div>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {filteredLeaderboard.map((entry) => (
                   <div
                     key={entry.id}
-                    className="p-4 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50 hover:scale-102"
+                    className="p-3 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50"
                   >
-                    <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center justify-between gap-3">
                       {/* RANK + PLAYER */}
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm bg-slate-700/50 text-slate-300">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-8 h-8 rounded flex items-center justify-center font-bold text-xs bg-slate-700/50 text-slate-300 flex-shrink-0">
                           #{entry.rank}
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="font-bold truncate text-white">
-                            {entry.nickname}
-                          </p>
-                          <p className="text-xs text-slate-400">
-                            {entry.totalCastles} castle{entry.totalCastles !== 1 ? 's' : ''}
-                          </p>
-                        </div>
+                        <p className="font-semibold text-white truncate text-sm">
+                          {entry.nickname}
+                        </p>
                       </div>
 
-                      {/* POWER VALUES */}
-                      <div className="hidden sm:flex items-center gap-6">
+                      {/* POWER VALUES - COMPACT */}
+                      <div className="flex items-center gap-3 flex-shrink-0 text-xs">
                         <div className="text-right">
-                          <p className="text-xs text-slate-400">Historical</p>
+                          <p className="text-slate-400">Historical</p>
                           <p className="font-bold text-green-400">
                             {(entry.totalHistoricalPower / 1000).toFixed(0)}k
                           </p>
                         </div>
-                        <div className="text-right">
-                          <p className="text-xs text-slate-400">Current</p>
+                        <div className="hidden sm:block text-right">
+                          <p className="text-slate-400">Current</p>
                           <p className="font-bold text-blue-400">
                             {(entry.totalCurrentPower / 1000).toFixed(0)}k
                           </p>
                         </div>
                       </div>
-
-                      {/* SCREENSHOT STATUS */}
-                      <div className="flex-shrink-0">
-                        <span className="text-xl">✓</span>
-                      </div>
-                    </div>
-
-                    {/* MOBILE POWER VALUES */}
-                    <div className="sm:hidden mt-3 flex gap-4 text-xs">
-                      <div className="flex-1">
-                        <p className="text-slate-400">Historical</p>
-                        <p className="font-bold text-green-400">{(entry.totalHistoricalPower / 1000).toFixed(0)}k</p>
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-slate-400">Current</p>
-                        <p className="font-bold text-blue-400">{(entry.totalCurrentPower / 1000).toFixed(0)}k</p>
-                      </div>
                     </div>
 
                     {/* PROGRESS BAR */}
-                    <div className="mt-3 h-1 bg-slate-700/30 rounded-full overflow-hidden">
+                    <div className="mt-2 h-1 bg-slate-700/30 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
                         style={{
