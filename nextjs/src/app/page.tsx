@@ -380,6 +380,46 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* TIPS & TRICKS SECTION */}
+      <section className="py-16 sm:py-20 md:py-24 px-4 bg-gradient-to-b from-slate-950 to-slate-900">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 sm:mb-6 text-center tracking-tight">
+            {t('tipsTitle')}
+          </h2>
+          <p className="text-sm sm:text-base text-slate-400 mb-10 sm:mb-14 text-center max-w-2xl mx-auto">
+            {t('tipsSubtitle')}
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            {[
+              { icon: '⚡', titleKey: 'tip1Title', descKey: 'tip1Desc' },
+              { icon: '🎯', titleKey: 'tip2Title', descKey: 'tip2Desc' },
+              { icon: '📊', titleKey: 'tip3Title', descKey: 'tip3Desc' },
+              { icon: '🔄', titleKey: 'tip4Title', descKey: 'tip4Desc' },
+              { icon: '💡', titleKey: 'tip5Title', descKey: 'tip5Desc' },
+              { icon: '⭐', titleKey: 'tip6Title', descKey: 'tip6Desc' },
+            ].map((tip, idx) => (
+              <div
+                key={idx}
+                className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/20 rounded-lg p-5 sm:p-6 hover:border-purple-500/40 transition-colors"
+              >
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl sm:text-3xl flex-shrink-0">{tip.icon}</span>
+                  <div className="flex-1">
+                    <h3 className="text-base sm:text-lg font-bold text-purple-300 mb-1 sm:mb-2">
+                      {t(tip.titleKey)}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                      {t(tip.descKey)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
         {/* COPYRIGHT */}
         <p className="text-xs sm:text-sm text-slate-500">© {new Date().getFullYear()} k698 · {t('copyright')}</p>
