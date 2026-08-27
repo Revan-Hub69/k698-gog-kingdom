@@ -46,6 +46,45 @@ const translations: Record<Language, Record<string, string>> = {
     applyCoa: 'Cavalry: Replace Infantry and Distanza with R17 Coats of Arms',
     calculateImpact: 'Distanza: Replace Cavalry and Infantry with R17 Coats of Arms',
     maximizePerformance: 'Exception: Rasse and Cristian are excluded from this strategy',
+    
+    // Leaderboard
+    leaderboardTitle: 'Kingdom Leaderboard',
+    leaderboardDesc: 'Ranked by Historical Power',
+    loginToView: 'Sign in to view the leaderboard',
+    signIn: 'Sign In',
+    signUp: 'Sign Up',
+    refreshLeaderboard: 'Refresh',
+    addCastle: '+ Add Castle',
+    myAccount: '👤 My Account',
+    
+    // Leaderboard Table
+    rank: 'Rank',
+    castleName: 'Castle Name',
+    historicalPower: 'Historical Power',
+    currentPower: 'Current Power',
+    screenshot: 'Screenshot',
+    lastUpdated: 'Last Updated',
+    
+    // Account Sheet
+    myKingdom: '👑 My Kingdom',
+    nickname: 'Nickname',
+    email: 'Email',
+    myCastles: '🏰 My Castles',
+    settings: '⚙️ Settings',
+    changeEmail: 'Change Email',
+    changePassword: 'Change Password',
+    save: 'Save',
+    logout: 'Logout',
+    
+    // Auth
+    emailLabel: 'Email',
+    passwordLabel: 'Password',
+    nicknameLabel: 'Nickname',
+    registerTitle: 'Create Account',
+    loginTitle: 'Sign In',
+    alreadyHaveAccount: 'Already have an account?',
+    dontHaveAccount: 'Don\'t have an account?',
+    
     copyright: 'Guns of Glory',
   },
   IT: {
@@ -88,6 +127,45 @@ const translations: Record<Language, Record<string, string>> = {
      applyCoa: 'Cavalleria: Sostituisci Fanteria e Distanza con Stemmi R17',
      calculateImpact: 'Distanza: Sostituisci Cavalleria e Fanteria con Stemmi R17',
      maximizePerformance: 'Eccezione: Rasse e Cristian sono esclusi da questa strategia',
+     
+     // Leaderboard
+     leaderboardTitle: 'Classifica del Regno',
+     leaderboardDesc: 'Ordinato per Potere Storico',
+     loginToView: 'Accedi per visualizzare la classifica',
+     signIn: 'Accedi',
+     signUp: 'Registrati',
+     refreshLeaderboard: 'Aggiorna',
+     addCastle: '+ Aggiungi Castello',
+     myAccount: '👤 Il Mio Account',
+     
+     // Leaderboard Table
+     rank: 'Posizione',
+     castleName: 'Nome Castello',
+     historicalPower: 'Potere Storico',
+     currentPower: 'Potere Attuale',
+     screenshot: 'Screenshot',
+     lastUpdated: 'Ultimo Aggiornamento',
+     
+     // Account Sheet
+     myKingdom: '👑 Il Mio Regno',
+     nickname: 'Nickname',
+     email: 'Email',
+     myCastles: '🏰 I Miei Castelli',
+     settings: '⚙️ Impostazioni',
+     changeEmail: 'Cambia Email',
+     changePassword: 'Cambia Password',
+     save: 'Salva',
+     logout: 'Esci',
+     
+     // Auth
+     emailLabel: 'Email',
+     passwordLabel: 'Password',
+     nicknameLabel: 'Nickname',
+     registerTitle: 'Crea Account',
+     loginTitle: 'Accedi',
+     alreadyHaveAccount: 'Hai già un account?',
+     dontHaveAccount: 'Non hai un account?',
+     
      copyright: 'Guns of Glory',
    },
   PL: {
