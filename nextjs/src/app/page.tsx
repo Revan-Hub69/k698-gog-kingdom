@@ -8,6 +8,16 @@ const LANGUAGES = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 
 type TabType = 'guard' | 'curiosities' | 'coa';
 
+interface LeaderboardEntry {
+  id: number;
+  nickname: string;
+  totalCastles: number;
+  totalCurrentPower: number;
+  totalHistoricalPower: number;
+  rank: number;
+  castles: { lastPowerUpdate: string }[];
+}
+
 const TAB_DATA: Record<TabType, { title: string; descKey: string; contentKey: string; image: string; list: string[] }> = {
   guard: {
     title: 'guardWeapons',
@@ -36,6 +46,10 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('guard');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboardLoading, setLeaderboardLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showAccountSheet, setShowAccountSheet] = useState(false);
 
   // Auto-detect browser language
   useEffect(() => {
@@ -44,6 +58,29 @@ export default function HomePage() {
       setLanguage(browserLang as typeof LANGUAGES[0]);
     }
   }, [setLanguage]);
+
+  // Fetch leaderboard
+  useEffect(() => {
+    fetchLeaderboard();
+    checkAuth();
+  }, []);
+
+  const fetchLeaderboard = async () => {
+    try {
+      const res = await fetch('/api/leaderboard');
+      const data = await res.json();
+      setLeaderboard(data.slice(0, 5)); // Top 5 only
+      setLeaderboardLoading(false);
+    } catch (error) {
+      console.error('Error fetching leaderboard:', error);
+      setLeaderboardLoading(false);
+    }
+  };
+
+  const checkAuth = () => {
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
@@ -317,11 +354,109 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* LEADERBOARD SECTION - INLINE */}
+      <section className="py-24 px-4 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border-t border-purple-500/20">
+        <div className="max-w-6xl mx-auto w-full">
+          <div className="flex items-center justify-between mb-16">
+            <div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 tracking-tight drop-shadow">
+                {t('leaderboardTitle')}
+              </h2>
+              <p className="text-slate-300 text-sm sm:text-base">{t('leaderboardDesc')}</p>
+            </div>
+            {isLoggedIn && (
+              <button
+                onClick={fetchLeaderboard}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm sm:text-base"
+              >
+                {t('refreshLeaderboard')}
+              </button>
+            )}
+          </div>
+
+          {!isLoggedIn ? (
+            <div className="text-center py-16">
+              <p className="text-slate-300 mb-8 text-lg">{t('loginToView')}</p>
+              <div className="blur-sm pointer-events-none">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-purple-500/30">
+                      <th className="px-4 py-3 text-left text-slate-400 font-semibold">{t('rank')}</th>
+                      <th className="px-4 py-3 text-left text-slate-400 font-semibold">{t('castleName')}</th>
+                      <th className="px-4 py-3 text-right text-slate-400 font-semibold">{t('historicalPower')}</th>
+                      <th className="px-4 py-3 text-right text-slate-400 font-semibold">{t('currentPower')}</th>
+                    </tr>
+                  </thead>
+                </table>
+              </div>
+              <div className="flex gap-3 justify-center mt-8">
+                <button className="px-6 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition">
+                  {t('signIn')}
+                </button>
+                <button className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
+                  {t('signUp')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg overflow-hidden">
+              {leaderboardLoading ? (
+                <div className="py-16 text-center text-slate-400">{t('leaderboardDesc')}</div>
+              ) : (
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-purple-500/30 bg-slate-800/40">
+                      <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('rank')}</th>
+                      <th className="px-4 py-4 text-left text-purple-300 font-bold text-sm">{t('castleName')}</th>
+                      <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('historicalPower')}</th>
+                      <th className="px-4 py-4 text-right text-purple-300 font-bold text-sm">{t('currentPower')}</th>
+                      <th className="px-4 py-4 text-center text-purple-300 font-bold text-sm">{t('screenshot')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leaderboard.map((entry) => (
+                      <tr key={entry.id} className="border-b border-slate-800/50 hover:bg-slate-800/20 transition">
+                        <td className="px-4 py-4 text-white font-bold text-sm">#{entry.rank}</td>
+                        <td className="px-4 py-4 text-white text-sm">{entry.nickname}</td>
+                        <td className="px-4 py-4 text-right text-green-400 font-semibold text-sm">
+                          {entry.totalHistoricalPower.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-4 text-right text-blue-400 font-semibold text-sm">
+                          {entry.totalCurrentPower.toLocaleString()}
+                        </td>
+                        <td className="px-4 py-4 text-center text-sm">
+                          <span className="text-green-400 font-bold">✓</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+
       <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
         {/* COPYRIGHT */}
         <p className="text-xs sm:text-sm text-slate-500">© {new Date().getFullYear()} k698 · {t('copyright')}</p>
         <p className="text-xs text-slate-600 mt-2">Guns of Glory Kingdom Manager</p>
       </footer>
+
+      {/* ACCOUNT SHEET PLACEHOLDER */}
+      {showAccountSheet && isLoggedIn && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setShowAccountSheet(false)}>
+          <div
+            className="fixed bottom-0 left-0 right-0 bg-slate-900 rounded-t-2xl border-t border-purple-500/20 p-6 max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-2xl font-black text-white mb-6">{t('myKingdom')}</h2>
+              <p className="text-slate-400">Account Sheet - Coming Soon</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         @keyframes pulse {
