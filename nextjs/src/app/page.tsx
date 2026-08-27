@@ -190,8 +190,8 @@ export default function HomePage() {
                   </ul>
                 </div>
 
-                {/* IMAGE - FULL WIDTH BELOW */}
-                <div className="relative w-full aspect-video bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg md:rounded-xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-600/30">
+                {/* IMAGE - SMALLER */}
+                <div className="relative w-full max-w-lg mx-auto aspect-video bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg md:rounded-xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-600/30">
                   <Image
                     src={TAB_DATA[activeTab].image}
                     alt={t(TAB_DATA[activeTab].title)}
