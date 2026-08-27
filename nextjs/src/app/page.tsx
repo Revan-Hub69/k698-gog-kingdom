@@ -74,9 +74,12 @@ export default function HomePage() {
                 </linearGradient>
               </defs>
             </svg>
-            <div className="flex flex-col">
-              <h1 className="font-black text-xs sm:text-sm text-white tracking-widest leading-tight">k698</h1>
-              <p className="text-xs text-purple-400 font-semibold tracking-wider">RENAISSANCE</p>
+            <div className="flex flex-col gap-0.5">
+              <div className="flex items-baseline gap-1">
+                <h1 className="font-black text-sm sm:text-base text-white tracking-tighter leading-tight bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">k698</h1>
+                <span className="text-xs text-purple-500/60 font-bold tracking-widest">●</span>
+              </div>
+              <p className="text-xs text-purple-400/70 font-semibold tracking-wider leading-none">RENAISSANCE</p>
             </div>
           </div>
 
@@ -127,16 +130,6 @@ export default function HomePage() {
         </div>
 
         <div className="relative max-w-5xl mx-auto">
-          {/* PROJECT NAME PILL */}
-          <div className="inline-block mb-6 sm:mb-8 md:mb-10">
-            <div className="px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 rounded-full border border-purple-500/40 bg-gradient-to-r from-purple-500/15 via-purple-500/10 to-blue-500/15 backdrop-blur-md hover:border-purple-500/60 transition-all">
-              <p className="text-xs sm:text-sm md:text-base text-purple-300 font-bold tracking-widest uppercase flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-purple-400 to-blue-400"></span>
-                {t('projectName')}
-              </p>
-            </div>
-          </div>
-          
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tight drop-shadow-lg">
             {t('headerBranding')}
           </h1>
