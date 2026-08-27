@@ -52,15 +52,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* LANGUAGE SELECTOR */}
-          <div className="flex items-center gap-2">
+          {/* LANGUAGE SELECTOR - DESKTOP BUTTONS */}
+          <div className="hidden md:flex items-center gap-2">
             <span className="text-xs text-slate-400 font-bold">LANG:</span>
             <div className="inline-flex bg-slate-800/80 border border-purple-500/50 rounded-lg p-1 gap-1">
               {LANGUAGES.map((lang) => (
                 <button
                   key={lang}
                   onClick={() => setLanguage(lang)}
-                  className={`px-3 py-1.5 text-xs font-black transition-all ${
+                  className={`px-2 py-1 text-xs font-black transition-all ${
                     language === lang
                       ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
                       : 'text-slate-400 hover:text-white'
@@ -71,6 +71,19 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+
+          {/* LANGUAGE SELECTOR - MOBILE SELECT */}
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value as typeof language)}
+            className="md:hidden px-2 py-1.5 bg-slate-800/80 border border-purple-500/50 rounded text-xs font-black text-white cursor-pointer focus:outline-none focus:border-purple-400"
+          >
+            {LANGUAGES.map((lang) => (
+              <option key={lang} value={lang} className="bg-slate-900">
+                {lang}
+              </option>
+            ))}
+          </select>
         </div>
       </header>
 
