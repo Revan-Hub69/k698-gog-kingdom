@@ -350,6 +350,36 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FAQ SECTION */}
+      <section className="py-16 sm:py-20 md:py-24 px-4 bg-slate-950">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-8 sm:mb-12 text-center tracking-tight">
+            {t('faqTitle')}
+          </h2>
+          
+          <div className="space-y-4 sm:space-y-6">
+            {[
+              { question: 'faq1Q', answer: 'faq1A' },
+              { question: 'faq2Q', answer: 'faq2A' },
+              { question: 'faq3Q', answer: 'faq3A' },
+              { question: 'faq4Q', answer: 'faq4A' },
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="bg-gradient-to-br from-slate-800/40 to-slate-900/40 border border-purple-500/20 rounded-lg p-5 sm:p-6"
+              >
+                <h3 className="text-base sm:text-lg font-bold text-purple-300 mb-2 sm:mb-3">
+                  {t(item.question)}
+                </h3>
+                <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                  {t(item.answer)}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
         {/* COPYRIGHT */}
         <p className="text-xs sm:text-sm text-slate-500">© {new Date().getFullYear()} k698 · {t('copyright')}</p>
