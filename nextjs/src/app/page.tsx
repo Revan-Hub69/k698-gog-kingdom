@@ -141,10 +141,15 @@ export default function HomePage() {
           </h2>
           
           {/* BANNER - GLASSMORPHISM ELEGANTE */}
-          <div className="mb-16 sm:mb-20 md:mb-28 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-blue-500/10 border border-red-500/40 rounded-xl p-6 sm:p-8 md:p-10 backdrop-blur-xl shadow-2xl shadow-red-500/10">
-            <div className="flex items-start gap-4 sm:gap-5">
-              <div className="text-2xl sm:text-3xl md:text-4xl mt-1">⚠️</div>
-              <p className="text-sm sm:text-base md:text-lg text-slate-100 font-semibold text-center lg:text-left leading-relaxed">
+          <div className="mb-16 sm:mb-20 md:mb-28 bg-gradient-to-r from-slate-800/40 via-slate-900/40 to-slate-800/40 border border-red-500/60 rounded-xl p-6 sm:p-8 md:p-10 backdrop-blur-2xl shadow-2xl shadow-red-600/20">
+            <div className="flex items-start gap-4 sm:gap-5 md:gap-6">
+              {/* PREMIUM SVG ICON */}
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex-shrink-0 mt-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 20h20L12 2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" className="text-red-500"/>
+                <circle cx="12" cy="16" r="1" fill="currentColor" className="text-red-500"/>
+                <line x1="12" y1="8" x2="12" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-red-500"/>
+              </svg>
+              <p className="text-sm sm:text-base md:text-lg text-slate-100 font-semibold leading-relaxed">
                 {t('spiritualPowerBanner')}
               </p>
             </div>
