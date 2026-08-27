@@ -14,17 +14,14 @@ export async function GET(req: NextRequest) {
             castleName: true,
             currentPower: true,
             historicalMaxPower: true,
+            screenshotUrl: true,
+            lastPowerUpdate: true,
           },
-        },
-      },
-      orderBy: {
-        castles: {
-          _count: 'desc',
         },
       },
     });
 
-    // Calculate totals and rank
+    // Calculate totals and rank by HISTORICAL POWER
     const rankedLeaderboard = leaderboard
       .map((user) => ({
         id: user.id,
@@ -34,7 +31,7 @@ export async function GET(req: NextRequest) {
         totalHistoricalPower: user.castles.reduce((sum, c) => sum + c.historicalMaxPower, 0),
         castles: user.castles,
       }))
-      .sort((a, b) => b.totalCurrentPower - a.totalCurrentPower)
+      .sort((a, b) => b.totalHistoricalPower - a.totalHistoricalPower)
       .map((user, index) => ({
         ...user,
         rank: index + 1,
@@ -49,3 +46,4 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
