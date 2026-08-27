@@ -140,17 +140,16 @@ export default function HomePage() {
             {t('spiritualPowerTitle')}
           </h2>
 
-          {/* MOBILE: HORIZONTAL SCROLL TABS + STACK CONTENT */}
-          {/* DESKTOP: TABS LEFT + CONTENT RIGHT */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
+          {/* MOBILE: STACK + SCROLL TABS / DESKTOP: TABS LEFT + CONTENT RIGHT */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {/* TABS */}
-            <div className="lg:sticky lg:top-[80px] h-fit space-y-2 lg:space-y-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit space-y-2 lg:space-y-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
               <div className="flex lg:flex-col gap-2 lg:gap-3 w-max lg:w-full">
                 {(Object.entries(TAB_DATA) as [TabType, typeof TAB_DATA['guard']][]).map(([tabKey, tabInfo]) => (
                   <button
                     key={tabKey}
                     onClick={() => setActiveTab(tabKey as TabType)}
-                    className={`px-4 sm:px-6 py-3 sm:py-4 rounded-lg md:rounded-xl font-bold text-sm sm:text-base text-left transition-all duration-300 flex-shrink-0 lg:flex-shrink whitespace-nowrap lg:whitespace-normal ${
+                    className={`px-4 sm:px-5 md:px-6 py-2.5 sm:py-3 md:py-4 rounded-lg md:rounded-xl font-bold text-xs sm:text-sm md:text-base text-left transition-all duration-300 flex-shrink-0 lg:flex-shrink whitespace-nowrap lg:whitespace-normal ${
                       activeTab === tabKey
                         ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-2xl shadow-purple-500/50 scale-100 lg:scale-105'
                         : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
@@ -166,25 +165,25 @@ export default function HomePage() {
             </div>
 
             {/* CONTENT */}
-            <div className="lg:col-span-3 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg md:rounded-2xl p-4 sm:p-6 md:p-8 lg:p-12 backdrop-blur w-full overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 items-start w-full">
+            <div className="order-1 lg:order-2 lg:col-span-3 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg md:rounded-2xl p-4 sm:p-5 md:p-8 lg:p-12 backdrop-blur w-full overflow-hidden">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8 items-start w-full">
                 {/* DESCRIPTION & LIST */}
-                <div className="md:col-span-1 space-y-4 sm:space-y-6 w-full">
+                <div className="md:col-span-1 space-y-3 sm:space-y-4 md:space-y-6 w-full">
                   <div>
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-white mb-2">
+                    <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-black text-white mb-2 sm:mb-3">
                       {t(TAB_DATA[activeTab].descKey)}
                     </h3>
-                    <div className="h-1 w-12 sm:w-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
+                    <div className="h-0.5 sm:h-1 w-10 sm:w-12 md:w-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
                   </div>
 
-                  <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+                  <p className="text-xs sm:text-sm md:text-base text-slate-300 leading-relaxed">
                     {t(TAB_DATA[activeTab].contentKey)}
                   </p>
 
-                  <ul className="space-y-2 sm:space-y-2.5 w-full">
+                  <ul className="space-y-2 sm:space-y-2.5 md:space-y-3 w-full">
                     {TAB_DATA[activeTab].list.map((key, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-slate-200 text-xs sm:text-sm w-full">
-                        <span className="text-purple-400 font-black text-base sm:text-lg flex-shrink-0">▸</span>
+                      <li key={idx} className="flex items-start gap-2 sm:gap-2.5 md:gap-3 text-slate-200 text-xs sm:text-sm md:text-base w-full">
+                        <span className="text-purple-400 font-black text-sm sm:text-base md:text-lg lg:text-lg flex-shrink-0 mt-0.5">▸</span>
                         <span className="word-wrap break-words">{t(key)}</span>
                       </li>
                     ))}
