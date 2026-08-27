@@ -7,7 +7,7 @@ type Language = 'EN' | 'IT' | 'PL' | 'ZH' | 'DE' | 'FR' | 'RU' | 'ES';
 const translations: Record<Language, Record<string, string>> = {
   EN: {
     headerBranding: 'Well Done! We\'re Champion Region!!',
-    headerSubtitle: 'Master your kingdom\'s equipment strategy during events. Spiritual power management through Guard Weapons, Curiosities, and Coats of Arms.',
+    headerSubtitle: 'Now let\'s try to recover from the mistakes made before it\'s too late',
     spiritualPowerTitle: 'Spiritual Power Management',
     spiritualPowerDesc: 'Learn how to manage your kingdom\'s spiritual power during events',
     guardWeapons: 'Guard Weapons',
@@ -35,7 +35,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   IT: {
     headerBranding: 'Ben Fatto! Siamo in regione campioni!!',
-    headerSubtitle: 'Gestisci la strategia degli equipaggiamenti del tuo regno durante gli eventi. Gestione del potere spirituale attraverso Armi della Guardia, Curiosità e Stemmi.',
+    headerSubtitle: 'Ora proviamo a recuperare agli errori commessi prima che sia troppo tardi',
     spiritualPowerTitle: 'Gestione del Potere Spirituale',
     spiritualPowerDesc: 'Impara come gestire il potere spirituale del tuo regno durante gli eventi',
     guardWeapons: 'Armi della Guardia',
@@ -63,7 +63,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   PL: {
     headerBranding: 'Świetnie! Jesteśmy Regionem Mistrzów!!',
-    headerSubtitle: 'Opanuj strategię uzbrojenia swojego królestwa podczas wydarzeń. Zarządzanie mocą duchową za pośrednictwem Broni Gwardii, Osobliwości i Herbarzy.',
+    headerSubtitle: 'Teraz spróbujmy naprawić błędy popełnione zanim będzie za późno',
     spiritualPowerTitle: 'Zarządzanie Mocą Duchową',
     spiritualPowerDesc: 'Dowiedz się, jak zarządzać mocą duchową swojego królestwa podczas wydarzeń',
     guardWeapons: 'Broń Gwardii',
@@ -91,7 +91,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   ZH: {
     headerBranding: '做得好！我们是冠军地区！！',
-    headerSubtitle: '在事件期间掌握您的王国装备策略。通过护卫武器、奇特物品和纹章管理精神力。',
+    headerSubtitle: '现在让我们尝试纠正之前犯下的错误，趁还不晚',
     spiritualPowerTitle: '精神力管理',
     spiritualPowerDesc: '学习如何在事件期间管理您的王国精神力',
     guardWeapons: '护卫武器',
@@ -119,7 +119,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   DE: {
     headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
-    headerSubtitle: 'Beherrsche die Ausrüstungsstrategie deines Königreichs während Events. Verwaltung der spirituellen Kraft durch Wachausrüstung, Kuriositäten und Wappen.',
+    headerSubtitle: 'Jetzt versuchen wir, die Fehler zu beheben, bevor es zu spät ist',
     spiritualPowerTitle: 'Verwaltung der Spirituellen Kraft',
     spiritualPowerDesc: 'Lerne, wie du die spirituelle Kraft deines Königreichs während Events verwaltest',
     guardWeapons: 'Wachausrüstung',
@@ -147,7 +147,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   FR: {
     headerBranding: 'Bien Fait! Nous Sommes Région Championne!!',
-    headerSubtitle: 'Maîtrisez la stratégie d\'équipement de votre royaume pendant les événements. Gestion du pouvoir spirituel par les armes de la garde, les curiosités et les blasons.',
+    headerSubtitle: 'Maintenant, essayons de corriger les erreurs commises avant qu\'il ne soit trop tard',
     spiritualPowerTitle: 'Gestion du Pouvoir Spirituel',
     spiritualPowerDesc: 'Apprenez à gérer le pouvoir spirituel de votre royaume pendant les événements',
     guardWeapons: 'Armes de la Garde',
@@ -175,7 +175,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   RU: {
     headerBranding: 'Отлично Сделано! Мы - Чемпионский Регион!!',
-    headerSubtitle: 'Овладейте стратегией вооружения вашего королевства во время событий. Управление духовной силой через оружие охраны, редкости и гербы.',
+    headerSubtitle: 'Теперь давайте попытаемся исправить ошибки, допущенные до того, как будет слишком поздно',
     spiritualPowerTitle: 'Управление Духовной Силой',
     spiritualPowerDesc: 'Узнайте, как управлять духовной силой вашего королевства во время событий',
     guardWeapons: 'Оружие Охраны',
@@ -203,7 +203,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   ES: {
     headerBranding: '¡Bien Hecho! ¡Somos la Región Campeona!!',
-    headerSubtitle: 'Domina la estrategia de equipo de tu reino durante los eventos. Gestión del poder espiritual a través de armas de la guardia, curiosidades y escudos de armas.',
+    headerSubtitle: 'Ahora intentemos recuperarnos de los errores cometidos antes de que sea demasiado tarde',
     spiritualPowerTitle: 'Gestión del Poder Espiritual',
     spiritualPowerDesc: 'Aprende cómo gestionar el poder espiritual de tu reino durante los eventos',
     guardWeapons: 'Armas de la Guardia',
