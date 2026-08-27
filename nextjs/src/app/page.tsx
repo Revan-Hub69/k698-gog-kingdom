@@ -455,66 +455,68 @@ export default function HomePage() {
                 No players found matching &quot;{leaderboardSearch}&quot;
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {filteredLeaderboard.map((entry) => {
                   const lastUpdate = entry.castles[0]?.lastPowerUpdate 
-                    ? new Date(entry.castles[0].lastPowerUpdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })
+                    ? new Date(entry.castles[0].lastPowerUpdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
                     : '-';
                   const hasScreenshot = entry.castles.some(c => c.screenshotUrl);
 
                   return (
                     <div
                       key={entry.id}
-                      className="p-3 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50"
+                      className="p-2.5 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50 overflow-hidden"
                     >
-                      {/* ROW 1: RANK + NAME + SCREENSHOT + UPDATED */}
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <div className="flex items-center gap-2 min-w-0">
-                          <div className="w-8 h-8 rounded flex items-center justify-center font-bold text-xs bg-slate-700/50 text-slate-300 flex-shrink-0">
+                      {/* ROW 1: RANK + NAME + SCREENSHOT + DATE */}
+                      <div className="flex items-center justify-between gap-2 mb-1.5 min-w-0">
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+                          <div className="w-7 h-7 rounded flex items-center justify-center font-bold text-xs bg-slate-700/50 text-slate-300 flex-shrink-0">
                             #{entry.rank}
                           </div>
-                          <p className="font-semibold text-white truncate text-sm">
+                          <p className="font-semibold text-white truncate text-xs sm:text-sm">
                             {entry.nickname}
                           </p>
                         </div>
 
-                        <div className="flex items-center gap-2 flex-shrink-0 text-xs">
+                        <div className="flex items-center gap-1.5 flex-shrink-0 text-xs">
                           {/* SCREENSHOT STATUS */}
                           <span className={`font-bold ${hasScreenshot ? 'text-green-400' : 'text-red-400'}`}>
                             {hasScreenshot ? '✓' : '✗'}
                           </span>
 
                           {/* LAST UPDATED */}
-                          <span className="text-slate-400 whitespace-nowrap">
+                          <span className="text-slate-400 whitespace-nowrap text-xs">
                             {lastUpdate}
                           </span>
                         </div>
                       </div>
 
-                      {/* ROW 2: POWER VALUES */}
-                      <div className="flex items-center justify-between gap-3 text-xs">
-                        <div className="flex-1">
-                          <p className="text-slate-400">Attuale</p>
-                          <p className="font-bold text-blue-400">
+                      {/* ROW 2: POWER VALUES + PROGRESS */}
+                      <div className="grid grid-cols-3 gap-2 text-xs">
+                        {/* ATTUALE */}
+                        <div className="min-w-0">
+                          <p className="text-slate-400 truncate text-xs">Attuale</p>
+                          <p className="font-bold text-blue-400 truncate">
                             {(entry.totalCurrentPower / 1000).toFixed(0)}k
                           </p>
                         </div>
 
-                        <div className="flex-1">
-                          <p className="text-slate-400">Storico</p>
-                          <p className="font-bold text-green-400">
+                        {/* STORICO */}
+                        <div className="min-w-0">
+                          <p className="text-slate-400 truncate text-xs">Storico</p>
+                          <p className="font-bold text-green-400 truncate">
                             {(entry.totalHistoricalPower / 1000).toFixed(0)}k
                           </p>
                         </div>
 
-                        {/* PROGRESS BAR INLINE */}
-                        <div className="flex-1">
-                          <p className="text-slate-400">Progresso</p>
-                          <div className="h-1.5 bg-slate-700/30 rounded-full overflow-hidden mt-0.5">
+                        {/* PROGRESS */}
+                        <div className="min-w-0">
+                          <p className="text-slate-400 truncate text-xs">Progress</p>
+                          <div className="h-1 bg-slate-700/30 rounded-full overflow-hidden mt-0.5">
                             <div
                               className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
                               style={{
-                                width: `${(entry.totalCurrentPower / entry.totalHistoricalPower) * 100}%`,
+                                width: `${Math.min((entry.totalCurrentPower / entry.totalHistoricalPower) * 100, 100)}%`,
                               }}
                             />
                           </div>
