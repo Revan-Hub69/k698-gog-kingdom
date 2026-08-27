@@ -50,28 +50,33 @@ export default function HomePage() {
       {/* HEADER - ELEGANT TIER 1 */}
       <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-lg shadow-2xl shadow-purple-950/30">
         <div className="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
-          {/* LOGO - PREMIUM SVG k698 */}
+          {/* LOGO - ELEGANT GEOMETRIC k698 */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            <svg className="w-9 h-9 sm:w-11 sm:h-11" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* k */}
-              <path d="M 8 10 L 8 38 M 20 10 L 8 24 L 20 38" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              {/* 6 */}
-              <path d="M 28 16 L 28 38 Q 28 30 35 30 Q 38 30 38 26 Q 38 18 32 18 Q 26 18 26 24 Q 26 30 32 30" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              {/* 9 */}
-              <path d="M 42 32 L 42 10 Q 42 18 36 18 Q 32 18 32 22 Q 32 28 38 28 Q 42 28 42 24 L 42 38" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              {/* 8 */}
-              <path d="M 42 26 Q 38 20 32 20 Q 26 20 26 24 Q 26 28 32 28 Q 38 28 38 32 Q 38 38 32 38 Q 26 38 26 34" stroke="url(#grad)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg className="w-9 h-9 sm:w-11 sm:h-11" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              {/* Outer circle */}
+              <circle cx="20" cy="20" r="18" stroke="url(#grad)" strokeWidth="1.5" opacity="0.6"/>
+              {/* Inner square rotated */}
+              <rect x="8" y="8" width="24" height="24" stroke="url(#grad)" strokeWidth="1.5" transform="rotate(45 20 20)" opacity="0.8"/>
+              {/* Center vertical line */}
+              <line x1="20" y1="10" x2="20" y2="30" stroke="url(#grad)" strokeWidth="1.2" opacity="0.9"/>
+              {/* Center horizontal line */}
+              <line x1="10" y1="20" x2="30" y2="20" stroke="url(#grad)" strokeWidth="1.2" opacity="0.9"/>
+              {/* Corner accents */}
+              <circle cx="14" cy="14" r="1.5" fill="url(#grad)"/>
+              <circle cx="26" cy="26" r="1.5" fill="url(#grad)"/>
+              <circle cx="14" cy="26" r="1.5" fill="url(#grad)"/>
+              <circle cx="26" cy="14" r="1.5" fill="url(#grad)"/>
               <defs>
-                <linearGradient id="grad" x1="0" y1="0" x2="48" y2="48">
+                <linearGradient id="grad" x1="0" y1="0" x2="40" y2="40">
                   <stop offset="0%" stopColor="#a855f7"/>
                   <stop offset="50%" stopColor="#7c3aed"/>
                   <stop offset="100%" stopColor="#3b82f6"/>
                 </linearGradient>
               </defs>
             </svg>
-            <div className="hidden sm:flex flex-col">
-              <h1 className="font-black text-xs sm:text-sm text-white tracking-widest">k698</h1>
-              <p className="text-xs text-purple-400 font-semibold">RENAISSANCE</p>
+            <div className="flex flex-col">
+              <h1 className="font-black text-xs sm:text-sm text-white tracking-widest leading-tight">k698</h1>
+              <p className="text-xs text-purple-400 font-semibold tracking-wider">RENAISSANCE</p>
             </div>
           </div>
 
