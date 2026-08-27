@@ -46,9 +46,9 @@ export default function HomePage() {
   }, [setLanguage]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden">
-      {/* HEADER */}
-      <header className="sticky top-0 z-[999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/30 backdrop-blur">
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* HEADER - STICKY */}
+      <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/30 backdrop-blur-md shadow-lg shadow-slate-950/50 will-change-transform">
         <div className="w-full px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between">
           {/* LOGO - LEFT */}
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
