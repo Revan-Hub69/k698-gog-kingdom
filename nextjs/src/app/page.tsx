@@ -266,48 +266,86 @@ export default function HomePage() {
           <p className="text-lg sm:text-xl md:text-2xl text-purple-300 mb-12 sm:mb-14 md:mb-16 text-center font-bold drop-shadow">
             {t('eventsSubtitle')}
           </p>
+          <p className="text-sm sm:text-base text-slate-300 mb-12 sm:mb-16 md:mb-20 text-center max-w-3xl mx-auto leading-relaxed">
+            {t('eventsContext')}
+          </p>
 
-          <div className="space-y-4 sm:space-y-6 w-full">
-            {[
-              {
-                keyTitle: 'guardWeaponsStrategy',
-                keyContent: 'guardWeaponsContent',
-                keyList: ['equipStrategically', 'manageTroops', 'exceptionLeaders'],
-                color: 'purple',
-              },
-              {
-                keyTitle: 'curiositiesManagement',
-                keyContent: 'optimizeCollection',
-                keyList: ['collectCombine', 'trackPowerChanges', 'planLoadouts'],
-                color: 'blue',
-              },
-              {
-                keyTitle: 'coaNew',
-                keyContent: 'newestFeature',
-                keyList: ['applyCoa', 'calculateImpact', 'maximizePerformance'],
-                color: 'amber',
-                isNew: true,
-              },
-            ].map((section, idx) => (
-              <div
-                key={idx}
-                className={`bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-${section.color}-500/40 rounded-lg md:rounded-xl p-4 sm:p-6 md:p-8 backdrop-blur w-full`}
-              >
-                <h3 className={`text-lg sm:text-xl md:text-2xl font-black text-${section.color}-300 mb-2 sm:mb-3 flex items-center gap-2`}>
-                  {section.isNew && <span className="text-amber-400 text-2xl sm:text-3xl">⭐</span>}
-                  {t(section.keyTitle)}
-                </h3>
-                <p className="text-slate-300 mb-3 sm:mb-4 text-sm sm:text-base">{t(section.keyContent)}</p>
-                <ul className="space-y-1.5 sm:space-y-2 ml-2 w-full">
-                  {section.keyList.map((key, i) => (
-                    <li key={i} className="flex items-center gap-2 text-slate-200 text-xs sm:text-sm">
-                      <span className={`text-${section.color}-400 font-bold`}>◆</span>
-                      <span className="word-wrap break-words">{t(key)}</span>
-                    </li>
-                  ))}
-                </ul>
+          {/* 5 STEPS GRID */}
+          <div className="space-y-6 sm:space-y-8">
+            {/* STEP 1 */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+              <div className="lg:col-span-2 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep1Title')}</h3>
+                    <p className="text-sm sm:text-base text-slate-300">{t('eventStep1Desc')}</p>
+                  </div>
+                </div>
               </div>
-            ))}
+              <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
+                <Image src="/equipaggiamento.png" alt="Equipment" fill className="object-cover" />
+              </div>
+            </div>
+
+            {/* STEP 2 */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+              <div className="lg:col-span-2 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep2Title')}</h3>
+                    <p className="text-sm sm:text-base text-slate-300">{t('eventStep2Desc')}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
+                <Image src="/parti-della-nave.png" alt="Ship Parts" fill className="object-cover" />
+              </div>
+            </div>
+
+            {/* STEP 3 */}
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
+                  3
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep3Title')}</h3>
+                  <p className="text-sm sm:text-base text-slate-300">{t('eventStep3Desc')}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 4 */}
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
+                  4
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep4Title')}</h3>
+                  <p className="text-sm sm:text-base text-slate-300">{t('eventStep4Desc')}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 5 */}
+            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
+                  5
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep5Title')}</h3>
+                  <p className="text-sm sm:text-base text-slate-300">{t('eventStep5Desc')}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
