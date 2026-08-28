@@ -240,28 +240,31 @@ export default function AuthSheet({
               onClick={onClose}
             />
 
-            {/* ── CLOSE X — top right, outside sheet ── */}
+            {/* ── CLOSE X — sits just above the sheet ── */}
             <motion.button key="close-btn" type="button" onClick={onClose}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ delay: 0.2 }}
               style={{
-                position: 'fixed', bottom: `calc(min(88vh, 720px) + 16px)`, right: 20, zIndex: 60,
-                width: 44, height: 44, borderRadius: 22,
-                background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255,255,255,0.25)',
+                position: 'fixed',
+                bottom: 'calc(min(86dvh, 700px) + 12px)',
+                right: 16,
+                zIndex: 60,
+                width: 40, height: 40, borderRadius: 20,
+                background: 'rgba(255,255,255,0.14)', backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.22)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', color: T.white,
-                boxShadow: '0 2px 12px rgba(0,0,0,0.4)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
               }}
               onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.25)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.15)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.14)')}
             >
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d={P.close} />
               </svg>
             </motion.button>
             <motion.div key="sheet" className="fixed bottom-0 left-0 right-0 z-50"
-              style={{ height: 'min(88vh, 720px)' }}
+              style={{ height: 'min(86dvh, 700px)' }}
               initial={{ y: '110%' }} animate={{ y: 0 }} exit={{ y: '110%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 320, mass: 0.9 }}
             >
@@ -298,7 +301,8 @@ export default function AuthSheet({
                     </div>
 
                     {/* Center: segmented tabs or title */}
-                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', overflow: 'auto', scrollbarWidth: 'none' }}>
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
+                      <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', display: 'flex', justifyContent: 'center', maxWidth: '100%' }}>
                       {(screen === 'login' || screen === 'register') && (
                         <div style={{ display: 'inline-flex', background: T.surface, borderRadius: 10, padding: 3, border: `1px solid ${T.border}`, gap: 2 }}>
                           {(['login', 'register'] as Screen[]).map(s => (
@@ -341,6 +345,7 @@ export default function AuthSheet({
                           ))}
                         </div>
                       )}
+                      </div>
                     </div>
 
                     {/* Right: sign out (account only) + close */}
