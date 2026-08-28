@@ -302,7 +302,7 @@ export default function AuthSheet({
 
                     {/* Center: segmented tabs or title */}
                     <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
-                      <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', display: 'flex', justifyContent: 'center', maxWidth: '100%' }}>
+                      <div style={{ overflowX: 'auto', scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch', display: 'flex', justifyContent: 'flex-start', maxWidth: '100%', padding: '0 4px' }}>
                       {(screen === 'login' || screen === 'register') && (
                         <div style={{ display: 'inline-flex', background: T.surface, borderRadius: 10, padding: 3, border: `1px solid ${T.border}`, gap: 2 }}>
                           {(['login', 'register'] as Screen[]).map(s => (
