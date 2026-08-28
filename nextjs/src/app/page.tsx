@@ -1,8 +1,9 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/LanguageProvider';
+import AuthSheet from '@/components/AuthSheet';
 
 const LANGUAGES = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 
@@ -51,15 +52,8 @@ export default function HomePage() {
   const [leaderboardLoading, setLeaderboardLoading] = useState(true);
   const [leaderboardSearch, setLeaderboardSearch] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showAccountSheet, setShowAccountSheet] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [showForgotModal, setShowForgotModal] = useState(false);
-  const [authLoading, setAuthLoading] = useState(false);
-  const [authError, setAuthError] = useState('');
-  const [showLoginPassword, setShowLoginPassword] = useState(false);
-  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
-  const [showRegisterConfirm, setShowRegisterConfirm] = useState(false);
+  const [showAuthSheet, setShowAuthSheet] = useState(false);
+  const [authSheetScreen, setAuthSheetScreen] = useState<'login' | 'register' | 'forgot' | 'account'>('login');
 
   // Auto-detect browser language
   useEffect(() => {
@@ -101,13 +95,8 @@ export default function HomePage() {
       }
       
       const data = await res.json();
-      
-      // Ensure data is an array
       const leaderboardData = Array.isArray(data) ? data : data.data || [];
-      if (leaderboardData.length === 0) {
-        throw new Error('No data');
-      }
-      
+
       setLeaderboard(leaderboardData); // ALL players
       setFilteredLeaderboard(leaderboardData);
       setLeaderboardLoading(false);
@@ -121,7 +110,7 @@ export default function HomePage() {
   };
 
   const checkAuth = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('auth_token');
     setIsLoggedIn(!!token);
   };
 
@@ -133,7 +122,7 @@ export default function HomePage() {
           {/* LOGO - K698 INNOVATIVE TIER1 TEXT */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <h1 className="font-black text-lg sm:text-2xl bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent tracking-tight leading-none">k698</h1>
-            <span className="text-purple-500/40 font-bold">●</span>
+            <span className="text-purple-500/40 font-bold">&#x25CF;</span>
             <p className="text-xs sm:text-sm text-purple-400/80 font-semibold tracking-widest leading-none">{t('renaissance')}</p>
           </div>
 
@@ -252,7 +241,7 @@ export default function HomePage() {
                   >
                     <div className="truncate lg:truncate-none">{t(tabInfo.title)}</div>
                     {tabKey === 'coa' && (
-                      <div className="text-xs text-amber-300 font-black">✦ {t('newBadge')} ✦</div>
+                      <div className="text-xs text-amber-300 font-black">* {t('newBadge')} *</div>
                     )}
                   </button>
                 ))}
@@ -278,7 +267,7 @@ export default function HomePage() {
                   <ul className="space-y-3 sm:space-y-4 md:space-y-4 w-full">
                     {TAB_DATA[activeTab].list.map((key, idx) => (
                       <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-slate-200 text-sm sm:text-base md:text-base leading-6 w-full">
-                        <span className="text-purple-400 font-black text-lg sm:text-xl flex-shrink-0 mt-0.5">▸</span>
+                        <span className="text-purple-400 font-black text-lg sm:text-xl flex-shrink-0 mt-0.5">&#x25B8;</span>
                         <span className="word-wrap break-words leading-7">{t(key)}</span>
                       </li>
                     ))}
@@ -423,7 +412,7 @@ export default function HomePage() {
                {/* INFO BOX - KVK RULES */}
                <div className="bg-gradient-to-br from-orange-600/10 to-red-600/10 border border-orange-500/40 rounded-lg p-5 sm:p-6">
                  <div className="flex items-start gap-4">
-                   <div className="text-2xl flex-shrink-0">⚠️</div>
+                   <div className="flex-shrink-0 text-orange-400"><svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div>
                    <div>
                      <h3 className="font-bold text-white text-lg mb-2">{t('kvkWarningTitle')}</h3>
                      <p className="text-slate-300 text-sm leading-relaxed">
@@ -438,13 +427,13 @@ export default function HomePage() {
                 <p className="text-slate-300 mb-6 text-lg font-semibold">{t('loginToView')}</p>
                 <div className="flex gap-3 justify-center">
                   <button 
-                    onClick={() => setShowLoginModal(true)}
+                    onClick={() => { setShowAuthSheet(true); setAuthSheetScreen('login'); }}
                     className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition"
                   >
                     {t('signIn')}
                   </button>
                   <button 
-                    onClick={() => setShowRegisterModal(true)}
+                    onClick={() => { setShowAuthSheet(true); setAuthSheetScreen('register'); }}
                     className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
                   >
                     {t('signUp')}
@@ -502,7 +491,7 @@ export default function HomePage() {
 
                         <div className="flex items-center gap-1.5 flex-shrink-0 text-xs">
                           {/* SCREENSHOT STATUS */}
-                          <span className={`font-bold ${hasScreenshot ? 'text-green-400' : 'text-red-400'}`}>
+                          <span className={`font-bold text-sm ${hasScreenshot ? 'text-green-400' : 'text-slate-500'}`}>
                             {hasScreenshot ? '✓' : '✗'}
                           </span>
 
@@ -563,477 +552,25 @@ export default function HomePage() {
 
       <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
         {/* COPYRIGHT */}
-        <p className="text-xs sm:text-sm text-slate-500">© {new Date().getFullYear()} k698 · {t('copyright')}</p>
+        <p className="text-xs sm:text-sm text-slate-500">{'©'} {new Date().getFullYear()} k698 {'\u00b7'} {t('copyright')}</p>
         <p className="text-xs text-slate-600 mt-2">Guns of Glory Kingdom Manager</p>
       </footer>
 
-      {/* ACCOUNT SHEET PLACEHOLDER */}
-      {showAccountSheet && isLoggedIn && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={() => setShowAccountSheet(false)}>
-          <div
-            className="fixed bottom-0 left-0 right-0 bg-slate-900 rounded-t-2xl border-t border-purple-500/20 p-6 max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="max-w-2xl mx-auto">
-              <h2 className="text-2xl font-black text-white mb-6">{t('myKingdom')}</h2>
-              
-              <div className="space-y-6">
-                {/* CLOSE BUTTON */}
-                <button
-                  onClick={() => setShowAccountSheet(false)}
-                  className="absolute top-6 right-6 p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition"
-                >
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
 
-                {/* MY CASTLES SECTION */}
-                <div className="border-b border-slate-700 pb-6">
-                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <span>🏰 {t('myCastles')}</span>
-                    <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded">0</span>
-                  </h3>
-                  <p className="text-slate-400 text-sm mb-4">Add and manage your kingdom castles</p>
-                  <button className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition">
-                    + Add Castle
-                  </button>
-                </div>
+      {/* AUTH SHEET */}
+      <AuthSheet
+        isOpen={showAuthSheet}
+        screen={authSheetScreen}
+        onOpen={() => setShowAuthSheet(true)}
+        onClose={() => setShowAuthSheet(false)}
+        onScreenChange={setAuthSheetScreen}
+        isLoggedIn={isLoggedIn}
+        onLoginSuccess={() => setIsLoggedIn(true)}
+        onLogout={() => setIsLoggedIn(false)}
+        t={t}
+      />
 
-                {/* ACCOUNT SETTINGS */}
-                <div className="border-b border-slate-700 pb-6">
-                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    ⚙️ {t('settings')}
-                  </h3>
-                  
-                  <div className="space-y-4">
-                    {/* EMAIL */}
-                    <div>
-                      <label className="text-xs font-semibold text-slate-300 uppercase tracking-wide block mb-2">
-                        📧 {t('email')}
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="email"
-                          placeholder="your@email.com"
-                          className="flex-1 px-3 py-2 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                        />
-                        <button className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">
-                          {t('save')}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* PASSWORD */}
-                    <div>
-                      <label className="text-xs font-semibold text-slate-300 uppercase tracking-wide block mb-2">
-                        🔐 {t('changePassword')}
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="password"
-                          placeholder="New password"
-                          className="flex-1 px-3 py-2 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                        />
-                        <button className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">
-                          {t('save')}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* LOGOUT BUTTON */}
-                <button
-                  onClick={() => {
-                    // Logout logic here
-                    setIsLoggedIn(false);
-                    setShowAccountSheet(false);
-                  }}
-                  className="w-full px-4 py-3 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-400 rounded-lg font-semibold transition"
-                >
-                  🚪 Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* LOGIN MODAL */}
-      {/* LOGIN MODAL / SHEET */}
-      {showLoginModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center p-4 md:p-0" onClick={() => setShowLoginModal(false)}>
-          <div
-            className="bg-slate-900/95 border border-purple-500/20 w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-t-none p-6 sm:p-8 max-h-[90vh] md:max-h-none overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Mobile header bar (optional) */}
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black text-white">{t('loginTitle')}</h2>
-              <button
-                onClick={() => setShowLoginModal(false)}
-                className="p-2 hover:bg-slate-800 rounded-lg transition"
-              >
-                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {authError && (
-              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
-                {authError}
-              </div>
-            )}
-
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              const email = new FormData(e.currentTarget).get('email') as string;
-              const password = new FormData(e.currentTarget).get('password') as string;
-              
-              setAuthLoading(true);
-              setAuthError('');
-              
-              try {
-                const res = await fetch('/api/auth/login', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ email, password }),
-                });
-                
-                const data = await res.json();
-                
-                if (!res.ok) {
-                  setAuthError(data.error || 'Login failed');
-                  return;
-                }
-                
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                setIsLoggedIn(true);
-                setShowLoginModal(false);
-              } catch (err) {
-                setAuthError('An error occurred. Please try again.');
-              } finally {
-                setAuthLoading(false);
-              }
-            }} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('changePassword')}</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
-              >
-                {authLoading ? 'Signing in...' : t('signIn')}
-              </button>
-            </form>
-
-            <p className="text-center text-slate-400 text-sm mt-4">
-              {t('dontHaveAccount')}{' '}
-              <button
-                onClick={() => {
-                  setShowLoginModal(false);
-                  setShowRegisterModal(true);
-                }}
-                className="text-purple-400 hover:text-purple-300 font-semibold"
-              >
-                {t('signUp')}
-              </button>
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* REGISTER MODAL */}
-      {/* REGISTER MODAL / SHEET */}
-      {showRegisterModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center p-4 md:p-0" onClick={() => setShowRegisterModal(false)}>
-          <div
-            className="bg-slate-900/95 border border-purple-500/20 w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-t-none p-6 sm:p-8 max-h-[90vh] md:max-h-none overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black text-white">{t('registerTitle')}</h2>
-              <button
-                onClick={() => setShowRegisterModal(false)}
-                className="p-2 hover:bg-slate-800 rounded-lg transition"
-              >
-                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {authError && (
-              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
-                {authError}
-              </div>
-            )}
-
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              const fd = new FormData(e.currentTarget);
-              const nickname = fd.get('nickname') as string;
-              const email = fd.get('email') as string;
-              const password = fd.get('password') as string;
-              
-              setAuthLoading(true);
-              setAuthError('');
-              
-              try {
-                const res = await fetch('/api/auth/register', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ nickname, email, password }),
-                });
-                
-                const data = await res.json();
-                
-                if (!res.ok) {
-                  setAuthError(data.error || 'Registration failed');
-                  return;
-                }
-                
-                localStorage.setItem('auth_token', data.token);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                setIsLoggedIn(true);
-                setShowRegisterModal(false);
-              } catch (err) {
-                setAuthError('An error occurred. Please try again.');
-              } finally {
-                setAuthLoading(false);
-              }
-            }} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Password</label>
-                <div className="relative">
-                  <input
-                    type={showLoginPassword ? 'text' : 'password'}
-                    name="password"
-                    placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowLoginPassword(!showLoginPassword)}
-                    className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
-                  >
-                    {showLoginPassword ? (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowLoginModal(false);
-                    setShowForgotModal(true);
-                  }}
-                  className="text-xs text-purple-400 hover:text-purple-300 mt-2"
-                >
-                  Forgot password?
-                </button>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Password</label>
-                <div className="relative">
-                  <input
-                    type={showRegisterPassword ? 'text' : 'password'}
-                    name="password"
-                    placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowRegisterPassword(!showRegisterPassword)}
-                    className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
-                  >
-                    {showRegisterPassword ? (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Confirm Password</label>
-                <div className="relative">
-                  <input
-                    type={showRegisterConfirm ? 'text' : 'password'}
-                    name="confirmPassword"
-                    placeholder="••••••••"
-                    className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowRegisterConfirm(!showRegisterConfirm)}
-                    className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
-                  >
-                    {showRegisterConfirm ? (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
-                      </svg>
-                    ) : (
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
-              >
-                {authLoading ? 'Creating...' : t('signUp')}
-              </button>
-            </form>
-
-            <p className="text-center text-slate-400 text-sm mt-4">
-              {t('alreadyHaveAccount')}{' '}
-              <button
-                onClick={() => {
-                  setShowRegisterModal(false);
-                  setShowLoginModal(true);
-                }}
-                className="text-purple-400 hover:text-purple-300 font-semibold"
-              >
-                {t('signIn')}
-              </button>
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* FORGOT PASSWORD MODAL */}
-      {/* FORGOT PASSWORD MODAL / SHEET */}
-      {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center p-4 md:p-0" onClick={() => setShowForgotModal(false)}>
-          <div
-            className="bg-slate-900/95 border border-purple-500/20 w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-t-none p-6 sm:p-8 max-h-[90vh] md:max-h-none overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-black text-white">Reset Password</h2>
-              <button
-                onClick={() => setShowForgotModal(false)}
-                className="p-2 hover:bg-slate-800 rounded-lg transition"
-              >
-                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {authError && (
-              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
-                {authError}
-              </div>
-            )}
-
-            <p className="text-slate-300 text-sm mb-6">Enter your email address and we'll send you instructions to reset your password.</p>
-
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              const email = new FormData(e.currentTarget).get('email') as string;
-              setAuthLoading(true);
-              setAuthError('');
-              
-              try {
-                // TODO: implement password reset endpoint
-                setAuthError('Password reset feature coming soon. Contact support.');
-              } finally {
-                setAuthLoading(false);
-              }
-            }} className="space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={authLoading}
-                className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
-              >
-                {authLoading ? 'Sending...' : 'Send Reset Link'}
-              </button>
-            </form>
-
-            <p className="text-center text-slate-400 text-sm mt-4">
-              Remember your password?{' '}
-              <button
-                onClick={() => {
-                  setShowForgotModal(false);
-                  setShowLoginModal(true);
-                }}
-                className="text-purple-400 hover:text-purple-300 font-semibold"
-              >
-                Sign In
-              </button>
-            </p>
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
+            <style jsx>{`
         @keyframes pulse {
           0%, 100% {
             opacity: 0.2;
@@ -1064,3 +601,4 @@ export default function HomePage() {
     </div>
   );
 }
+

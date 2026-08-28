@@ -3,14 +3,13 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Fetch all users with their castles and calculate totals
+    // Only users WITH at least one castle
     const users = await prisma.user.findMany({
-      include: {
-        castles: true,
+      where: {
+        castles: { some: {} },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      include: { castles: true },
+      orderBy: { createdAt: 'desc' },
     });
 
     // Transform to leaderboard entries ranked by historical power

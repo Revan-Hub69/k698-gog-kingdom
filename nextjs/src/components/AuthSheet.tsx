@@ -1,369 +1,415 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+type Screen = 'login' | 'register' | 'forgot' | 'account';
+type Status = 'idle' | 'loading' | 'success';
 
 interface AuthSheetProps {
   isOpen: boolean;
-  screen: 'login' | 'register' | 'forgot' | 'account';
+  screen: Screen;
+  onOpen: () => void;
   onClose: () => void;
-  onScreenChange: (screen: 'login' | 'register' | 'forgot' | 'account') => void;
+  onScreenChange: (screen: Screen) => void;
   isLoggedIn: boolean;
   onLoginSuccess: () => void;
+  onLogout: () => void;
   t: (key: string) => string;
 }
 
+// ── outside component so references never change ──────────────────
+const Eye = ({ open }: { open: boolean }) => (
+  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+    {open ? (
+      <><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></>
+    ) : (
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+    )}
+  </svg>
+);
+
+const SpinnerIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
+    style={{ animation: 'spin 0.75s linear infinite' }}>
+    <circle cx="6.5" cy="6.5" r="5" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5" />
+    <path d="M6.5 1.5A5 5 0 0111.5 6.5" stroke="white" strokeWidth="1.5" strokeLinecap="round" />
+  </svg>
+);
+
+const C = {
+  bgSheet:   '#09090a',
+  bgContent: '#111113',
+  border:    '#212224',
+  borderHov: '#2e3035',
+  label:     '#6b6f76',
+  text:      '#e2e3e5',
+  white:     '#ffffff',
+  purple:    '#7c3aed',
+};
+
+const SCREEN_ORDER: Record<Screen, number> = { login: 0, register: 1, forgot: 2, account: 3 };
+
 export default function AuthSheet({
-  isOpen,
-  screen,
-  onClose,
-  onScreenChange,
-  isLoggedIn,
-  onLoginSuccess,
-  t,
+  isOpen, screen, onOpen, onClose, onScreenChange, isLoggedIn, onLoginSuccess, onLogout, t,
 }: AuthSheetProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [status, setStatus]   = useState<Status>('idle');
+  const [error, setError]     = useState('');
+  const [showPw, setShowPw]   = useState(false);
+  const [showCpw, setShowCpw] = useState(false);
+  const prevScreen            = useRef<Screen>(screen);
+  const [dir, setDir]         = useState(1);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setDir(SCREEN_ORDER[screen] >= SCREEN_ORDER[prevScreen.current] ? 1 : -1);
+    prevScreen.current = screen;
+  }, [screen]);
 
-  const PasswordToggle = ({ show, setShow }: { show: boolean; setShow: (v: boolean) => void }) => (
-    <button
-      type="button"
-      onClick={() => setShow(!show)}
-      className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
-    >
-      {show ? (
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
-        </svg>
-      ) : (
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
-        </svg>
-      )}
-    </button>
-  );
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    window.history.pushState({ authSheet: true }, '');
+    const pop = () => onClose();
+    window.addEventListener('popstate', pop);
+    return () => window.removeEventListener('popstate', pop);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    setError(''); setStatus('idle'); setShowPw(false); setShowCpw(false);
+  }, [screen]);
+
+  const success = (cb: () => void) => {
+    setStatus('success');
+    setTimeout(() => {
+      cb();
+      onScreenChange('account'); // stay open, go to account
+    }, 650);
+  };
+
+  // shared input style — pure CSS, no state dependency that causes remount
+  const inp: React.CSSProperties = {
+    width: '100%', height: 32, padding: '0 10px', borderRadius: 6,
+    fontSize: 13, fontWeight: 500, color: C.white,
+    background: '#1c1c1e', border: `1px solid ${C.border}`,
+    outline: 'none', boxSizing: 'border-box',
+    transition: 'border-color 0.12s, box-shadow 0.12s',
+  };
+
+  const inpFocusCss = `
+    .auth-inp:focus { border-color: ${C.purple} !important; box-shadow: 0 0 0 3px rgba(124,58,237,0.16) !important; }
+    .auth-inp:hover:not(:focus) { border-color: ${C.borderHov} !important; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  `;
+
+  const screenV = {
+    initial: (d: number) => ({ opacity: 0, x: d * 20, filter: 'blur(3px)' }),
+    animate: { opacity: 1, x: 0, filter: 'blur(0px)', transition: { duration: 0.16, ease: [0.25, 0.1, 0.25, 1] as const } },
+    exit:    (d: number) => ({ opacity: 0, x: d * -20, filter: 'blur(3px)', transition: { duration: 0.1 } }),
+  };
+
+  const btnStyle: React.CSSProperties = {
+    width: '100%', height: 32, marginTop: 8, borderRadius: 6,
+    fontSize: 13, fontWeight: 500, border: 'none', color: C.white,
+    background: status === 'success' ? '#16a34a' : `linear-gradient(135deg, ${C.purple}, #2563eb)`,
+    cursor: status !== 'idle' ? 'default' : 'pointer',
+    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+    transition: 'background 0.2s',
+    opacity: status === 'loading' ? 0.8 : 1,
+  };
+
+  const labelStyle: React.CSSProperties = { fontSize: 12, fontWeight: 500, color: C.label, display: 'block', marginBottom: 6 };
+  const rowStyle:   React.CSSProperties = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 };
+  const fieldGap:   React.CSSProperties = { display: 'flex', flexDirection: 'column', gap: 14 };
+  const relPos:     React.CSSProperties = { position: 'relative' };
+  const eyeBtn:     React.CSSProperties = { position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', color: C.label, background: 'none', border: 'none', cursor: 'pointer', display: 'flex', padding: 0 };
+
+  const screenTitle: Record<Screen, string> = {
+    login: t('signIn'), register: t('signUp'), forgot: t('resetPassword'), account: t('myAccount'),
+  };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div
-        className="fixed bottom-0 left-0 right-0 bg-slate-900/95 border-t border-purple-500/20 rounded-t-3xl p-6 max-h-[95vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Handle bar */}
-        <div className="flex justify-center mb-4">
-          <div className="w-12 h-1 bg-slate-700 rounded-full"></div>
-        </div>
+    <>
+      <style>{inpFocusCss}</style>
 
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 p-2 hover:bg-slate-800 rounded-lg transition"
-        >
-          <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+      {/* ── PERSISTENT TAB ── */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.div key="tab"
+            initial={{ y: 60 }} animate={{ y: 0 }} exit={{ y: 60 }}
+            transition={{ type: 'spring', damping: 28, stiffness: 340 }}
+            style={{ position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 40, display: 'flex', justifyContent: 'center' }}
+          >
+            <button type="button"
+              onClick={() => { onScreenChange(isLoggedIn ? 'account' : 'login'); onOpen(); }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px 14px',
+                background: C.bgSheet, border: `1px solid ${C.border}`, borderBottom: 'none',
+                borderRadius: '10px 10px 0 0', cursor: 'pointer', color: C.text,
+                fontSize: 13, fontWeight: 500, boxShadow: '0 -4px 20px rgba(0,0,0,0.5)',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = C.borderHov)}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = C.border)}
+            >
+              {isLoggedIn ? t('openAccount') : `${t('signIn')} / ${t('signUp')}`}
+              <svg width="10" height="10" fill="none" stroke={C.label} strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+              </svg>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <div className="max-w-2xl mx-auto pr-8">
-          {/* LOGIN SCREEN */}
-          {screen === 'login' && (
-            <>
-              <h2 className="text-3xl font-black text-white mb-6">{t('loginTitle')}</h2>
-              {error && (
-                <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const email = new FormData(e.currentTarget).get('email') as string;
-                  const password = new FormData(e.currentTarget).get('password') as string;
-                  setLoading(true);
-                  setError('');
-                  try {
-                    const res = await fetch('/api/auth/login', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ email, password }),
-                    });
-                    const data = await res.json();
-                    if (!res.ok) {
-                      setError(data.error || 'Login failed');
-                      return;
-                    }
-                    localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    onLoginSuccess();
-                    onClose();
-                  } catch (err) {
-                    setError('An error occurred. Please try again.');
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Password</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      placeholder="••••••••"
-                      className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                      required
-                    />
-                    <PasswordToggle show={showPassword} setShow={setShowPassword} />
+      {/* ── SHEET ── */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div key="bd" className="fixed inset-0 z-50"
+              style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)' }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }} onClick={onClose}
+            />
+
+            <motion.div key="sheet" className="fixed bottom-0 left-0 right-0 z-50"
+              style={{ height: 'min(88vh, 680px)' }}
+              initial={{ y: '110%' }} animate={{ y: 0 }} exit={{ y: '110%' }}
+              transition={{ type: 'spring', damping: 32, stiffness: 340, mass: 0.8 }}
+            >
+              <div className="h-full flex flex-col overflow-hidden" style={{
+                background: C.bgSheet, borderTop: `1px solid ${C.border}`,
+                borderRadius: '16px 16px 0 0',
+                boxShadow: '0 -8px 48px rgba(0,0,0,0.6), 0 -1px 0 rgba(255,255,255,0.04)',
+              }}>
+                {/* HEADER */}
+                <div style={{ flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 6px' }}>
+                    <div style={{ width: 32, height: 4, borderRadius: 999, background: 'rgba(255,255,255,0.12)' }} />
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => onScreenChange('forgot')}
-                    className="text-xs text-purple-400 hover:text-purple-300 mt-2"
-                  >
-                    Forgot password?
-                  </button>
-                </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
-                >
-                  {loading ? 'Signing in...' : t('signIn')}
-                </button>
-              </form>
-              <p className="text-center text-slate-400 text-sm mt-6">
-                {t('dontHaveAccount')}{' '}
-                <button
-                  onClick={() => onScreenChange('register')}
-                  className="text-purple-400 hover:text-purple-300 font-semibold"
-                >
-                  {t('signUp')}
-                </button>
-              </p>
-            </>
-          )}
-
-          {/* REGISTER SCREEN */}
-          {screen === 'register' && (
-            <>
-              <h2 className="text-3xl font-black text-white mb-6">{t('registerTitle')}</h2>
-              {error && (
-                <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  const fd = new FormData(e.currentTarget);
-                  const nickname = fd.get('nickname') as string;
-                  const email = fd.get('email') as string;
-                  const password = fd.get('password') as string;
-                  const confirmPassword = fd.get('confirmPassword') as string;
-                  if (password !== confirmPassword) {
-                    setError('Passwords do not match');
-                    return;
-                  }
-                  setLoading(true);
-                  setError('');
-                  try {
-                    const res = await fetch('/api/auth/register', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ nickname, email, password }),
-                    });
-                    const data = await res.json();
-                    if (!res.ok) {
-                      setError(data.error || 'Registration failed');
-                      return;
-                    }
-                    localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    onLoginSuccess();
-                    onClose();
-                  } catch (err) {
-                    setError('An error occurred. Please try again.');
-                  } finally {
-                    setLoading(false);
-                  }
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('nicknameLabel')}</label>
-                  <input
-                    type="text"
-                    name="nickname"
-                    placeholder="DragonSlayer"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Password</label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      name="password"
-                      placeholder="••••••••"
-                      className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                      required
-                    />
-                    <PasswordToggle show={showPassword} setShow={setShowPassword} />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Confirm Password</label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      name="confirmPassword"
-                      placeholder="••••••••"
-                      className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                      required
-                    />
-                    <PasswordToggle show={showConfirmPassword} setShow={setShowConfirmPassword} />
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
-                >
-                  {loading ? 'Creating...' : t('signUp')}
-                </button>
-              </form>
-              <p className="text-center text-slate-400 text-sm mt-6">
-                {t('alreadyHaveAccount')}{' '}
-                <button
-                  onClick={() => onScreenChange('login')}
-                  className="text-purple-400 hover:text-purple-300 font-semibold"
-                >
-                  {t('signIn')}
-                </button>
-              </p>
-            </>
-          )}
-
-          {/* FORGOT PASSWORD SCREEN */}
-          {screen === 'forgot' && (
-            <>
-              <h2 className="text-3xl font-black text-white mb-6">Reset Password</h2>
-              {error && (
-                <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
-                  {error}
-                </div>
-              )}
-              <p className="text-slate-300 text-sm mb-6">Enter your email address and we'll send you instructions to reset your password.</p>
-              <form
-                onSubmit={async (e) => {
-                  e.preventDefault();
-                  setLoading(true);
-                  setError('Password reset feature coming soon. Contact support.');
-                  setLoading(false);
-                }}
-                className="space-y-4"
-              >
-                <div>
-                  <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
-                >
-                  {loading ? 'Sending...' : 'Send Reset Link'}
-                </button>
-              </form>
-              <p className="text-center text-slate-400 text-sm mt-6">
-                Remember your password?{' '}
-                <button
-                  onClick={() => onScreenChange('login')}
-                  className="text-purple-400 hover:text-purple-300 font-semibold"
-                >
-                  Sign In
-                </button>
-              </p>
-            </>
-          )}
-
-          {/* ACCOUNT SCREEN */}
-          {screen === 'account' && isLoggedIn && (
-            <>
-              <h2 className="text-3xl font-black text-white mb-6">{t('myKingdom')}</h2>
-              <div className="space-y-6">
-                <div className="border-b border-slate-700 pb-6">
-                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    <span>🏰 {t('myCastles')}</span>
-                    <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded">0</span>
-                  </h3>
-                  <button className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition">
-                    + Add Castle
-                  </button>
-                </div>
-                <div className="border-b border-slate-700 pb-6">
-                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                    ⚙️ {t('settings')}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">📧 {t('email')}</label>
-                      <div className="flex gap-2">
-                        <input type="email" placeholder="your@email.com" className="flex-1 px-3 py-2 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
-                        <button className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">{t('save')}</button>
-                      </div>
+                  <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px 10px', gap: 8 }}>
+                    {/* back */}
+                    <div style={{ width: 32, flexShrink: 0 }}>
+                      {screen === 'forgot' && (
+                        <button type="button" onClick={() => onScreenChange('login')}
+                          style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, color: C.text, background: 'none', border: 'none', cursor: 'pointer' }}
+                          onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.07)')}
+                          onMouseLeave={e => (e.currentTarget.style.background = 'none')}>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                      )}
                     </div>
-                    <div>
-                      <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">🔐 {t('changePassword')}</label>
-                      <div className="flex gap-2">
-                        <input type="password" placeholder="New password" className="flex-1 px-3 py-2 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm" />
-                        <button className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">{t('save')}</button>
-                      </div>
+                    {/* tabs / title */}
+                    <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+                      {(screen === 'login' || screen === 'register') ? (
+                        <div style={{ display: 'inline-flex', gap: 2, background: 'rgba(255,255,255,0.04)', borderRadius: 8, padding: 3, border: `1px solid ${C.border}` }}>
+                          {(['login', 'register'] as Screen[]).map(s => (
+                            <button key={s} type="button" onClick={() => onScreenChange(s)}
+                              style={{ position: 'relative', padding: '0 16px', height: 28, borderRadius: 5, fontSize: 13, fontWeight: 500, cursor: 'pointer', border: 'none', background: 'transparent', color: screen === s ? C.white : C.label, transition: 'color 0.15s', zIndex: 1 }}>
+                              {screen === s && (
+                                <motion.span layoutId="pill"
+                                  style={{ position: 'absolute', inset: 0, borderRadius: 5, background: 'rgba(255,255,255,0.09)', zIndex: -1 }}
+                                  transition={{ type: 'spring', stiffness: 500, damping: 35 }} />
+                              )}
+                              {s === 'login' ? t('signIn') : t('signUp')}
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <span style={{ fontSize: 14, fontWeight: 600, color: C.text }}>{screenTitle[screen]}</span>
+                      )}
                     </div>
+                    {/* close */}
+                    <button type="button" onClick={onClose}
+                      style={{ width: 32, height: 32, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 6, color: C.label, background: 'none', border: 'none', cursor: 'pointer' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.color = C.white; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = C.label; }}>
+                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
-                <button
-                  onClick={onClose}
-                  className="w-full px-4 py-3 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-400 rounded-lg font-semibold transition"
-                >
-                  🚪 Logout
-                </button>
+
+                {/* CONTENT */}
+                <div className="flex-1 overflow-y-auto no-scrollbar" style={{ background: C.bgContent }}>
+                  <div style={{ maxWidth: 400, margin: '0 auto', padding: '28px 24px 40px' }}>
+
+                    <AnimatePresence>
+                      {error && (
+                        <motion.div key={`err-${error}`}
+                          initial={{ opacity: 0, x: 0 }}
+                          animate={{ opacity: 1, x: [0, -6, 6, -4, 4, -2, 2, 0] }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.35 }}
+                          style={{ marginBottom: 16, padding: '10px 12px', borderRadius: 6, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#f87171', fontSize: 13 }}
+                        >{error}</motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    <AnimatePresence mode="wait" initial={false} custom={dir}>
+
+                      {/* ── LOGIN ── */}
+                      {screen === 'login' && (
+                        <motion.form key="login" custom={dir} variants={screenV} initial="initial" animate="animate" exit="exit"
+                          onSubmit={async e => {
+                            e.preventDefault();
+                            const fd = new FormData(e.currentTarget);
+                            setStatus('loading'); setError('');
+                            try {
+                              const res = await fetch('/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: fd.get('email'), password: fd.get('password') }) });
+                              const data = await res.json();
+                              if (!res.ok) { setError(data.error || t('loginFailed')); setStatus('idle'); return; }
+                              localStorage.setItem('auth_token', data.token);
+                              localStorage.setItem('user', JSON.stringify(data.user));
+                              success(onLoginSuccess);
+                            } catch { setError(t('connectionError')); setStatus('idle'); }
+                          }}
+                          style={fieldGap}
+                        >
+                          <div>
+                            <label style={labelStyle}>{t('emailLabel')}</label>
+                            <input className="auth-inp" id="login-email" type="email" name="email" placeholder="you@example.com" autoComplete="email" required style={inp} />
+                          </div>
+                          <div>
+                            <div style={rowStyle}>
+                              <label style={{ ...labelStyle, marginBottom: 0 }}>{t('passwordLabel')}</label>
+                              <button type="button" onClick={() => onScreenChange('forgot')} style={{ fontSize: 12, color: C.purple, background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontWeight: 500 }}>
+                                {t('forgotPassword')}
+                              </button>
+                            </div>
+                            <div style={{ ...relPos, marginTop: 6 }}>
+                              <input className="auth-inp" id="login-password" type={showPw ? 'text' : 'password'} name="password" placeholder="••••••••" autoComplete="current-password" required style={{ ...inp, paddingRight: 32 }} />
+                              <button type="button" tabIndex={-1} onClick={() => setShowPw(v => !v)} style={eyeBtn}><Eye open={showPw} /></button>
+                            </div>
+                          </div>
+                          <button type="submit" disabled={status !== 'idle'} style={btnStyle}>
+                            <AnimatePresence mode="wait" initial={false}>
+                              {status === 'loading' && <motion.span key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><SpinnerIcon />{t('signingIn')}</motion.span>}
+                              {status === 'success' && <motion.span key="s" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>&#10003; {t('doneLabel')}</motion.span>}
+                              {status === 'idle' && <motion.span key="i" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{t('signIn')}</motion.span>}
+                            </AnimatePresence>
+                          </button>
+                        </motion.form>
+                      )}
+
+                      {/* ── REGISTER ── */}
+                      {screen === 'register' && (
+                        <motion.form key="register" custom={dir} variants={screenV} initial="initial" animate="animate" exit="exit"
+                          onSubmit={async e => {
+                            e.preventDefault();
+                            const fd = new FormData(e.currentTarget);
+                            const pw = fd.get('password') as string;
+                            if (pw !== fd.get('confirmPassword')) { setError(t('passwordMismatch')); return; }
+                            setStatus('loading'); setError('');
+                            try {
+                              const res = await fetch('/api/auth/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nickname: fd.get('nickname'), email: fd.get('email'), password: pw }) });
+                              const data = await res.json();
+                              if (!res.ok) { setError(data.error || t('registrationFailed')); setStatus('idle'); return; }
+                              localStorage.setItem('auth_token', data.token);
+                              localStorage.setItem('user', JSON.stringify(data.user));
+                              success(onLoginSuccess);
+                            } catch { setError(t('connectionError')); setStatus('idle'); }
+                          }}
+                          style={fieldGap}
+                        >
+                          <div>
+                            <label style={labelStyle}>{t('nicknameLabel')}</label>
+                            <input className="auth-inp" id="reg-nickname" type="text" name="nickname" placeholder="DragonSlayer" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck={false} required style={inp} />
+                          </div>
+                          <div>
+                            <label style={labelStyle}>{t('emailLabel')}</label>
+                            <input className="auth-inp" id="reg-email" type="email" name="email" placeholder="you@example.com" autoComplete="email" required style={inp} />
+                          </div>
+                          <div>
+                            <label style={labelStyle}>{t('passwordLabel')}</label>
+                            <div style={relPos}>
+                              <input className="auth-inp" id="reg-password" type={showPw ? 'text' : 'password'} name="password" placeholder="••••••••" autoComplete="new-password" required style={{ ...inp, paddingRight: 32 }} />
+                              <button type="button" tabIndex={-1} onClick={() => setShowPw(v => !v)} style={eyeBtn}><Eye open={showPw} /></button>
+                            </div>
+                          </div>
+                          <div>
+                            <label style={labelStyle}>{t('confirmPasswordLabel')}</label>
+                            <div style={relPos}>
+                              <input className="auth-inp" type={showCpw ? 'text' : 'password'} name="confirmPassword" placeholder="••••••••" autoComplete="new-password" required style={{ ...inp, paddingRight: 32 }} />
+                              <button type="button" tabIndex={-1} onClick={() => setShowCpw(v => !v)} style={eyeBtn}><Eye open={showCpw} /></button>
+                            </div>
+                          </div>
+                          <button type="submit" disabled={status !== 'idle'} style={btnStyle}>
+                            <AnimatePresence mode="wait" initial={false}>
+                              {status === 'loading' && <motion.span key="l" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}><SpinnerIcon />{t('creating')}</motion.span>}
+                              {status === 'success' && <motion.span key="s" initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>&#10003; {t('doneLabel')}</motion.span>}
+                              {status === 'idle' && <motion.span key="i" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{t('signUp')}</motion.span>}
+                            </AnimatePresence>
+                          </button>
+                        </motion.form>
+                      )}
+
+                      {/* ── FORGOT ── */}
+                      {screen === 'forgot' && (
+                        <motion.form key="forgot" custom={dir} variants={screenV} initial="initial" animate="animate" exit="exit"
+                          onSubmit={e => { e.preventDefault(); setError(t('comingSoon')); }}
+                          style={fieldGap}
+                        >
+                          <p style={{ fontSize: 13, color: C.label, lineHeight: 1.6, margin: 0 }}>
+                            {t('resetPasswordDesc')}
+                          </p>
+                          <div>
+                            <label style={labelStyle}>{t('emailLabel')}</label>
+                            <input className="auth-inp" type="email" name="email" placeholder="you@example.com" autoComplete="email" required style={inp} />
+                          </div>
+                          <button type="submit" style={btnStyle}>{t('sendResetLink')}</button>
+                        </motion.form>
+                      )}
+
+                      {/* ── ACCOUNT ── */}
+                      {screen === 'account' && isLoggedIn && (
+                        <motion.div key="account" custom={dir} variants={screenV} initial="initial" animate="animate" exit="exit"
+                          style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                          <div>
+                            <label style={labelStyle}>{t('castlesLabel')}</label>
+                            <button type="button"
+                              style={{ height: 32, padding: '0 12px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer', background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`, color: C.text }}
+                              onMouseEnter={e => (e.currentTarget.style.borderColor = C.borderHov)}
+                              onMouseLeave={e => (e.currentTarget.style.borderColor = C.border)}>
+                              {t('addCastleBtn')}
+                            </button>
+                          </div>
+                          <div style={{ paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+                            <label style={labelStyle}>{t('updateEmail')}</label>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                              <input className="auth-inp" type="email" placeholder="new@email.com" autoComplete="email" style={{ ...inp, flex: 1 }} />
+                              <button type="button" style={{ height: 32, padding: '0 12px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer', background: 'rgba(255,255,255,0.04)', border: `1px solid ${C.border}`, color: C.text, whiteSpace: 'nowrap' }}>{t('save')}</button>
+                            </div>
+                          </div>
+                          <div style={{ paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+                            <button type="button"
+                              onClick={() => {
+                                localStorage.removeItem('auth_token');
+                                localStorage.removeItem('user');
+                                onLogout();
+                                onClose();
+                              }}
+                              style={{ height: 32, padding: '0 12px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer', background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.18)', color: '#f87171' }}
+                              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(239,68,68,0.38)')}
+                              onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(239,68,68,0.18)')}>
+                              {t('signOut')}
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+
+                    </AnimatePresence>
+                  </div>
+                </div>
               </div>
-            </>
-          )}
-        </div>
-      </div>
-    </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
