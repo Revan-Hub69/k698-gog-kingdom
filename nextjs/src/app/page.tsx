@@ -661,12 +661,14 @@ export default function HomePage() {
       )}
 
       {/* LOGIN MODAL */}
+      {/* LOGIN MODAL / SHEET */}
       {showLoginModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowLoginModal(false)}>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center p-4 md:p-0" onClick={() => setShowLoginModal(false)}>
           <div
-            className="bg-slate-900/95 border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-md"
+            className="bg-slate-900/95 border border-purple-500/20 w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-t-none p-6 sm:p-8 max-h-[90vh] md:max-h-none overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Mobile header bar (optional) */}
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-black text-white">{t('loginTitle')}</h2>
               <button
@@ -765,10 +767,11 @@ export default function HomePage() {
       )}
 
       {/* REGISTER MODAL */}
+      {/* REGISTER MODAL / SHEET */}
       {showRegisterModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowRegisterModal(false)}>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center p-4 md:p-0" onClick={() => setShowRegisterModal(false)}>
           <div
-            className="bg-slate-900/95 border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-md"
+            className="bg-slate-900/95 border border-purple-500/20 w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-t-none p-6 sm:p-8 max-h-[90vh] md:max-h-none overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
@@ -954,10 +957,11 @@ export default function HomePage() {
       )}
 
       {/* FORGOT PASSWORD MODAL */}
+      {/* FORGOT PASSWORD MODAL / SHEET */}
       {showForgotModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowForgotModal(false)}>
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center p-4 md:p-0" onClick={() => setShowForgotModal(false)}>
           <div
-            className="bg-slate-900/95 border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-md"
+            className="bg-slate-900/95 border border-purple-500/20 w-full md:max-w-md md:rounded-2xl rounded-t-2xl md:rounded-t-none p-6 sm:p-8 max-h-[90vh] md:max-h-none overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
