@@ -562,7 +562,85 @@ export default function HomePage() {
           >
             <div className="max-w-2xl mx-auto">
               <h2 className="text-2xl font-black text-white mb-6">{t('myKingdom')}</h2>
-              <p className="text-slate-400">Account Sheet - Coming Soon</p>
+              
+              <div className="space-y-6">
+                {/* CLOSE BUTTON */}
+                <button
+                  onClick={() => setShowAccountSheet(false)}
+                  className="absolute top-6 right-6 p-2 rounded-lg bg-slate-800/50 hover:bg-slate-700 transition"
+                >
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                {/* MY CASTLES SECTION */}
+                <div className="border-b border-slate-700 pb-6">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <span>🏰 {t('myCastles')}</span>
+                    <span className="text-sm bg-purple-600 text-white px-2 py-1 rounded">0</span>
+                  </h3>
+                  <p className="text-slate-400 text-sm mb-4">Add and manage your kingdom castles</p>
+                  <button className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition">
+                    + Add Castle
+                  </button>
+                </div>
+
+                {/* ACCOUNT SETTINGS */}
+                <div className="border-b border-slate-700 pb-6">
+                  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    ⚙️ {t('settings')}
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    {/* EMAIL */}
+                    <div>
+                      <label className="text-xs font-semibold text-slate-300 uppercase tracking-wide block mb-2">
+                        📧 {t('email')}
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="email"
+                          placeholder="your@email.com"
+                          className="flex-1 px-3 py-2 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                        />
+                        <button className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">
+                          {t('save')}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* PASSWORD */}
+                    <div>
+                      <label className="text-xs font-semibold text-slate-300 uppercase tracking-wide block mb-2">
+                        🔐 {t('changePassword')}
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="password"
+                          placeholder="New password"
+                          className="flex-1 px-3 py-2 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                        />
+                        <button className="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm">
+                          {t('save')}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* LOGOUT BUTTON */}
+                <button
+                  onClick={() => {
+                    // Logout logic here
+                    setIsLoggedIn(false);
+                    setShowAccountSheet(false);
+                  }}
+                  className="w-full px-4 py-3 bg-red-600/20 hover:bg-red-600/30 border border-red-500/40 text-red-400 rounded-lg font-semibold transition"
+                >
+                  🚪 Logout
+                </button>
+              </div>
             </div>
           </div>
         </div>
