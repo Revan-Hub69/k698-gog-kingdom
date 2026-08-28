@@ -9,6 +9,13 @@ import { LanguageProvider } from "@/lib/LanguageProvider";
 export const metadata: Metadata = {
   title: "k698 · Guns of Glory Kingdom Manager",
   description: "Master your kingdom's equipment strategy during events. Spiritual power management through Guard Weapons, Curiosities, and Coats of Arms.",
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
 };
 
 export default function RootLayout({

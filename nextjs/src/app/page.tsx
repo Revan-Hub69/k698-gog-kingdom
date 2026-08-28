@@ -1,10 +1,15 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/LanguageProvider';
-import AuthSheet from '@/components/AuthSheet';
+import dynamic from 'next/dynamic';
 import { formatPower } from '@/lib/power';
+
+const AuthSheet = dynamic(() => import('@/components/AuthSheet'), {
+  ssr: false,
+  loading: () => null,
+});
 
 const LANGUAGES = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 
