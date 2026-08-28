@@ -54,8 +54,12 @@ export default function HomePage() {
   const [showAccountSheet, setShowAccountSheet] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showRegisterConfirm, setShowRegisterConfirm] = useState(false);
 
   // Auto-detect browser language
   useEffect(() => {
@@ -820,14 +824,41 @@ export default function HomePage() {
               }
             }} className="space-y-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('nicknameLabel')}</label>
-                <input
-                  type="text"
-                  name="nickname"
-                  placeholder="DragonSlayer"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                  required
-                />
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Password</label>
+                <div className="relative">
+                  <input
+                    type={showLoginPassword ? 'text' : 'password'}
+                    name="password"
+                    placeholder="••••••••"
+                    className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
+                  >
+                    {showLoginPassword ? (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowLoginModal(false);
+                    setShowForgotModal(true);
+                  }}
+                  className="text-xs text-purple-400 hover:text-purple-300 mt-2"
+                >
+                  Forgot password?
+                </button>
               </div>
 
               <div>
@@ -842,14 +873,59 @@ export default function HomePage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('changePassword')}</label>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
-                  required
-                />
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Password</label>
+                <div className="relative">
+                  <input
+                    type={showRegisterPassword ? 'text' : 'password'}
+                    name="password"
+                    placeholder="••••••••"
+                    className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                    className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
+                  >
+                    {showRegisterPassword ? (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">Confirm Password</label>
+                <div className="relative">
+                  <input
+                    type={showRegisterConfirm ? 'text' : 'password'}
+                    name="confirmPassword"
+                    placeholder="••••••••"
+                    className="w-full px-4 py-3 pr-10 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowRegisterConfirm(!showRegisterConfirm)}
+                    className="absolute right-3 top-3.5 text-slate-400 hover:text-slate-300"
+                  >
+                    {showRegisterConfirm ? (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 5C7 5 2.73 8.11 1 12.46c1.73 4.35 6 7.54 11 7.54s9.27-3.19 11-7.54C21.27 8.11 17 5 12 5m0 10c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.83 9L15.5 12.67c.04-.3.07-.59.07-.67C15.57 11.14 14.43 10 13 10c-.36 0-.69.08-1.17.17zM19.08 15.54c.33-.67.54-1.42.54-2.54 0-3.97-3.03-7-7-7-1.12 0-1.87.21-2.54.54l1.81 1.81c.71-.38 1.53-.6 2.73-.6 2.76 0 5 2.24 5 5 0 1.2-.22 2.02-.6 2.73l1.6 1.6zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 11.69c1.73 4.39 6 7.54 11 7.54 1.69 0 3.32-.27 4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.78-4.28c5.05 0 9.27 3.19 11 7.54-1.73 4.39-6 7.54-11 7.54-1.69 0-3.32-.27-4.84-.75l2.85 2.85c.36.36.93.36 1.29 0 .36-.36.36-.93 0-1.29L3.29 2.58c-.36-.36-.93-.36-1.29 0-.37.36-.37.92.01 1.29zm7.5 6.85c0 .67-.54 1.21-1.21 1.21-.67 0-1.21-.54-1.21-1.21s.54-1.21 1.21-1.21 1.21.54 1.21 1.21z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
               </div>
 
               <button
@@ -871,6 +947,82 @@ export default function HomePage() {
                 className="text-purple-400 hover:text-purple-300 font-semibold"
               >
                 {t('signIn')}
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* FORGOT PASSWORD MODAL */}
+      {showForgotModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowForgotModal(false)}>
+          <div
+            className="bg-slate-900/95 border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-white">Reset Password</h2>
+              <button
+                onClick={() => setShowForgotModal(false)}
+                className="p-2 hover:bg-slate-800 rounded-lg transition"
+              >
+                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {authError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
+                {authError}
+              </div>
+            )}
+
+            <p className="text-slate-300 text-sm mb-6">Enter your email address and we'll send you instructions to reset your password.</p>
+
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const email = new FormData(e.currentTarget).get('email') as string;
+              setAuthLoading(true);
+              setAuthError('');
+              
+              try {
+                // TODO: implement password reset endpoint
+                setAuthError('Password reset feature coming soon. Contact support.');
+              } finally {
+                setAuthLoading(false);
+              }
+            }} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
+              >
+                {authLoading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+            </form>
+
+            <p className="text-center text-slate-400 text-sm mt-4">
+              Remember your password?{' '}
+              <button
+                onClick={() => {
+                  setShowForgotModal(false);
+                  setShowLoginModal(true);
+                }}
+                className="text-purple-400 hover:text-purple-300 font-semibold"
+              >
+                Sign In
               </button>
             </p>
           </div>
