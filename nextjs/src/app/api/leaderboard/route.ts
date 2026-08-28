@@ -41,6 +41,7 @@ export async function GET() {
         rank: index + 1,
       }));
 
+    // Return ALL players (no limit)
     return NextResponse.json(leaderboard, { status: 200 });
   } catch (error) {
     console.error('Leaderboard error:', error);

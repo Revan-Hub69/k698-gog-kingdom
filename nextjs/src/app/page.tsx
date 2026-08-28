@@ -52,6 +52,10 @@ export default function HomePage() {
   const [leaderboardSearch, setLeaderboardSearch] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAccountSheet, setShowAccountSheet] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
 
   // Auto-detect browser language
   useEffect(() => {
@@ -100,8 +104,8 @@ export default function HomePage() {
         throw new Error('No data');
       }
       
-      setLeaderboard(leaderboardData.slice(0, 20)); // Top 20
-      setFilteredLeaderboard(leaderboardData.slice(0, 20));
+      setLeaderboard(leaderboardData); // ALL players
+      setFilteredLeaderboard(leaderboardData);
       setLeaderboardLoading(false);
     } catch (error) {
       console.error('Error fetching leaderboard:', error);
@@ -429,10 +433,16 @@ export default function HomePage() {
               <div className="text-center py-12">
                 <p className="text-slate-300 mb-6 text-lg font-semibold">{t('loginToView')}</p>
                 <div className="flex gap-3 justify-center">
-                  <button className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition">
+                  <button 
+                    onClick={() => setShowLoginModal(true)}
+                    className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition"
+                  >
                     {t('signIn')}
                   </button>
-                  <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition">
+                  <button 
+                    onClick={() => setShowRegisterModal(true)}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
+                  >
                     {t('signUp')}
                   </button>
                 </div>
@@ -642,6 +652,227 @@ export default function HomePage() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* LOGIN MODAL */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowLoginModal(false)}>
+          <div
+            className="bg-slate-900/95 border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-white">{t('loginTitle')}</h2>
+              <button
+                onClick={() => setShowLoginModal(false)}
+                className="p-2 hover:bg-slate-800 rounded-lg transition"
+              >
+                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {authError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
+                {authError}
+              </div>
+            )}
+
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const email = new FormData(e.currentTarget).get('email') as string;
+              const password = new FormData(e.currentTarget).get('password') as string;
+              
+              setAuthLoading(true);
+              setAuthError('');
+              
+              try {
+                const res = await fetch('/api/auth/login', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email, password }),
+                });
+                
+                const data = await res.json();
+                
+                if (!res.ok) {
+                  setAuthError(data.error || 'Login failed');
+                  return;
+                }
+                
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                setIsLoggedIn(true);
+                setShowLoginModal(false);
+              } catch (err) {
+                setAuthError('An error occurred. Please try again.');
+              } finally {
+                setAuthLoading(false);
+              }
+            }} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('changePassword')}</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
+              >
+                {authLoading ? 'Signing in...' : t('signIn')}
+              </button>
+            </form>
+
+            <p className="text-center text-slate-400 text-sm mt-4">
+              {t('dontHaveAccount')}{' '}
+              <button
+                onClick={() => {
+                  setShowLoginModal(false);
+                  setShowRegisterModal(true);
+                }}
+                className="text-purple-400 hover:text-purple-300 font-semibold"
+              >
+                {t('signUp')}
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* REGISTER MODAL */}
+      {showRegisterModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowRegisterModal(false)}>
+          <div
+            className="bg-slate-900/95 border border-purple-500/20 rounded-2xl p-6 sm:p-8 w-full max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-black text-white">{t('registerTitle')}</h2>
+              <button
+                onClick={() => setShowRegisterModal(false)}
+                className="p-2 hover:bg-slate-800 rounded-lg transition"
+              >
+                <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {authError && (
+              <div className="mb-4 p-3 bg-red-500/20 border border-red-500/40 rounded-lg text-red-400 text-sm">
+                {authError}
+              </div>
+            )}
+
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              const fd = new FormData(e.currentTarget);
+              const nickname = fd.get('nickname') as string;
+              const email = fd.get('email') as string;
+              const password = fd.get('password') as string;
+              
+              setAuthLoading(true);
+              setAuthError('');
+              
+              try {
+                const res = await fetch('/api/auth/register', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ nickname, email, password }),
+                });
+                
+                const data = await res.json();
+                
+                if (!res.ok) {
+                  setAuthError(data.error || 'Registration failed');
+                  return;
+                }
+                
+                localStorage.setItem('auth_token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                setIsLoggedIn(true);
+                setShowRegisterModal(false);
+              } catch (err) {
+                setAuthError('An error occurred. Please try again.');
+              } finally {
+                setAuthLoading(false);
+              }
+            }} className="space-y-4">
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('nicknameLabel')}</label>
+                <input
+                  type="text"
+                  name="nickname"
+                  placeholder="DragonSlayer"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('email')}</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300 uppercase block mb-2">{t('changePassword')}</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-purple-500 text-sm"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full mt-6 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 text-white rounded-lg font-bold transition"
+              >
+                {authLoading ? 'Creating...' : t('signUp')}
+              </button>
+            </form>
+
+            <p className="text-center text-slate-400 text-sm mt-4">
+              {t('alreadyHaveAccount')}{' '}
+              <button
+                onClick={() => {
+                  setShowRegisterModal(false);
+                  setShowLoginModal(true);
+                }}
+                className="text-purple-400 hover:text-purple-300 font-semibold"
+              >
+                {t('signIn')}
+              </button>
+            </p>
           </div>
         </div>
       )}
