@@ -37,14 +37,14 @@ const TAB_DATA: Record<TabType, { title: string; descKey: string; contentKey: st
     title: 'curiosities',
     descKey: 'curiositiesManagement',
     contentKey: 'curiositiesContent',
-    image: '/images/Curiosities.png',
+    image: '/images/curiosities.png',
     list: ['collectCombine', 'trackPowerChanges', 'planLoadouts'],
   },
   coa: {
     title: 'coatsOfArms',
     descKey: 'coaNew',
     contentKey: 'newestFeature',
-    image: '/images/COA.png',
+    image: '/images/coa.png',
     list: ['applyCoa', 'calculateImpact', 'maximizePerformance'],
   },
 };
