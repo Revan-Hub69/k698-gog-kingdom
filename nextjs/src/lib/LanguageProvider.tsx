@@ -84,6 +84,10 @@ const translations: Record<Language, Record<string, string>> = {
     alreadyHaveAccount: 'Already have an account?',
     dontHaveAccount: 'Don\'t have an account?',
     
+    // KvK Warning
+    kvkWarningTitle: 'KvK Power Update Required',
+    kvkWarningMessage: 'Players who do not submit or update their power data will not receive KvK rewards. Regular updates ensure your kingdom is properly ranked and eligible for rewards. Sign in to submit your power data and appear on the leaderboard.',
+    
     copyright: 'Guns of Glory',
   },
   IT: {
@@ -162,10 +166,14 @@ const translations: Record<Language, Record<string, string>> = {
      nicknameLabel: 'Nickname',
      registerTitle: 'Crea Account',
      loginTitle: 'Accedi',
-     alreadyHaveAccount: 'Hai già un account?',
-     dontHaveAccount: 'Non hai un account?',
-     
-     copyright: 'Guns of Glory',
+      alreadyHaveAccount: 'Hai già un account?',
+      dontHaveAccount: 'Non hai un account?',
+      
+      // KvK Warning
+      kvkWarningTitle: 'Aggiornamento Potere KvK Richiesto',
+      kvkWarningMessage: 'I giocatori che non inviano o aggiornano i dati di potere non riceveranno i premi KvK. Gli aggiornamenti regolari garantiscono che il tuo regno sia correttamente classificato e idoneo per i premi. Accedi per inviare i dati di potere e apparire nella classifica.',
+      
+      copyright: 'Guns of Glory',
    },
   PL: {
     headerBranding: 'Świetnie! Jesteśmy Regionem Mistrzów!!',
@@ -243,10 +251,14 @@ const translations: Record<Language, Record<string, string>> = {
       nicknameLabel: 'Pseudonim',
       registerTitle: 'Utwórz Konto',
       loginTitle: 'Zaloguj się',
-       alreadyHaveAccount: 'Już masz konto?',
-       dontHaveAccount: 'Nie masz konta?',
-       
-       copyright: 'Guns of Glory',
+      alreadyHaveAccount: 'Już masz konto?',
+      dontHaveAccount: 'Nie masz konta?',
+      
+      // KvK Warning
+      kvkWarningTitle: 'Wymagana Aktualizacja Mocy KvK',
+      kvkWarningMessage: 'Gracze, którzy nie przesyłają ani nie aktualizują danych mocy, nie otrzymają nagród KvK. Regularne aktualizacje zapewniają, że twoje królestwo jest prawidłowo sklasyfikowane i uprawnione do nagród. Zaloguj się, aby przesłać dane mocy i pojawić się na liście liderów.',
+      
+      copyright: 'Guns of Glory',
       },
   ZH: {
     headerBranding: '做得好！我们是冠军地区！！',
@@ -323,12 +335,16 @@ const translations: Record<Language, Record<string, string>> = {
       nicknameLabel: '昵称',
       registerTitle: '创建账户',
       loginTitle: '登录',
-      alreadyHaveAccount: '已有账户?',
-      dontHaveAccount: '没有账户?',
-      
-      renaissance: '复兴',
-      copyright: 'Guns of Glory',
-     },
+       alreadyHaveAccount: '已有账户?',
+       dontHaveAccount: '没有账户?',
+       
+       // KvK Warning
+       kvkWarningTitle: '需要KvK力量更新',
+       kvkWarningMessage: '不提交或更新力量数据的玩家将无法获得KvK奖励。定期更新可确保您的王国正确排名并符合奖励条件。登录以提交力量数据并出现在排行榜上。',
+       
+       renaissance: '复兴',
+       copyright: 'Guns of Glory',
+      },
   DE: {
     headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
     projectName: 'k698 - Wiedergeburtsprojekt',
@@ -405,11 +421,15 @@ const translations: Record<Language, Record<string, string>> = {
       nicknameLabel: 'Spitzname',
       registerTitle: 'Konto erstellen',
       loginTitle: 'Anmelden',
-      alreadyHaveAccount: 'Haben Sie bereits ein Konto?',
-       dontHaveAccount: 'Sie haben kein Konto?',
-       
-       copyright: 'Guns of Glory',
-      },
+       alreadyHaveAccount: 'Haben Sie bereits ein Konto?',
+        dontHaveAccount: 'Sie haben kein Konto?',
+        
+        // KvK Warning
+        kvkWarningTitle: 'KvK-Kraftaktualisierung erforderlich',
+        kvkWarningMessage: 'Spieler, die ihre Kraftdaten nicht einreichen oder aktualisieren, erhalten keine KvK-Belohnungen. Regelmäßige Aktualisierungen stellen sicher, dass Ihr Königreich ordnungsgemäß eingestuft und für Belohnungen berechtigt ist. Melden Sie sich an, um Kraftdaten einzureichen und in der Rangliste zu erscheinen.',
+        
+        copyright: 'Guns of Glory',
+       },
   FR: {
     headerBranding: 'Bien Fait! Nous Sommes Région Championne!!',
     projectName: 'k698 - Projet Renaissance',
@@ -489,8 +509,12 @@ const translations: Record<Language, Record<string, string>> = {
       alreadyHaveAccount: 'Vous avez déjà un compte?',
        dontHaveAccount: 'Vous n\'avez pas de compte?',
        
+       // KvK Warning
+       kvkWarningTitle: 'Mise à jour de la puissance KvK requise',
+       kvkWarningMessage: 'Les joueurs qui ne soumettent pas ou ne mettent pas à jour leurs données de puissance ne recevront pas de récompenses KvK. Les mises à jour régulières garantissent que votre royaume est correctement classé et admissible aux récompenses. Connectez-vous pour soumettre vos données de puissance et apparaître au classement.',
+       
        copyright: 'Guns of Glory',
-      },
+       },
    RU: {
     headerBranding: 'Отлично Сделано! Мы - Чемпионский Регион!!',
     projectName: 'k698 - Проект Возрождения',
@@ -566,12 +590,16 @@ const translations: Record<Language, Record<string, string>> = {
       nicknameLabel: 'Прозвище',
       registerTitle: 'Создать аккаунт',
       loginTitle: 'Вход',
-      alreadyHaveAccount: 'Уже есть аккаунт?',
-      dontHaveAccount: 'Нет аккаунта?',
-      
-      renaissance: 'ВОЗРОЖДЕНИЕ',
-      copyright: 'Guns of Glory',
-     },
+       alreadyHaveAccount: 'Уже есть аккаунт?',
+       dontHaveAccount: 'Нет аккаунта?',
+       
+       // KvK Warning
+       kvkWarningTitle: 'Требуется обновление мощи KvK',
+       kvkWarningMessage: 'Игроки, которые не отправляют или не обновляют данные мощи, не получат награды KvK. Регулярные обновления обеспечивают правильную классификацию вашего королевства и его право на получение награды. Войдите, чтобы отправить данные мощи и появиться в рейтинге.',
+       
+       renaissance: 'ВОЗРОЖДЕНИЕ',
+       copyright: 'Guns of Glory',
+      },
   ES: {
     headerBranding: '¡Bien Hecho! ¡Somos la Región Campeona!!',
     projectName: 'k698 - Proyecto Renacimiento',
@@ -651,8 +679,12 @@ const translations: Record<Language, Record<string, string>> = {
       alreadyHaveAccount: '¿Ya tienes una cuenta?',
        dontHaveAccount: '¿No tienes una cuenta?',
        
+       // KvK Warning
+       kvkWarningTitle: 'Se requiere actualización de poder KvK',
+       kvkWarningMessage: 'Los jugadores que no envíen ni actualicen sus datos de poder no recibirán recompensas KvK. Las actualizaciones regulares garantizan que tu reino esté correctamente clasificado y sea elegible para recompensas. Inicia sesión para enviar tus datos de poder y aparecer en el ranking.',
+       
        copyright: 'Guns of Glory',
-      },
+       },
   };
 
 interface LanguageContextType {

@@ -412,20 +412,18 @@ export default function HomePage() {
 
           {!isLoggedIn ? (
             <div className="space-y-6">
-              {/* INFO BOX - KVK RULES */}
-              <div className="bg-gradient-to-br from-orange-600/10 to-red-600/10 border border-orange-500/40 rounded-lg p-5 sm:p-6">
-                <div className="flex items-start gap-4">
-                  <div className="text-2xl flex-shrink-0">⚠️</div>
-                  <div>
-                    <h3 className="font-bold text-white text-lg mb-2">KvK Power Update Required</h3>
-                    <p className="text-slate-300 text-sm leading-relaxed">
-                      Players who do not submit or update their power data <strong>will not receive</strong> KvK rewards. 
-                      Regular updates ensure your kingdom is properly ranked and eligible for rewards. 
-                      Sign in to submit your power data and appear on the leaderboard.
-                    </p>
-                  </div>
-                </div>
-              </div>
+               {/* INFO BOX - KVK RULES */}
+               <div className="bg-gradient-to-br from-orange-600/10 to-red-600/10 border border-orange-500/40 rounded-lg p-5 sm:p-6">
+                 <div className="flex items-start gap-4">
+                   <div className="text-2xl flex-shrink-0">⚠️</div>
+                   <div>
+                     <h3 className="font-bold text-white text-lg mb-2">{t('kvkWarningTitle')}</h3>
+                     <p className="text-slate-300 text-sm leading-relaxed">
+                       {t('kvkWarningMessage')}
+                     </p>
+                   </div>
+                 </div>
+               </div>
 
               {/* LOGIN PROMPT */}
               <div className="text-center py-12">
