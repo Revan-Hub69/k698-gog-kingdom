@@ -1,29 +1,11 @@
 ﻿'use client';
 
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/LanguageProvider';
-import dynamic from 'next/dynamic';
-import { formatPower } from '@/lib/power';
-
-const AuthSheet = dynamic(() => import('@/components/AuthSheet'), {
-  ssr: false,
-  loading: () => null,
-});
 
 const LANGUAGES = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
-
 type TabType = 'guard' | 'curiosities' | 'coa';
-
-interface LeaderboardEntry {
-  id: number;
-  nickname: string;
-  totalCastles: number;
-  totalCurrentPower: number;
-  totalHistoricalPower: number;
-  rank: number;
-  castles: { lastPowerUpdate: string; screenshotUrl?: string }[];
-}
 
 const TAB_DATA: Record<TabType, { title: string; descKey: string; contentKey: string; image: string; list: string[] }> = {
   guard: {
@@ -53,15 +35,7 @@ export default function HomePage() {
   const { language, setLanguage, t } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('guard');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [filteredLeaderboard, setFilteredLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [leaderboardLoading, setLeaderboardLoading] = useState(true);
-  const [leaderboardSearch, setLeaderboardSearch] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showAuthSheet, setShowAuthSheet] = useState(false);
-  const [authSheetScreen, setAuthSheetScreen] = useState<'login' | 'register' | 'forgot' | 'account'>('login');
 
-  // Auto-detect browser language
   useEffect(() => {
     const browserLang = navigator.language.split('-')[0].toUpperCase();
     if (LANGUAGES.includes(browserLang as typeof LANGUAGES[0])) {
@@ -69,96 +43,29 @@ export default function HomePage() {
     }
   }, [setLanguage]);
 
-  // Fetch leaderboard
-  useEffect(() => {
-    fetchLeaderboard();
-    checkAuth();
-  }, []);
-
-  // Filter leaderboard based on search
-  useEffect(() => {
-    if (leaderboardSearch.trim() === '') {
-      setFilteredLeaderboard(leaderboard);
-    } else {
-      const search = leaderboardSearch.toLowerCase();
-      setFilteredLeaderboard(
-        leaderboard.filter((entry) =>
-          entry.nickname.toLowerCase().includes(search)
-        )
-      );
-    }
-  }, [leaderboardSearch, leaderboard]);
-
-  const fetchLeaderboard = async () => {
-    try {
-      const res = await fetch('/api/leaderboard', { 
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-      
-      const data = await res.json();
-      const leaderboardData = Array.isArray(data) ? data : data.data || [];
-
-      setLeaderboard(leaderboardData); // ALL players
-      setFilteredLeaderboard(leaderboardData);
-      setLeaderboardLoading(false);
-    } catch (error) {
-      console.error('Error fetching leaderboard:', error);
-      // No mock fallback - show empty state for non-logged-in users
-      setLeaderboard([]);
-      setFilteredLeaderboard([]);
-      setLeaderboardLoading(false);
-    }
-  };
-
-  const checkAuth = () => {
-    const token = localStorage.getItem('auth_token');
-    setIsLoggedIn(!!token);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden">
-      {/* HEADER - ELEGANT TIER 1 */}
+
+      {/* HEADER */}
       <header className="sticky top-0 z-[9999] bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-purple-500/20 backdrop-blur-lg shadow-2xl shadow-purple-950/30">
         <div className="w-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
-          {/* LOGO - K698 INNOVATIVE TIER1 TEXT */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <h1 className="font-black text-lg sm:text-2xl bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 bg-clip-text text-transparent tracking-tight leading-none">k698</h1>
-            <span className="text-purple-500/40 font-bold">&#x25CF;</span>
+            <span className="text-purple-500/40 font-bold">&#x25CF;</span>
             <p className="text-xs sm:text-sm text-purple-400/80 font-semibold tracking-widest leading-none">{t('renaissance')}</p>
           </div>
-
-          {/* LANGUAGE SELECTOR - TIER 1 ELEGANT */}
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-lg border border-purple-500/40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 text-white font-bold text-xs hover:border-purple-500/60 hover:bg-purple-500/15 transition-all backdrop-blur-sm hover:shadow-lg hover:shadow-purple-500/20"
+              className="flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-lg border border-purple-500/40 bg-gradient-to-br from-purple-500/10 to-blue-500/10 text-white font-bold text-xs hover:border-purple-500/60 transition-all backdrop-blur-sm"
             >
               <span className="text-sm sm:text-base">{language}</span>
             </button>
-
-            {/* DROPDOWN MENU - TIER 1 ELEGANT */}
             {dropdownOpen && (
-              <div className="absolute top-full right-0 mt-2.5 bg-gradient-to-b from-slate-800/95 to-slate-900/95 border border-purple-500/30 rounded-lg shadow-2xl shadow-purple-900/40 z-50 min-w-40 backdrop-blur-xl overflow-hidden">
+              <div className="absolute top-full right-0 mt-2.5 bg-gradient-to-b from-slate-800/95 to-slate-900/95 border border-purple-500/30 rounded-lg shadow-2xl z-50 min-w-40 backdrop-blur-xl overflow-hidden">
                 {LANGUAGES.map((lang, idx) => (
-                  <button
-                    key={lang}
-                    onClick={() => {
-                      setLanguage(lang);
-                      setDropdownOpen(false);
-                    }}
-                    className={`w-full px-4 py-3 text-sm font-semibold transition-all text-center ${
-                      idx !== 0 ? 'border-t border-purple-500/10' : ''
-                    } ${
-                      language === lang
-                        ? 'bg-gradient-to-r from-purple-600/30 to-blue-600/30 text-white'
-                        : 'text-slate-300 hover:text-white hover:bg-purple-500/10'
-                    }`}
-                  >
+                  <button key={lang} onClick={() => { setLanguage(lang); setDropdownOpen(false); }}
+                    className={`w-full px-4 py-3 text-sm font-semibold transition-all text-center ${idx !== 0 ? 'border-t border-purple-500/10' : ''} ${language === lang ? 'bg-gradient-to-r from-purple-600/30 to-blue-600/30 text-white' : 'text-slate-300 hover:text-white hover:bg-purple-500/10'}`}>
                     {lang}
                   </button>
                 ))}
@@ -168,23 +75,17 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* HERO SECTION */}
+      {/* HERO */}
       <section className="relative pt-16 sm:pt-20 md:pt-28 pb-16 sm:pb-20 md:pb-24 px-4 text-center overflow-hidden">
-        {/* GEOMETRIC BACKGROUND ELEMENTS */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
           <div className="absolute top-1/3 right-1/4 w-48 h-48 border border-purple-500/20 rounded-lg rotate-45 opacity-50"></div>
           <div className="absolute bottom-1/4 left-1/3 w-32 h-32 border border-blue-500/20 rounded-full opacity-50"></div>
         </div>
-
         <div className="relative max-w-5xl mx-auto">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tight drop-shadow-lg">
-            {t('headerBranding')}
-          </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-slate-200 mb-10 leading-relaxed max-w-3xl mx-auto font-medium drop-shadow">
-            {t('headerSubtitle')}
-          </p>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tight drop-shadow-lg">{t('headerBranding')}</h1>
+          <p className="text-lg sm:text-xl md:text-2xl text-slate-200 mb-10 leading-relaxed max-w-3xl mx-auto font-medium drop-shadow">{t('headerSubtitle')}</p>
           <div className="flex gap-4 justify-center">
             <div className="h-1.5 w-32 bg-gradient-to-r from-purple-500 via-blue-500 to-purple-500 rounded-full"></div>
           </div>
@@ -196,100 +97,59 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-2 sm:gap-3">
             {Array.from({ length: 12 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg md:rounded-xl opacity-20 hover:opacity-50 transition-all cursor-pointer shadow-lg shadow-purple-600/30"
-                style={{
-                  animation: `pulse ${2 + i * 0.15}s cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-                }}
-              />
+              <div key={i} className="aspect-square bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg md:rounded-xl opacity-20 hover:opacity-50 transition-all cursor-pointer shadow-lg shadow-purple-600/30"
+                style={{ animation: `pulse ${2 + i * 0.15}s cubic-bezier(0.4, 0, 0.6, 1) infinite` }} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* SPIRITUAL POWER SECTION */}
+      {/* SPIRITUAL POWER */}
       <section className="py-12 sm:py-16 md:py-24 px-4">
         <div className="max-w-6xl mx-auto w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-12 sm:mb-16 md:mb-20 text-center tracking-tight drop-shadow">
-            {t('spiritualPowerTitle')}
-          </h2>
-          
-          {/* BANNER - GLASSMORPHISM ELEGANTE */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-12 sm:mb-16 md:mb-20 text-center tracking-tight drop-shadow">{t('spiritualPowerTitle')}</h2>
           <div className="mb-16 sm:mb-20 md:mb-28 bg-gradient-to-r from-slate-800/40 via-slate-900/40 to-slate-800/40 border border-red-500/60 rounded-xl p-6 sm:p-8 md:p-10 backdrop-blur-2xl shadow-2xl shadow-red-600/20">
             <div className="flex items-start gap-4 sm:gap-5 md:gap-6">
-              {/* PREMIUM SVG ICON */}
-              <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex-shrink-0 mt-1" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 20h20L12 2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" className="text-red-500"/>
-                <circle cx="12" cy="16" r="1" fill="currentColor" className="text-red-500"/>
-                <line x1="12" y1="8" x2="12" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="text-red-500"/>
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex-shrink-0 mt-1 text-red-500" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 20h20L12 2z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+                <circle cx="12" cy="16" r="1" fill="currentColor"/>
+                <line x1="12" y1="8" x2="12" y2="14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
-              <p className="text-sm sm:text-base md:text-lg text-slate-100 font-semibold leading-relaxed">
-                {t('spiritualPowerBanner')}
-              </p>
+              <p className="text-sm sm:text-base md:text-lg text-slate-100 font-semibold leading-relaxed">{t('spiritualPowerBanner')}</p>
             </div>
           </div>
-
-          {/* MOBILE: STACK + SCROLL TABS / DESKTOP: TABS LEFT + CONTENT RIGHT */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-            {/* TABS */}
-            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit w-full lg:w-auto">
-              <div className="flex flex-nowrap gap-2 lg:flex-col lg:gap-3 w-full lg:w-auto overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
+            <div className="order-2 lg:order-1 lg:sticky lg:top-[80px] h-fit">
+              <div className="flex flex-nowrap gap-2 lg:flex-col lg:gap-3 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0">
                 {(Object.entries(TAB_DATA) as [TabType, typeof TAB_DATA['guard']][]).map(([tabKey, tabInfo]) => (
-                  <button
-                    key={tabKey}
-                    onClick={() => setActiveTab(tabKey as TabType)}
-                    className={`flex-1 lg:flex-none px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap lg:whitespace-normal ${
-                      activeTab === tabKey
-                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50'
-                        : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'
-                    }`}
-                  >
+                  <button key={tabKey} onClick={() => setActiveTab(tabKey as TabType)}
+                    className={`flex-1 lg:flex-none px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap lg:whitespace-normal ${activeTab === tabKey ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50' : 'bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 border border-slate-700/50'}`}>
                     <div className="truncate lg:truncate-none">{t(tabInfo.title)}</div>
-                    {tabKey === 'coa' && (
-                      <div className="text-xs text-amber-300 font-black">* {t('newBadge')} *</div>
-                    )}
+                    {tabKey === 'coa' && <div className="text-xs text-amber-300 font-black">* {t('newBadge')} *</div>}
                   </button>
                 ))}
               </div>
             </div>
-
-            {/* CONTENT */}
             <div className="order-1 lg:order-2 lg:col-span-3 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg md:rounded-2xl p-4 sm:p-5 md:p-8 lg:p-12 backdrop-blur w-full overflow-hidden min-h-[600px] sm:min-h-[700px] md:min-h-[500px]">
               <div className="grid grid-cols-1 gap-4 sm:gap-5 md:gap-6 lg:gap-8 items-start w-full h-full">
-                {/* DESCRIPTION & LIST - FULL WIDTH */}
                 <div className="space-y-4 sm:space-y-5 md:space-y-6 w-full">
                   <div>
-                    <h3 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black text-white mb-3 sm:mb-4">
-                      {t(TAB_DATA[activeTab].descKey)}
-                    </h3>
+                    <h3 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black text-white mb-3 sm:mb-4">{t(TAB_DATA[activeTab].descKey)}</h3>
                     <div className="h-0.5 sm:h-1 w-10 sm:w-12 md:w-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
                   </div>
-
-                  <p className="text-sm sm:text-base md:text-base text-slate-300 leading-7">
-                    {t(TAB_DATA[activeTab].contentKey)}
-                  </p>
-
-                  <ul className="space-y-3 sm:space-y-4 md:space-y-4 w-full">
+                  <p className="text-sm sm:text-base text-slate-300 leading-7">{t(TAB_DATA[activeTab].contentKey)}</p>
+                  <ul className="space-y-3 sm:space-y-4 w-full">
                     {TAB_DATA[activeTab].list.map((key, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-slate-200 text-sm sm:text-base md:text-base leading-6 w-full">
+                      <li key={idx} className="flex items-start gap-2.5 sm:gap-3 text-slate-200 text-sm sm:text-base leading-6 w-full">
                         <span className="text-purple-400 font-black text-lg sm:text-xl flex-shrink-0 mt-0.5">&#x25B8;</span>
-                        <span className="word-wrap break-words leading-7">{t(key)}</span>
+                        <span className="break-words leading-7">{t(key)}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
-
-                {/* IMAGE - SMALLER */}
                 <div className="relative w-full max-w-lg mx-auto aspect-video bg-gradient-to-br from-slate-700 to-slate-900 rounded-lg md:rounded-xl overflow-hidden border border-purple-500/30 shadow-2xl shadow-purple-600/30">
-                  <Image
-                    src={TAB_DATA[activeTab].image}
-                    alt={t(TAB_DATA[activeTab].title)}
-                    fill
-                    className="object-contain bg-slate-900"
-                    priority={activeTab === 'guard'}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 50vw"
-                  />
+                  <Image src={TAB_DATA[activeTab].image} alt={t(TAB_DATA[activeTab].title)} fill className="object-contain bg-slate-900"
+                    priority={activeTab === 'guard'} sizes="(max-width: 768px) 100vw, (max-width: 1024px) 80vw, 50vw" />
                 </div>
               </div>
             </div>
@@ -297,308 +157,61 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEPARATOR */}
       <div className="h-px sm:h-1 bg-gradient-to-r from-transparent via-purple-500/50 to-transparent my-8 sm:my-12 md:my-16"></div>
 
-      {/* EVENTS SECTION - BACKGROUND CHANGE */}
+      {/* EVENTS */}
       <section className="py-24 px-4 bg-gradient-to-b from-slate-900/50 via-purple-900/30 to-slate-950">
         <div className="max-w-5xl mx-auto w-full">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 sm:mb-4 text-center tracking-tight drop-shadow">
-            {t('eventsTitle')}
-          </h2>
-          <p className="text-lg sm:text-xl md:text-2xl text-purple-300 mb-12 sm:mb-14 md:mb-16 text-center font-bold drop-shadow">
-            {t('eventsSubtitle')}
-          </p>
-          <p className="text-sm sm:text-base text-slate-300 mb-12 sm:mb-16 md:mb-20 text-center max-w-3xl mx-auto leading-relaxed">
-            {t('eventsContext')}
-          </p>
-
-          {/* 5 STEPS GRID */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 sm:mb-4 text-center tracking-tight drop-shadow">{t('eventsTitle')}</h2>
+          <p className="text-lg sm:text-xl md:text-2xl text-purple-300 mb-12 sm:mb-14 md:mb-16 text-center font-bold drop-shadow">{t('eventsSubtitle')}</p>
+          <p className="text-sm sm:text-base text-slate-300 mb-12 sm:mb-16 md:mb-20 text-center max-w-3xl mx-auto leading-relaxed">{t('eventsContext')}</p>
           <div className="space-y-6 sm:space-y-8">
-            {/* STEP 1 */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-              <div className="lg:col-span-2 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep1Title')}</h3>
-                    <p className="text-sm sm:text-base text-slate-300">{t('eventStep1Desc')}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
-                <Image src="/equipaggiamento.png" alt="Equipment" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
-              </div>
-            </div>
-
-            {/* STEP 2 */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-              <div className="lg:col-span-2 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
-                <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep2Title')}</h3>
-                    <p className="text-sm sm:text-base text-slate-300">{t('eventStep2Desc')}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
-                <Image src="/parti-della-nave.png" alt="Ship Parts" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
-              </div>
-            </div>
-
-            {/* STEP 3 */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
-                  3
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep3Title')}</h3>
-                  <p className="text-sm sm:text-base text-slate-300">{t('eventStep3Desc')}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* STEP 4 */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
-                  4
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep4Title')}</h3>
-                  <p className="text-sm sm:text-base text-slate-300">{t('eventStep4Desc')}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* STEP 5 */}
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">
-                  5
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t('eventStep5Title')}</h3>
-                  <p className="text-sm sm:text-base text-slate-300">{t('eventStep5Desc')}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* LEADERBOARD SECTION - INLINE */}
-      <section className="py-24 px-4 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border-t border-purple-500/20">
-        <div className="max-w-6xl mx-auto w-full">
-          <div className="flex items-center justify-between mb-16">
-            <div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-3 tracking-tight drop-shadow">
-                {t('leaderboardTitle')}
-              </h2>
-              <p className="text-slate-300 text-sm sm:text-base">{t('leaderboardDesc')}</p>
-            </div>
-            {isLoggedIn && (
-              <button
-                onClick={fetchLeaderboard}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition text-sm sm:text-base"
-              >
-                {t('refreshLeaderboard')}
-              </button>
-            )}
-          </div>
-
-          {!isLoggedIn ? (
-            <div className="space-y-6">
-               {/* INFO BOX - KVK RULES */}
-               <div className="bg-gradient-to-br from-orange-600/10 to-red-600/10 border border-orange-500/40 rounded-lg p-5 sm:p-6">
-                 <div className="flex items-start gap-4">
-                   <div className="flex-shrink-0 text-orange-400"><svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div>
-                   <div>
-                     <h3 className="font-bold text-white text-lg mb-2">{t('kvkWarningTitle')}</h3>
-                     <p className="text-slate-300 text-sm leading-relaxed">
-                       {t('kvkWarningMessage')}
-                     </p>
-                   </div>
-                 </div>
-               </div>
-
-              {/* LOGIN PROMPT */}
-              <div className="text-center py-12">
-                <p className="text-slate-300 mb-6 text-lg font-semibold">{t('loginToView')}</p>
-                <div className="flex gap-3 justify-center">
-                  <button 
-                    onClick={() => { setShowAuthSheet(true); setAuthSheetScreen('login'); }}
-                    className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition"
-                  >
-                    {t('signIn')}
-                  </button>
-                  <button 
-                    onClick={() => { setShowAuthSheet(true); setAuthSheetScreen('register'); }}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
-                  >
-                    {t('signUp')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {/* SEARCH BAR */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search by nickname..."
-                  value={leaderboardSearch}
-                  onChange={(e) => setLeaderboardSearch(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-purple-500/40 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-purple-500/80 focus:ring-1 focus:ring-purple-500/30 transition"
-                />
-                <svg className="absolute right-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-
-          {/* SCROLLABLE TABLE */}
-          <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/40 rounded-lg overflow-hidden max-h-[600px] overflow-y-auto custom-scrollbar">
-            {leaderboardLoading ? (
-              <div className="py-16 text-center text-slate-400">{t('leaderboardDesc')}</div>
-            ) : filteredLeaderboard.length === 0 ? (
-              <div className="py-12 text-center text-slate-400">
-                No players found matching &quot;{leaderboardSearch}&quot;
-              </div>
-            ) : (
-              <div className="space-y-1.5">
-                {filteredLeaderboard.map((entry) => {
-                  const lastUpdate = entry.castles[0]?.lastPowerUpdate 
-                    ? new Date(entry.castles[0].lastPowerUpdate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-                    : '-';
-                  const hasScreenshot = entry.castles.some(c => c.screenshotUrl);
-
-                  return (
-                    <div
-                      key={entry.id}
-                      className="p-2.5 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50 overflow-hidden"
-                    >
-                      {/* ROW 1: RANK + NAME + SCREENSHOT + DATE */}
-                      <div className="flex items-center justify-between gap-3 mb-3 min-w-0">
-                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                          <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm bg-slate-700/50 text-slate-300 flex-shrink-0">
-                            #{entry.rank}
-                          </div>
-                          <p className="font-bold text-white truncate text-base sm:text-lg">
-                            {entry.nickname}
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          {/* SCREENSHOT STATUS */}
-                          <span className={`font-bold text-base ${hasScreenshot ? 'text-green-400' : 'text-slate-600'}`}>
-                            {hasScreenshot ? '✓' : '✗'}
-                          </span>
-                          {/* LAST UPDATED */}
-                          <span className="text-slate-400 whitespace-nowrap text-xs">
-                            {lastUpdate}
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* ROW 2: POWER VALUES */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <p className="text-slate-400 text-xs mb-1">{t('currentPower')}</p>
-                          <p className="font-bold text-blue-400 text-lg sm:text-xl">
-                            {formatPower(entry.totalCurrentPower)}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-slate-400 text-xs mb-1">{t('historicalPower')}</p>
-                          <p className="font-bold text-green-400 text-lg sm:text-xl">
-                            {formatPower(entry.totalHistoricalPower)}
-                          </p>
-                        </div>
-                      </div>
-                      {/* Progress bar */}
-                      {entry.totalHistoricalPower > 0 && (
-                        <div className="mt-3">
-                          <div className="h-1.5 bg-slate-700/40 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
-                              style={{ width: `${Math.min((entry.totalCurrentPower / entry.totalHistoricalPower) * 100, 100)}%` }}
-                            />
-                          </div>
-                        </div>
-                      )}
+            {[
+              { n: 1, title: 'eventStep1Title', desc: 'eventStep1Desc', img: '/equipaggiamento.png' },
+              { n: 2, title: 'eventStep2Title', desc: 'eventStep2Desc', img: '/parti-della-nave.png' },
+            ].map(step => (
+              <div key={step.n} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+                <div className="lg:col-span-2 bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">{step.n}</div>
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t(step.title)}</h3>
+                      <p className="text-sm sm:text-base text-slate-300">{t(step.desc)}</p>
                     </div>
-                  );
-                })}
+                  </div>
+                </div>
+                <div className="lg:col-span-1 relative w-full aspect-video bg-slate-700 rounded-lg overflow-hidden border border-purple-500/20">
+                  <Image src={step.img} alt={t(step.title)} fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                </div>
               </div>
-            )}
+            ))}
+            {[3, 4, 5].map(n => (
+              <div key={n} className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-purple-500/30 rounded-lg p-6 sm:p-8">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600 to-blue-600 flex items-center justify-center font-black text-white text-lg flex-shrink-0">{n}</div>
+                  <div className="flex-1">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{t(`eventStep${n}Title`)}</h3>
+                    <p className="text-sm sm:text-base text-slate-300">{t(`eventStep${n}Desc`)}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-
-          {/* RESULTS COUNT */}
-           {/* RESULTS COUNT */}
-           <div className="text-sm text-slate-400 text-right">
-             Showing {filteredLeaderboard.length} of {leaderboard.length} players
-           </div>
-            </div>
-          )}
         </div>
       </section>
 
-      <footer className="relative z-[30] py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
-        {/* COPYRIGHT */}
+      {/* FOOTER */}
+      <footer className="py-6 sm:py-8 md:py-12 px-4 text-center border-t border-purple-500/20 bg-slate-950">
         <p className="text-xs sm:text-sm text-slate-500">{'©'} {new Date().getFullYear()} k698 {'\u00b7'} {t('copyright')}</p>
         <p className="text-xs text-slate-600 mt-2">Guns of Glory Kingdom Manager</p>
       </footer>
 
-
-      {/* AUTH SHEET */}
-      <AuthSheet
-        isOpen={showAuthSheet}
-        screen={authSheetScreen}
-        onOpen={() => setShowAuthSheet(true)}
-        onClose={() => setShowAuthSheet(false)}
-        onScreenChange={setAuthSheetScreen}
-        isLoggedIn={isLoggedIn}
-        onLoginSuccess={() => setIsLoggedIn(true)}
-        onLogout={() => setIsLoggedIn(false)}
-        t={t}
-      />
-
-            <style jsx>{`
+      <style jsx>{`
         @keyframes pulse {
-          0%, 100% {
-            opacity: 0.2;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(30, 41, 59, 0.3);
-          border-radius: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, rgba(147, 51, 234, 0.6), rgba(59, 130, 246, 0.6));
-          border-radius: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, rgba(147, 51, 234, 0.8), rgba(59, 130, 246, 0.8));
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 0.5; }
         }
       `}</style>
     </div>
   );
 }
-
