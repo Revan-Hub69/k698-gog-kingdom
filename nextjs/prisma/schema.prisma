@@ -11,23 +11,25 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  password  String
-  nickname  String  @unique
-  isAdmin   Boolean @default(false)
-  castles   Castle[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  password   String
+  nickname   String   @unique
+  isAdmin    Boolean  @default(false)
+  kvkPackage String?  // 'gold' | 'silver' | 'bronze' | null
+  castles    Castle[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Castle {
-  id                  Int     @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   userId              Int
-  user                User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   castleName          String
-  currentPower        Int     @default(0)
-  historicalMaxPower  Int     @default(0)
+  currentPower        BigInt   @default(0)
+  historicalMaxPower  BigInt   @default(0)
+  totalHistoricalPower BigInt  @default(0)
   screenshotUrl       String?
   screenshotUpdatedAt DateTime?
   lastPowerUpdate     DateTime @default(now())

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/lib/LanguageProvider';
 import AuthSheet from '@/components/AuthSheet';
+import { formatPower } from '@/lib/power';
 
 const LANGUAGES = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 
@@ -479,22 +480,21 @@ export default function HomePage() {
                       className="p-2.5 rounded-lg border bg-slate-800/40 border-slate-700/50 transition-all duration-300 hover:bg-slate-800/60 hover:border-purple-500/50 overflow-hidden"
                     >
                       {/* ROW 1: RANK + NAME + SCREENSHOT + DATE */}
-                      <div className="flex items-center justify-between gap-2 mb-1.5 min-w-0">
-                        <div className="flex items-center gap-1.5 min-w-0 flex-1">
-                          <div className="w-7 h-7 rounded flex items-center justify-center font-bold text-xs bg-slate-700/50 text-slate-300 flex-shrink-0">
+                      <div className="flex items-center justify-between gap-3 mb-3 min-w-0">
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                          <div className="w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm bg-slate-700/50 text-slate-300 flex-shrink-0">
                             #{entry.rank}
                           </div>
-                          <p className="font-semibold text-white truncate text-xs sm:text-sm">
+                          <p className="font-bold text-white truncate text-base sm:text-lg">
                             {entry.nickname}
                           </p>
                         </div>
 
-                        <div className="flex items-center gap-1.5 flex-shrink-0 text-xs">
+                        <div className="flex items-center gap-2 flex-shrink-0">
                           {/* SCREENSHOT STATUS */}
-                          <span className={`font-bold text-sm ${hasScreenshot ? 'text-green-400' : 'text-slate-500'}`}>
+                          <span className={`font-bold text-base ${hasScreenshot ? 'text-green-400' : 'text-slate-600'}`}>
                             {hasScreenshot ? '✓' : '✗'}
                           </span>
-
                           {/* LAST UPDATED */}
                           <span className="text-slate-400 whitespace-nowrap text-xs">
                             {lastUpdate}
@@ -502,37 +502,32 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      {/* ROW 2: POWER VALUES + PROGRESS */}
-                      <div className="grid grid-cols-3 gap-2 text-xs">
-                        {/* ATTUALE */}
-                        <div className="min-w-0">
-                          <p className="text-slate-400 truncate text-xs">Attuale</p>
-                          <p className="font-bold text-blue-400 truncate">
-                            {(entry.totalCurrentPower / 1000).toFixed(0)}k
+                      {/* ROW 2: POWER VALUES */}
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-slate-400 text-xs mb-1">{t('currentPower')}</p>
+                          <p className="font-bold text-blue-400 text-lg sm:text-xl">
+                            {formatPower(entry.totalCurrentPower)}
                           </p>
                         </div>
-
-                        {/* STORICO */}
-                        <div className="min-w-0">
-                          <p className="text-slate-400 truncate text-xs">Storico</p>
-                          <p className="font-bold text-green-400 truncate">
-                            {(entry.totalHistoricalPower / 1000).toFixed(0)}k
+                        <div>
+                          <p className="text-slate-400 text-xs mb-1">{t('historicalPower')}</p>
+                          <p className="font-bold text-green-400 text-lg sm:text-xl">
+                            {formatPower(entry.totalHistoricalPower)}
                           </p>
                         </div>
-
-                        {/* PROGRESS */}
-                        <div className="min-w-0">
-                          <p className="text-slate-400 truncate text-xs">Progress</p>
-                          <div className="h-1 bg-slate-700/30 rounded-full overflow-hidden mt-0.5">
+                      </div>
+                      {/* Progress bar */}
+                      {entry.totalHistoricalPower > 0 && (
+                        <div className="mt-3">
+                          <div className="h-1.5 bg-slate-700/40 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
-                              style={{
-                                width: `${Math.min((entry.totalCurrentPower / entry.totalHistoricalPower) * 100, 100)}%`,
-                              }}
+                              className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"
+                              style={{ width: `${Math.min((entry.totalCurrentPower / entry.totalHistoricalPower) * 100, 100)}%` }}
                             />
                           </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                   );
                 })}
