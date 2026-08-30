@@ -84,8 +84,8 @@ export default function KvkEventPage() {
       }}>
         <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', width: 24, flexShrink: 0, textAlign: 'right' }}>{p.pos}</span>
         <span style={{ fontSize: 13, fontWeight: isPriority(p) ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
-        {p.score > 0 && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{(p.score/1e9).toFixed(1)}B</span>}
-        {deaths && <span style={{ fontSize: 10, color: 'rgba(248,113,113,0.5)', flexShrink: 0 }}>{deaths}💀</span>}
+        {p.score > 0 && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{(p.score/1e6 >= 1000 ? (p.score/1e9).toFixed(1)+'B' : (p.score/1e6).toFixed(0)+'M')}</span>}
+        {deaths && <span style={{ fontSize: 10, color: 'rgba(248,113,113,0.5)', flexShrink: 0 }}>{Number(deaths) >= 1000 ? (Number(deaths)/1000).toFixed(1)+'B' : deaths+'M'} 💀</span>}
         <PackBadges p90={p.pack90} p60={p.pack60} p30={p.pack30} />
       </div>
     );

@@ -35,6 +35,7 @@ export default function KvkPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState('');
   const [sheetMode, setSheetMode] = useState<null | 'new' | 'list' | 'packs'>(null);
+  const [newTab, setNewTab] = useState<'packs' | 'list'>('packs');
   const [editingEventId, setEditingEventId] = useState<number | null>(null);
   const [packs, setPacks] = useState({ p90: '3', p60: '33', p30: '140' });
   const [rows, setRows] = useState<PlayerRow[]>([mkRow()]);
@@ -87,7 +88,7 @@ export default function KvkPage() {
     setRows(Array.isArray(pls) && pls.length > 0
       ? pls.map((p: { name: string; score: number; notes: string | null; pack90: number; pack60: number; pack30: number }) => ({
           id: _uid++, name: p.name,
-          score: p.score > 0 ? String(Math.round(p.score / 1e6)) : '',
+          score: p.score > 0 ? String(p.score / 1e6) : '',
           deaths: p.notes?.replace('morti: ', '') ?? '',
           p90: p.pack90, p60: p.pack60, p30: p.pack30,
         }))
@@ -109,7 +110,7 @@ export default function KvkPage() {
     } else {
       await fetch(`/api/kvk/events/${eventId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }) });
     }
-    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths}` : null })) }) });
+    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null })) }) });
     await reloadEvents();
     setSaving(false); setSheetMode(null);
   };
@@ -119,7 +120,7 @@ export default function KvkPage() {
     const valid = rows.filter(r => r.name.trim());
     if (!editingEventId || !valid.length) { setSaving(false); return; }
     await fetch(`/api/kvk/events/${editingEventId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }) });
-    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId: editingEventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths}` : null })) }) });
+    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId: editingEventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null })) }) });
     const pList = await (await fetch(`/api/kvk/players?eventId=${editingEventId}`)).json();
     await Promise.all(pList.map((p: { id: number }, idx: number) => {
       const row = valid[idx]; if (!row) return Promise.resolve();
@@ -223,18 +224,28 @@ export default function KvkPage() {
             <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 0', flexShrink: 0 }}>
               <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.15)' }} />
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 18px 12px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 18px 0', flexShrink: 0 }}>
               <div style={{ fontSize: 15, fontWeight: 800, color: '#fff' }}>
                 {sheetMode === 'list' ? t('sheetListTitle') : sheetMode === 'packs' ? t('sheetPacksTitle') : t('sheetNewTitle')}
               </div>
               <button onClick={() => setSheetMode(null)} style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', fontSize: 22, cursor: 'pointer', padding: 0, lineHeight: 1 }}>✕</button>
             </div>
 
+            {/* tab switcher for new mode */}
+            {sheetMode === 'new' && (
+              <div style={{ display: 'flex', gap: 4, padding: '10px 18px 0', flexShrink: 0 }}>
+                {([['packs', `📦 ${t('packsLabel')}`], ['list', `👥 ${t('sheetListTitle')}`]] as const).map(([tab, label]) => (
+                  <button key={tab} onClick={() => setNewTab(tab)} style={{ flex: 1, padding: '7px 0', borderRadius: 8, fontSize: 12, fontWeight: 700, border: 'none', cursor: 'pointer', background: newTab === tab ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.05)', color: newTab === tab ? '#fff' : 'rgba(255,255,255,0.4)' }}>{label}</button>
+                ))}
+              </div>
+            )}
+            <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '10px 0 0', flexShrink: 0 }} />
+
             {/* scrollable body — thin modern scrollbar */}
             <div style={{ overflowY: 'auto', flex: 1, padding: '16px 18px 28px', maxWidth: 520, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
 
-              {/* PACKS INPUT (new or packs mode) */}
-              {(sheetMode === 'new' || sheetMode === 'packs') && (
+              {/* PACKS INPUT */}
+              {(sheetMode === 'packs' || (sheetMode === 'new' && newTab === 'packs')) && (
                 <div style={{ marginBottom: 16 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>{t('packsLabel')}</div>
                   <div style={{ display: 'flex', gap: 8 }}>
@@ -246,12 +257,18 @@ export default function KvkPage() {
                       </div>
                     ))}
                   </div>
-                  {sheetMode === 'new' && <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '16px 0 0' }} />}
+                  {sheetMode === 'packs' && <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '16px 0 0' }} />}
+                  {sheetMode === 'new' && newTab === 'packs' && (
+                    <div style={{ marginTop: 14, display: 'flex', gap: 10 }}>
+                      <button onClick={() => setSheetMode(null)} style={{ ...S.btn(false), flex: 1 }}>{t('cancel')}</button>
+                      <button onClick={() => setNewTab('list')} style={{ ...S.btn(true), flex: 2 }}>👥 {t('sheetListTitle')} →</button>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* PLAYER LIST (new or list mode) */}
-              {(sheetMode === 'new' || sheetMode === 'list') && (
+              {/* PLAYER LIST */}
+              {(sheetMode === 'list' || (sheetMode === 'new' && newTab === 'list')) && (
                 <>
                   {/* column headers */}
                   <div style={{ display: 'grid', gridTemplateColumns: '16px 1fr 56px 50px 28px', gap: 5, alignItems: 'center', padding: '0 4px', marginBottom: 5 }}>
@@ -273,8 +290,8 @@ export default function KvkPage() {
                         <input style={IN} placeholder={t('colName')} value={row.name}
                           autoFocus={idx === rows.length - 1 && rows.length > 1}
                           onChange={e => updateRow(row.id, 'name', e.target.value)} />
-                        <input style={{ ...IN, textAlign: 'center', padding: '7px 4px' }} placeholder="0" type="number" min="0" value={row.score} onChange={e => updateRow(row.id, 'score', e.target.value)} />
-                        <input style={{ ...IN, textAlign: 'center', padding: '7px 4px' }} placeholder="0" type="number" min="0" value={row.deaths} onChange={e => updateRow(row.id, 'deaths', e.target.value)} />
+                        <input style={{ ...IN, textAlign: 'center', padding: '7px 4px' }} placeholder="M" inputMode="decimal" value={row.score} onChange={e => updateRow(row.id, 'score', e.target.value)} />
+                        <input style={{ ...IN, textAlign: 'center', padding: '7px 4px' }} placeholder="M" inputMode="decimal" value={row.deaths} onChange={e => updateRow(row.id, 'deaths', e.target.value)} />
                         <button onClick={() => removeRow(row.id)} style={{ width: 28, height: 32, borderRadius: 6, border: '1px solid rgba(255,80,80,0.15)', background: 'rgba(255,80,80,0.06)', cursor: 'pointer', color: 'rgba(255,100,100,0.5)', fontSize: 13 }}>✕</button>
                       </div>
                     ))}
