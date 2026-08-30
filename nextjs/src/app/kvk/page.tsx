@@ -374,18 +374,9 @@ export default function KvkPage() {
               {/* ASSIGN PACKS */}
               {sheetMode === 'packs' && (
                 <>
-                  {/* remaining */}
-                  <div style={{ display: 'flex', gap: 10, marginBottom: 12, padding: '9px 14px', borderRadius: 10, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', alignItems: 'center' }}>
-                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', marginRight: 2 }}>{t('remaining')}:</span>
-                    {([['90',rem.p90,PC['90']],['60',rem.p60,PC['60']],['30',rem.p30,PC['30']]] as const).map(([type, val, color]) => (
-                      <span key={type} style={{ fontSize: 14, fontWeight: 900, color: val < 0 ? '#ef4444' : color }}>{val}×{type}</span>
-                    ))}
-                    <span style={{ marginLeft: 'auto', fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>{t('assigned')}: {assigned.p90+assigned.p60+assigned.p30}</span>
-                  </div>
-                  {/* max warning note */}
-                  <div style={{ fontSize: 11, color: 'rgba(255,200,100,0.6)', marginBottom: 10 }}>⚠ {t('maxPacksWarning')}</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,200,100,0.5)', marginBottom: 10 }}>⚠ {t('maxPacksWarning')}</div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 16 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 80 }}>
                     {rows.filter(r => r.name.trim()).map((row, idx) => {
                       const total = row.p90 + row.p60 + row.p30;
                       return (
@@ -420,18 +411,57 @@ export default function KvkPage() {
                       );
                     })}
                   </div>
-                  <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-                    <button onClick={() => setSheetMode(null)} style={{ ...S.btn(false), flex: 1 }}>{t('cancel')}</button>
-                    <button onClick={savePacks} disabled={saving} style={{ ...S.btn(false), flex: 1, border: '1px solid rgba(124,58,237,0.3)', color: '#c084fc' }}>
-                      {saving ? t('saving') : '💾 ' + t('packsLabel')}
-                    </button>
-                  </div>
-                  <button onClick={generateList} disabled={saving} style={{ ...S.btn(true), width: '100%', fontSize: 14, padding: '12px' }}>
-                    {saving ? t('saving') : t('generateList')}
-                  </button>
                 </>
               )}
             </div>
+
+            {/* ── STICKY FLOATING BAR (packs mode only) ── */}
+            {sheetMode === 'packs' && (() => {
+              const validRows = rows.filter(r => r.name.trim());
+              const playersWithoutPacks = validRows.filter(r => r.p90 + r.p60 + r.p30 === 0).length;
+              const totalRem = rem.p90 + rem.p60 + rem.p30;
+              const media = playersWithoutPacks > 0 ? (totalRem / playersWithoutPacks) : 0;
+              return (
+                <div style={{ flexShrink: 0, padding: '10px 16px 16px', borderTop: '1px solid rgba(124,58,237,0.2)', background: 'rgba(9,9,10,0.95)', backdropFilter: 'blur(12px)' }}>
+                  {/* stats row */}
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 10, alignItems: 'stretch' }}>
+                    {/* remaining */}
+                    <div style={{ flex: 1, padding: '8px 10px', borderRadius: 10, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{t('remaining')}</div>
+                      <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                        {([['90',rem.p90,PC['90']],['60',rem.p60,PC['60']],['30',rem.p30,PC['30']]] as const).map(([type, val, color]) => (
+                          <span key={type} style={{ fontSize: 12, fontWeight: 900, color: val < 0 ? '#ef4444' : color }}>{val}×{type}</span>
+                        ))}
+                      </div>
+                    </div>
+                    {/* media */}
+                    <div style={{ flex: 1, padding: '8px 10px', borderRadius: 10, background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)' }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(124,58,237,0.6)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>Media/player</div>
+                      <div style={{ fontSize: 18, fontWeight: 900, color: '#c084fc', lineHeight: 1 }}>
+                        {playersWithoutPacks > 0 ? media.toFixed(2).replace('.', ',') : '—'}
+                      </div>
+                      <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>{playersWithoutPacks} senza pacchi</div>
+                    </div>
+                    {/* assigned */}
+                    <div style={{ flex: 1, padding: '8px 10px', borderRadius: 10, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{t('assigned')}</div>
+                      <div style={{ fontSize: 18, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{assigned.p90+assigned.p60+assigned.p30}</div>
+                      <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>{validRows.filter(r => r.p90+r.p60+r.p30 > 0).length}/{validRows.length} player</div>
+                    </div>
+                  </div>
+                  {/* action buttons */}
+                  <div style={{ display: 'flex', gap: 8 }}>
+                    <button onClick={() => setSheetMode(null)} style={{ ...S.btn(false), flex: 1, padding: '9px' }}>{t('cancel')}</button>
+                    <button onClick={savePacks} disabled={saving} style={{ ...S.btn(false), flex: 1, padding: '9px', border: '1px solid rgba(124,58,237,0.3)', color: '#c084fc' }}>
+                      {saving ? '...' : '💾 Pacchi'}
+                    </button>
+                    <button onClick={generateList} disabled={saving} style={{ ...S.btn(true), flex: 2, padding: '9px', fontSize: 13 }}>
+                      {saving ? '...' : t('generateList')}
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </>
       )}
