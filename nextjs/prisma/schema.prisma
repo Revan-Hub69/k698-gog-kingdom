@@ -40,3 +40,36 @@ model Castle {
   @@unique([userId, castleName])
   @@index([userId])
 }
+
+// KVK Package Distribution
+model KvkEvent {
+  id            Int         @id @default(autoincrement())
+  name          String      // e.g. "KVK 30/08/2026"
+  date          String      // display date string
+  pack90Total   Int         @default(0)
+  pack60Total   Int         @default(0)
+  pack30Total   Int         @default(0)
+  isActive      Boolean     @default(true)
+  players       KvkPlayer[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model KvkPlayer {
+  id          Int       @id @default(autoincrement())
+  eventId     Int
+  event       KvkEvent  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name        String
+  alliance    String?
+  score       BigInt    @default(0)  // KVK score/points
+  notes       String?
+  pack90      Int       @default(0)
+  pack60      Int       @default(0)
+  pack30      Int       @default(0)
+  under100m   Boolean   @default(false)
+  pos         Int       @default(0)  // display position/rank
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([eventId])
+}
