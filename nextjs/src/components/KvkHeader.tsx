@@ -23,9 +23,10 @@ interface Props {
   backHref?: string;
   backLabel?: string;
   onAuthChange?: (token: string | null, nickname: string | null, isAdmin: boolean) => void;
+  hideAuth?: boolean;
 }
 
-export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthChange }: Props) {
+export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthChange, hideAuth }: Props) {
   const [langOpen, setLangOpen] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
   const [nickname, setNickname] = useState<string | null>(null);
@@ -139,7 +140,7 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
 
           {/* RIGHT */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            {nickname ? (
+            {!hideAuth && (nickname ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{ fontSize: 12, fontWeight: 700, color: isAdmin ? '#c084fc' : 'rgba(255,255,255,0.7)', whiteSpace: 'nowrap', maxWidth: 110, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {isAdmin ? '★ ' : ''}{nickname}
@@ -152,7 +153,7 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
               <button onClick={() => { setShowLogin(true); setLoginErr(''); }} style={{ fontSize: 12, fontWeight: 700, padding: '7px 16px', borderRadius: 9, border: '1px solid rgba(168,85,247,0.5)', background: 'linear-gradient(135deg,rgba(124,58,237,0.2),rgba(37,99,235,0.2))', color: '#c084fc', cursor: 'pointer', whiteSpace: 'nowrap' }}>
                 {tl('login')}
               </button>
-            )}
+            ))}
 
             {/* Lang */}
             <div style={{ position: 'relative' }}>

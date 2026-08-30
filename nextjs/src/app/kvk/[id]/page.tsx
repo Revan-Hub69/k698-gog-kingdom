@@ -138,7 +138,7 @@ export default function KvkEventPage() {
 
   return (
     <div style={page}>
-      <KvkHeader lang={lang} onLang={l => { setLang(l); localStorage.setItem('lang', l); }} backHref="/kvk" backLabel={t('back')} />
+      <KvkHeader lang={lang} onLang={l => { setLang(l); localStorage.setItem('lang', l); }} backHref="/kvk" backLabel={t('back')} hideAuth />
 
       <div style={{ padding: '14px 16px 6px', textAlign: 'center' }}>
         <h1 style={{ fontSize: 'clamp(0.95rem,4vw,1.3rem)', fontWeight: 900, margin: '0 0 2px', background: 'linear-gradient(135deg,#c084fc,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{event.name}</h1>
