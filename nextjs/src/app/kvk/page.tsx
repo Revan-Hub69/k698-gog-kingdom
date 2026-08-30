@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import KvkHeader, { KvkLang } from '@/components/KvkHeader';
 
@@ -8,50 +8,14 @@ const LANGS = ['IT', 'EN', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 type Lang = KvkLang;
 
 const T: Record<Lang, Record<string, string>> = {
-  IT: {
-    title: 'Pacchi KVK',
-    subtitle: 'Seleziona un evento per vedere la distribuzione pacchi',
-    newEvent: '+ Nuovo Evento',
-    noEvents: 'Nessun evento trovato.',
-    players: 'giocatori',
-    packs: 'pacchi',
-    active: 'Attivo',
-    closed: 'Chiuso',
-    eventName: 'Nome evento',
-    eventDate: 'Data',
-    p90: '90',
-    p60: '60',
-    p30: '30',
-    create: 'Crea',
-    cancel: 'Annulla',
-    total: 'Totale',
-    available: 'Disponibili',
-  },
-  EN: {
-    title: 'KVK Packages',
-    subtitle: 'Select an event to view package distribution',
-    newEvent: '+ New Event',
-    noEvents: 'No events found.',
-    players: 'players',
-    packs: 'packs',
-    active: 'Active',
-    closed: 'Closed',
-    eventName: 'Event name',
-    eventDate: 'Date',
-    p90: '90',
-    p60: '60',
-    p30: '30',
-    create: 'Create',
-    cancel: 'Cancel',
-    total: 'Total',
-    available: 'Available',
-  },
-  PL: { title: 'Pakiety KvK', subtitle: 'Wybierz wydarzenie', newEvent: '+ Nowe', noEvents: 'Brak wydarzeń.', players: 'gracze', packs: 'paczki', active: 'Aktywny', closed: 'Zamknięty', eventName: 'Nazwa', eventDate: 'Data', p90: '90', p60: '60', p30: '30', create: 'Utwórz', cancel: 'Anuluj', total: 'Suma', available: 'Dostępne' },
-  ZH: { title: 'KVK礼包', subtitle: '选择活动', newEvent: '+ 新活动', noEvents: '没有活动。', players: '玩家', packs: '礼包', active: '活跃', closed: '已关闭', eventName: '活动名称', eventDate: '日期', p90: '90', p60: '60', p30: '30', create: '创建', cancel: '取消', total: '总计', available: '可用' },
-  DE: { title: 'KVK-Pakete', subtitle: 'Ereignis auswählen', newEvent: '+ Neues Ereignis', noEvents: 'Keine Ereignisse.', players: 'Spieler', packs: 'Pakete', active: 'Aktiv', closed: 'Geschlossen', eventName: 'Ereignisname', eventDate: 'Datum', p90: '90', p60: '60', p30: '30', create: 'Erstellen', cancel: 'Abbrechen', total: 'Gesamt', available: 'Verfügbar' },
-  FR: { title: 'Packages KvK', subtitle: 'Sélectionnez un événement', newEvent: '+ Nouvel événement', noEvents: 'Aucun événement.', players: 'joueurs', packs: 'packages', active: 'Actif', closed: 'Fermé', eventName: "Nom de l'événement", eventDate: 'Date', p90: '90', p60: '60', p30: '30', create: 'Créer', cancel: 'Annuler', total: 'Total', available: 'Disponibles' },
-  RU: { title: 'Пакеты KvK', subtitle: 'Выберите событие', newEvent: '+ Новое событие', noEvents: 'Событий нет.', players: 'игроки', packs: 'пакеты', active: 'Активно', closed: 'Закрыто', eventName: 'Название события', eventDate: 'Дата', p90: '90', p60: '60', p30: '30', create: 'Создать', cancel: 'Отмена', total: 'Всего', available: 'Доступно' },
-  ES: { title: 'Paquetes KvK', subtitle: 'Selecciona un evento', newEvent: '+ Nuevo evento', noEvents: 'No hay eventos.', players: 'jugadores', packs: 'paquetes', active: 'Activo', closed: 'Cerrado', eventName: 'Nombre del evento', eventDate: 'Fecha', p90: '90', p60: '60', p30: '30', create: 'Crear', cancel: 'Cancelar', total: 'Total', available: 'Disponibles' },
+  IT: { title: 'Pacchi KVK', active: 'EVENTI ATTIVI', past: 'EVENTI PASSATI', newEvent: '+ Nuovo Evento', noActive: 'Nessun evento attivo.', noPast: 'Nessun evento passato.', players: 'giocatori', packs: 'pacchi', isActive: 'Attivo', closed: 'Chiuso', eventName: 'Nome evento', eventDate: 'Data (es. 30/08/2026)', p90: '×90 disponibili', p60: '×60 disponibili', p30: '×30 disponibili', create: 'Crea Evento', cancel: 'Annulla', loginPrompt: 'Accedi come admin per creare e gestire eventi.' },
+  EN: { title: 'KVK Packages', active: 'ACTIVE EVENTS', past: 'PAST EVENTS', newEvent: '+ New Event', noActive: 'No active events.', noPast: 'No past events.', players: 'players', packs: 'packs', isActive: 'Active', closed: 'Closed', eventName: 'Event name', eventDate: 'Date (e.g. 30/08/2026)', p90: '×90 available', p60: '×60 available', p30: '×30 available', create: 'Create Event', cancel: 'Cancel', loginPrompt: 'Log in as admin to create and manage events.' },
+  PL: { title: 'Pakiety KvK', active: 'AKTYWNE WYDARZENIA', past: 'MINIONE WYDARZENIA', newEvent: '+ Nowe', noActive: 'Brak aktywnych.', noPast: 'Brak minionych.', players: 'gracze', packs: 'paczki', isActive: 'Aktywny', closed: 'Zamknięty', eventName: 'Nazwa', eventDate: 'Data', p90: '×90', p60: '×60', p30: '×30', create: 'Utwórz', cancel: 'Anuluj', loginPrompt: 'Zaloguj się jako admin.' },
+  ZH: { title: 'KVK礼包', active: '活跃活动', past: '历史活动', newEvent: '+ 新活动', noActive: '没有活跃活动。', noPast: '没有历史活动。', players: '玩家', packs: '礼包', isActive: '活跃', closed: '已关闭', eventName: '活动名称', eventDate: '日期', p90: '×90', p60: '×60', p30: '×30', create: '创建', cancel: '取消', loginPrompt: '请以管理员身份登录。' },
+  DE: { title: 'KVK-Pakete', active: 'AKTIVE EREIGNISSE', past: 'VERGANGENE EREIGNISSE', newEvent: '+ Neues Ereignis', noActive: 'Keine aktiven Ereignisse.', noPast: 'Keine vergangenen.', players: 'Spieler', packs: 'Pakete', isActive: 'Aktiv', closed: 'Geschlossen', eventName: 'Ereignisname', eventDate: 'Datum', p90: '×90', p60: '×60', p30: '×30', create: 'Erstellen', cancel: 'Abbrechen', loginPrompt: 'Als Admin anmelden.' },
+  FR: { title: 'Packages KvK', active: 'ÉVÉNEMENTS ACTIFS', past: 'ÉVÉNEMENTS PASSÉS', newEvent: '+ Nouvel événement', noActive: 'Aucun événement actif.', noPast: 'Aucun événement passé.', players: 'joueurs', packs: 'packages', isActive: 'Actif', closed: 'Fermé', eventName: "Nom de l'événement", eventDate: 'Date', p90: '×90', p60: '×60', p30: '×30', create: 'Créer', cancel: 'Annuler', loginPrompt: 'Connectez-vous en tant qu\'admin.' },
+  RU: { title: 'Пакеты KvK', active: 'АКТИВНЫЕ СОБЫТИЯ', past: 'ПРОШЕДШИЕ СОБЫТИЯ', newEvent: '+ Новое событие', noActive: 'Нет активных событий.', noPast: 'Нет прошедших.', players: 'игроки', packs: 'пакеты', isActive: 'Активно', closed: 'Закрыто', eventName: 'Название', eventDate: 'Дата', p90: '×90', p60: '×60', p30: '×30', create: 'Создать', cancel: 'Отмена', loginPrompt: 'Войдите как администратор.' },
+  ES: { title: 'Paquetes KvK', active: 'EVENTOS ACTIVOS', past: 'EVENTOS PASADOS', newEvent: '+ Nuevo evento', noActive: 'No hay eventos activos.', noPast: 'No hay eventos pasados.', players: 'jugadores', packs: 'paquetes', isActive: 'Activo', closed: 'Cerrado', eventName: 'Nombre del evento', eventDate: 'Fecha', p90: '×90', p60: '×60', p30: '×30', create: 'Crear', cancel: 'Cancelar', loginPrompt: 'Inicia sesión como administrador.' },
 };
 
 interface KvkEvent {
@@ -69,38 +33,36 @@ export default function KvkPage() {
   const [lang, setLang] = useState<Lang>('IT');
   const [events, setEvents] = useState<KvkEvent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showCreate, setShowCreate] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [token, setToken] = useState('');
+  const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({ name: '', date: '', pack90Total: '3', pack60Total: '33', pack30Total: '140' });
   const [saving, setSaving] = useState(false);
 
-  const t = (k: string) => T[lang][k] || T['EN'][k] || k;
+  const t = (k: string) => T[lang]?.[k] || T['EN'][k] || k;
 
   useEffect(() => {
     const stored = localStorage.getItem('lang') as Lang | null;
-    if (stored && LANGS.includes(stored)) {
-      setLang(stored);
-    } else {
-      const browser = navigator.language.split('-')[0].toUpperCase() as Lang;
-      if (LANGS.includes(browser)) setLang(browser);
+    if (stored && LANGS.includes(stored)) setLang(stored);
+    else {
+      const br = navigator.language.split('-')[0].toUpperCase() as Lang;
+      if (LANGS.includes(br)) setLang(br);
     }
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        if (payload.isAdmin) setIsAdmin(true);
-      } catch {}
-    }
-    fetch('/api/kvk/events').then(r => r.json()).then(d => { setEvents(d); setLoading(false); });
+    fetch('/api/kvk/events').then(r => r.json()).then(d => { setEvents(Array.isArray(d) ? d : []); setLoading(false); });
+  }, []);
+
+  const handleAuthChange = useCallback((tok: string | null, _nick: string | null, admin: boolean) => {
+    setToken(tok || '');
+    setIsAdmin(admin);
   }, []);
 
   const createEvent = async () => {
+    if (!form.name.trim()) return;
     setSaving(true);
-    const token = localStorage.getItem('token');
     const res = await fetch('/api/kvk/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ ...form, pack90Total: Number(form.pack90Total), pack60Total: Number(form.pack60Total), pack30Total: Number(form.pack30Total) }),
+      body: JSON.stringify({ name: form.name, date: form.date, pack90Total: Number(form.pack90Total), pack60Total: Number(form.pack60Total), pack30Total: Number(form.pack30Total) }),
     });
     if (res.ok) {
       const ev = await res.json();
@@ -111,41 +73,72 @@ export default function KvkPage() {
     setSaving(false);
   };
 
+  const activeEvents = events.filter(e => e.isActive);
+  const pastEvents = events.filter(e => !e.isActive);
+
   const S = {
     page: { minHeight: '100vh', background: '#09090a', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' } as React.CSSProperties,
-    card: (active: boolean) => ({ display: 'block', padding: '16px', borderRadius: 14, marginBottom: 8, background: active ? 'rgba(124,58,237,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${active ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.07)'}`, textDecoration: 'none', cursor: 'pointer' } as React.CSSProperties),
-    input: { width: '100%', padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const },
-    btn: (primary: boolean) => ({ padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', background: primary ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: '#fff' }),
+    sectionLabel: { fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.35)', letterSpacing: 1.5, textTransform: 'uppercase' as const, marginBottom: 10, marginLeft: 2 },
+    card: (active: boolean) => ({ display: 'block', padding: '14px 16px', borderRadius: 14, marginBottom: 8, background: active ? 'rgba(124,58,237,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${active ? 'rgba(124,58,237,0.25)' : 'rgba(255,255,255,0.06)'}`, textDecoration: 'none', cursor: 'pointer', transition: 'all 0.15s' } as React.CSSProperties),
+    input: { width: '100%', padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 13, outline: 'none', boxSizing: 'border-box' as const },
+    btn: (primary: boolean) => ({ padding: '10px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', background: primary ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: '#fff' }),
   };
+
+  const EventCard = ({ ev }: { ev: KvkEvent }) => (
+    <Link href={`/kvk/${ev.id}`} style={S.card(ev.isActive)}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{ev.name}</div>
+          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{ev.date} · {ev._count.players} {t('players')}</div>
+        </div>
+        <span style={{ fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 6, background: ev.isActive ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)', color: ev.isActive ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0, whiteSpace: 'nowrap' }}>
+          {ev.isActive ? t('isActive') : t('closed')}
+        </span>
+      </div>
+      <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+        {[['90', ev.pack90Total, '#f87171'], ['60', ev.pack60Total, '#fbbf24'], ['30', ev.pack30Total, '#a78bfa']].map(([type, count, color]) => (
+          <span key={type as string} style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: `${color as string}14`, color: color as string, border: `1px solid ${color as string}22` }}>
+            {count as number}×{type}
+          </span>
+        ))}
+        <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)' }}>
+          = {(ev.pack90Total + ev.pack60Total + ev.pack30Total)} {t('packs')}
+        </span>
+      </div>
+    </Link>
+  );
 
   return (
     <div style={S.page}>
-      <KvkHeader lang={lang} onLang={l => { setLang(l); localStorage.setItem('lang', l); }} />
+      <KvkHeader
+        lang={lang}
+        onLang={l => { setLang(l); localStorage.setItem('lang', l); }}
+        onAuthChange={handleAuthChange}
+      />
 
       {/* TITLE */}
-      <div style={{ padding: '24px 16px 16px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: 'clamp(1.3rem,5vw,2rem)', fontWeight: 900, margin: '0 0 6px', background: 'linear-gradient(135deg,#c084fc,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{t('title')}</h1>
-        <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: 0 }}>{t('subtitle')}</p>
+      <div style={{ padding: '22px 16px 16px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 'clamp(1.4rem,5vw,2rem)', fontWeight: 900, margin: 0, background: 'linear-gradient(135deg,#c084fc,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{t('title')}</h1>
       </div>
 
-      {/* CREATE BUTTON */}
+      {/* ADMIN: CREATE BUTTON */}
       {isAdmin && (
-        <div style={{ padding: '0 16px 16px' }}>
-          <button onClick={() => setShowCreate(!showCreate)} style={{ ...S.btn(true), width: '100%' }}>{t('newEvent')}</button>
+        <div style={{ padding: '0 16px 14px' }}>
+          <button onClick={() => setShowCreate(s => !s)} style={{ ...S.btn(true), width: '100%' }}>{t('newEvent')}</button>
         </div>
       )}
 
       {/* CREATE FORM */}
-      {showCreate && (
+      {isAdmin && showCreate && (
         <div style={{ margin: '0 16px 16px', padding: 16, borderRadius: 14, background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             <input style={S.input} placeholder={t('eventName')} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
             <input style={S.input} placeholder={t('eventDate')} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-              {[['pack90Total', '×90'], ['pack60Total', '×60'], ['pack30Total', '×30']].map(([k, label]) => (
+              {[['pack90Total', t('p90')], ['pack60Total', t('p60')], ['pack30Total', t('p30')]].map(([k, label]) => (
                 <div key={k}>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{label}</div>
-                  <input style={S.input} type="number" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{label}</div>
+                  <input style={S.input} type="number" min="0" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
                 </div>
               ))}
             </div>
@@ -157,31 +150,28 @@ export default function KvkPage() {
         </div>
       )}
 
-      {/* EVENTS LIST */}
+      {/* EVENTS */}
       <div style={{ padding: '0 16px 40px' }}>
-        {loading && <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>...</p>}
-        {!loading && events.length === 0 && <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14 }}>{t('noEvents')}</p>}
-        {events.map(ev => (
-          <Link key={ev.id} href={`/kvk/${ev.id}`} style={S.card(ev.isActive)}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{ev.name}</div>
-                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{ev.date} · {ev._count.players} {t('players')}</div>
+        {loading && <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14, padding: '30px 0' }}>...</p>}
+
+        {!loading && (
+          <>
+            {/* ACTIVE */}
+            <div style={S.sectionLabel}>{t('active')} ({activeEvents.length})</div>
+            {activeEvents.length === 0
+              ? <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.25)', marginBottom: 24 }}>{t('noActive')}</p>
+              : activeEvents.map(ev => <EventCard key={ev.id} ev={ev} />)
+            }
+
+            {/* PAST */}
+            {pastEvents.length > 0 && (
+              <div style={{ marginTop: 28 }}>
+                <div style={S.sectionLabel}>{t('past')} ({pastEvents.length})</div>
+                {pastEvents.map(ev => <EventCard key={ev.id} ev={ev} />)}
               </div>
-              <span style={{ fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 6, background: ev.isActive ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.06)', color: ev.isActive ? '#4ade80' : 'rgba(255,255,255,0.4)', flexShrink: 0 }}>{ev.isActive ? t('active') : t('closed')}</span>
-            </div>
-            <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-              {[['90', ev.pack90Total, '#f87171'], ['60', ev.pack60Total, '#fbbf24'], ['30', ev.pack30Total, '#a78bfa']].map(([type, count, color]) => (
-                <span key={type as string} style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: `${color}15`, color: color as string, border: `1px solid ${color}25` }}>
-                  {count}×{type}
-                </span>
-              ))}
-              <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.5)' }}>
-                = {(ev.pack90Total + ev.pack60Total + ev.pack30Total)} {t('packs')}
-              </span>
-            </div>
-          </Link>
-        ))}
+            )}
+          </>
+        )}
       </div>
     </div>
   );

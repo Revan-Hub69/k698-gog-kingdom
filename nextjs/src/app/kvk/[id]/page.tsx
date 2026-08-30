@@ -153,6 +153,11 @@ export default function KvkEventPage() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState('');
+
+  const handleAuthChange = useCallback((tok: string | null, _nick: string | null, admin: boolean) => {
+    setToken(tok || '');
+    setIsAdmin(admin);
+  }, []);
   const [showAdmin, setShowAdmin] = useState(false);
   const [importText, setImportText] = useState('');
   const [importStatus, setImportStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
@@ -277,6 +282,7 @@ export default function KvkEventPage() {
         onLang={l => { setLang(l); localStorage.setItem('lang', l); }}
         backHref="/kvk"
         backLabel={t('back')}
+        onAuthChange={handleAuthChange}
       />
 
       {/* TITLE */}
