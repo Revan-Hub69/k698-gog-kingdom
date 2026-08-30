@@ -130,21 +130,23 @@ export default function KvkPage() {
 
       {/* CREATE FORM */}
       {isAdmin && showCreate && (
-        <div style={{ margin: '0 16px 16px', padding: 16, borderRadius: 14, background: 'rgba(124,58,237,0.08)', border: '1px solid rgba(124,58,237,0.2)' }}>
+        <div style={{ margin: '-6px 16px 16px', padding: '16px', borderRadius: '0 0 14px 14px', background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.2)', borderTop: 'none' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <input style={S.input} placeholder={t('eventName')} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-            <input style={S.input} placeholder={t('eventDate')} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-              {[['pack90Total', t('p90')], ['pack60Total', t('p60')], ['pack30Total', t('p30')]].map(([k, label]) => (
-                <div key={k}>
-                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{label}</div>
-                  <input style={S.input} type="number" min="0" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
-                </div>
-              ))}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              <input style={{ ...S.input, gridColumn: 'span 2' }} placeholder={t('eventName')} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+              <input style={S.input} placeholder={t('eventDate')} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
+                {[['pack90Total', '90'], ['pack60Total', '60'], ['pack30Total', '30']].map(([k, label]) => (
+                  <div key={k} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: k === 'pack90Total' ? '#f87171' : k === 'pack60Total' ? '#fbbf24' : '#a78bfa', textAlign: 'center' }}>×{label}</div>
+                    <input style={{ ...S.input, textAlign: 'center', padding: '8px 4px' }} type="number" min="0" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
+                  </div>
+                ))}
+              </div>
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <button style={{ ...S.btn(false), flex: 1 }} onClick={() => setShowCreate(false)}>{t('cancel')}</button>
-              <button style={{ ...S.btn(true), flex: 2 }} onClick={createEvent} disabled={saving}>{saving ? '...' : t('create')}</button>
+              <button style={{ ...S.btn(false), flex: 1, fontSize: 12 }} onClick={() => setShowCreate(false)}>{t('cancel')}</button>
+              <button style={{ ...S.btn(true), flex: 2, fontSize: 12 }} onClick={createEvent} disabled={saving}>{saving ? '...' : t('create')}</button>
             </div>
           </div>
         </div>
