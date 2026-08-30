@@ -3,9 +3,10 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import KvkHeader, { KvkLang } from '@/components/KvkHeader';
 
 const LANGS = ['IT', 'EN', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
-type Lang = typeof LANGS[number];
+type Lang = KvkLang;
 
 const T: Record<Lang, Record<string, string>> = {
   IT: {
@@ -253,9 +254,6 @@ export default function KvkEventPage() {
 
   const S = {
     page: { minHeight: '100vh', background: '#09090a', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' } as React.CSSProperties,
-    header: { position: 'sticky' as const, top: 0, zIndex: 50, background: 'rgba(9,9,10,0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(124,58,237,0.15)', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-    logo: { width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg,#7c3aed,#2563eb)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 900, color: '#fff', flexShrink: 0 } as React.CSSProperties,
-    langBtn: (active: boolean) => ({ padding: '3px 8px', borderRadius: 5, fontSize: 9, fontWeight: 700, border: 'none', cursor: 'pointer', background: active ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: active ? '#fff' : 'rgba(255,255,255,0.4)' }),
     row: (priority: boolean, under: boolean) => ({
       padding: '12px 14px', borderRadius: 12, marginBottom: 4,
       background: priority ? 'rgba(124,58,237,0.12)' : under ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.03)',
@@ -274,16 +272,12 @@ export default function KvkEventPage() {
 
   return (
     <div style={S.page}>
-      {/* HEADER */}
-      <div style={S.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
-          <div style={S.logo}>k</div>
-          <Link href="/kvk" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none', whiteSpace: 'nowrap' }}>{t('back')}</Link>
-        </div>
-        <div style={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: 180 }}>
-          {LANGS.map(l => <button key={l} style={S.langBtn(lang === l)} onClick={() => { setLang(l); localStorage.setItem('lang', l); }}>{l}</button>)}
-        </div>
-      </div>
+      <KvkHeader
+        lang={lang}
+        onLang={l => { setLang(l); localStorage.setItem('lang', l); }}
+        backHref="/kvk"
+        backLabel={t('back')}
+      />
 
       {/* TITLE */}
       <div style={{ padding: '20px 16px 8px', textAlign: 'center' }}>

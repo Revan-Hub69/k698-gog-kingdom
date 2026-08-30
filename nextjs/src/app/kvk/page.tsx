@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import KvkHeader, { KvkLang } from '@/components/KvkHeader';
 
 const LANGS = ['IT', 'EN', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
-type Lang = typeof LANGS[number];
+type Lang = KvkLang;
 
 const T: Record<Lang, Record<string, string>> = {
   IT: {
@@ -112,9 +113,6 @@ export default function KvkPage() {
 
   const S = {
     page: { minHeight: '100vh', background: '#09090a', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' } as React.CSSProperties,
-    header: { position: 'sticky' as const, top: 0, zIndex: 50, background: 'rgba(9,9,10,0.9)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(124,58,237,0.15)', padding: '10px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
-    logo: { width: 30, height: 30, borderRadius: 8, background: 'linear-gradient(135deg,#7c3aed,#2563eb)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 900, color: '#fff' } as React.CSSProperties,
-    langBtn: (active: boolean) => ({ padding: '4px 10px', borderRadius: 6, fontSize: 10, fontWeight: 700, border: 'none', cursor: 'pointer', background: active ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: active ? '#fff' : 'rgba(255,255,255,0.4)' }),
     card: (active: boolean) => ({ display: 'block', padding: '16px', borderRadius: 14, marginBottom: 8, background: active ? 'rgba(124,58,237,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${active ? 'rgba(124,58,237,0.3)' : 'rgba(255,255,255,0.07)'}`, textDecoration: 'none', cursor: 'pointer' } as React.CSSProperties),
     input: { width: '100%', padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 14, outline: 'none', boxSizing: 'border-box' as const },
     btn: (primary: boolean) => ({ padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', background: primary ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: '#fff' }),
@@ -122,16 +120,7 @@ export default function KvkPage() {
 
   return (
     <div style={S.page}>
-      {/* HEADER */}
-      <div style={S.header}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={S.logo}>k</div>
-          <span style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>698</span>
-        </div>
-        <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap', justifyContent: 'flex-end', maxWidth: 200 }}>
-          {LANGS.map(l => <button key={l} style={S.langBtn(lang === l)} onClick={() => { setLang(l); localStorage.setItem('lang', l); }}>{l}</button>)}
-        </div>
-      </div>
+      <KvkHeader lang={lang} onLang={l => { setLang(l); localStorage.setItem('lang', l); }} />
 
       {/* TITLE */}
       <div style={{ padding: '24px 16px 16px', textAlign: 'center' }}>
