@@ -123,37 +123,37 @@ export default function KvkPage() {
 
       {/* ADMIN: CREATE BUTTON */}
       {isAdmin && (
-        <div style={{ padding: '0 16px 8px' }}>
+        <div style={{ padding: '0 16px 8px', maxWidth: 480, margin: '0 auto' }}>
           <button onClick={() => setShowCreate(s => !s)} style={{ ...S.btn(showCreate), width: '100%', fontSize: 13, padding: '9px 16px' }}>{t('newEvent')}</button>
         </div>
       )}
 
       {/* CREATE FORM */}
       {isAdmin && showCreate && (
-        <div style={{ margin: '-6px 16px 16px', padding: '16px', borderRadius: '0 0 14px 14px', background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.2)', borderTop: 'none' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-              <input style={{ ...S.input, gridColumn: 'span 2' }} placeholder={t('eventName')} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-              <input style={S.input} placeholder={t('eventDate')} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
-                {[['pack90Total', '90'], ['pack60Total', '60'], ['pack30Total', '30']].map(([k, label]) => (
-                  <div key={k} style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: k === 'pack90Total' ? '#f87171' : k === 'pack60Total' ? '#fbbf24' : '#a78bfa', textAlign: 'center' }}>×{label}</div>
+        <div style={{ padding: '0 16px 12px' }}>
+          <div style={{ maxWidth: 480, margin: '0 auto', padding: '14px 16px', borderRadius: 12, background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.18)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <input style={S.input} placeholder={t('eventName')} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input style={{ ...S.input, flex: 2 }} placeholder={t('eventDate')} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+                {[['pack90Total', '90', '#f87171'], ['pack60Total', '60', '#fbbf24'], ['pack30Total', '30', '#a78bfa']].map(([k, label, color]) => (
+                  <div key={k} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    <div style={{ fontSize: 9, fontWeight: 700, color: color as string, textAlign: 'center' }}>×{label}</div>
                     <input style={{ ...S.input, textAlign: 'center', padding: '8px 4px' }} type="number" min="0" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
                   </div>
                 ))}
               </div>
-            </div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              <button style={{ ...S.btn(false), flex: 1, fontSize: 12 }} onClick={() => setShowCreate(false)}>{t('cancel')}</button>
-              <button style={{ ...S.btn(true), flex: 2, fontSize: 12 }} onClick={createEvent} disabled={saving}>{saving ? '...' : t('create')}</button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button style={{ ...S.btn(false), flex: 1, padding: '8px 12px', fontSize: 12 }} onClick={() => setShowCreate(false)}>{t('cancel')}</button>
+                <button style={{ ...S.btn(true), flex: 2, padding: '8px 12px', fontSize: 12 }} onClick={createEvent} disabled={saving}>{saving ? '...' : t('create')}</button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
       {/* EVENTS */}
-      <div style={{ padding: '4px 12px 40px' }}>
+      <div style={{ padding: '4px 16px 40px', maxWidth: 560, margin: '0 auto' }}>
         {loading && <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14, padding: '30px 0' }}>...</p>}
 
         {!loading && (

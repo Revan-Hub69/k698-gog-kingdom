@@ -202,9 +202,9 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
                     onChange={e => setForgotEmail(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && doForgot()}
                     autoFocus
-                    style={{ padding: '14px 16px', borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 15, outline: 'none', width: '100%', boxSizing: 'border-box' as const }}
+                    style={{ padding: '12px 14px', borderRadius: 10, background: '#1a1a1f', border: '1px solid rgba(124,58,237,0.25)', color: '#fff', fontSize: 14, outline: 'none', width: '100%', boxSizing: 'border-box' as const }}
                   />
-                  <button onClick={doForgot} disabled={forgotSending} style={{ padding: '14px', borderRadius: 12, border: 'none', cursor: 'pointer', fontWeight: 800, fontSize: 15, background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: '#fff', opacity: forgotSending ? 0.7 : 1, width: '100%' }}>
+                  <button onClick={doForgot} disabled={forgotSending} style={{ padding: '12px', borderRadius: 10, border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 14, background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: '#fff', opacity: forgotSending ? 0.7 : 1, width: '100%' }}>
                     {forgotSending ? tl('sending') : tl('send')}
                   </button>
                 </>
@@ -219,7 +219,7 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
                   onChange={e => setEmail(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && doLogin()}
                   autoFocus
-                  style={{ padding: '14px 16px', borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 15, outline: 'none', width: '100%', boxSizing: 'border-box' as const }}
+                  style={{ padding: '12px 14px', borderRadius: 10, background: '#1a1a1f', border: '1px solid rgba(124,58,237,0.25)', color: '#fff', fontSize: 14, outline: 'none', width: '100%', boxSizing: 'border-box' as const }}
                 />
 
                 {/* Password with eye toggle */}
@@ -230,21 +230,21 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && doLogin()}
-                    style={{ padding: '14px 48px 14px 16px', borderRadius: 12, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 15, outline: 'none', width: '100%', boxSizing: 'border-box' as const }}
+                    style={{ padding: '12px 44px 12px 14px', borderRadius: 10, background: '#1a1a1f', border: '1px solid rgba(124,58,237,0.25)', color: '#fff', fontSize: 14, outline: 'none', width: '100%', boxSizing: 'border-box' as const }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPw(p => !p)}
-                    style={{ position: 'absolute', right: 14, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.5)', padding: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: showPw ? '#c084fc' : 'rgba(255,255,255,0.4)', padding: 4, display: 'flex', alignItems: 'center' }}
                   >
                     {showPw ? (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
                         <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
                         <line x1="1" y1="1" x2="23" y2="23"/>
                       </svg>
                     ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                         <circle cx="12" cy="12" r="3"/>
                       </svg>
@@ -259,7 +259,7 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
                 <button
                   onClick={doLogin}
                   disabled={signing}
-                  style={{ padding: '14px', borderRadius: 12, border: 'none', cursor: signing ? 'wait' : 'pointer', fontWeight: 800, fontSize: 15, background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: '#fff', opacity: signing ? 0.7 : 1, width: '100%' }}
+                  style={{ padding: '12px', borderRadius: 10, border: 'none', cursor: signing ? 'wait' : 'pointer', fontWeight: 700, fontSize: 14, background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: '#fff', opacity: signing ? 0.7 : 1, width: '100%' }}
                 >{signing ? tl('signing') : tl('login')}</button>
 
                 {/* Forgot password */}
