@@ -280,8 +280,8 @@ export default function KvkPage() {
       {/* ── SHEET ── */}
       {sheetMode && (
         <>
-          <div onClick={() => !saving && setSheetMode(null)} style={{ position: 'fixed', inset: 0, zIndex: 998, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)' }} />
-          <div style={{ position: 'fixed', zIndex: 999, left: '50%', transform: 'translateX(-50%)', top: 0, bottom: 0, width: '100%', maxWidth: 560, background: '#111114', display: 'flex', flexDirection: 'column', boxShadow: '0 0 80px rgba(0,0,0,0.9)' }}>
+          <div onClick={() => !saving && setSheetMode(null)} style={{ position: 'fixed', inset: 0, zIndex: 10000, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)' }} />
+          <div style={{ position: 'fixed', zIndex: 10001, left: '50%', transform: 'translateX(-50%)', top: 0, bottom: 0, width: '100%', maxWidth: 560, background: '#111114', display: 'flex', flexDirection: 'column', boxShadow: '0 0 80px rgba(0,0,0,0.9)' }}>
 
             {/* ── HEADER ── */}
             <div style={{ flexShrink: 0, paddingTop: 'max(12px, env(safe-area-inset-top))', background: '#111114', borderBottom: '1px solid rgba(255,255,255,0.09)' }}>
