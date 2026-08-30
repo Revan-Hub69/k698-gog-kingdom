@@ -118,14 +118,14 @@ export default function KvkEventPage() {
       }}>
         {/* pos */}
         <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 20, flexShrink: 0, textAlign: 'right', paddingRight: 6 }}>{p.pos}</span>
-        {/* name — fixed width */}
-        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', width: 80, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 8 }}>{p.name}</span>
-        {/* Pt. — fixed width */}
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 72, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+        {/* name — wider */}
+        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', width: 120, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 10 }}>{p.name}</span>
+        {/* Pt. — wider */}
+        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 82, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>
           {scoreStr ? `Pt. ${scoreStr}` : ''}
         </span>
-        {/* 💀 — fixed width */}
-        <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.55)', width: 58, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+        {/* 💀 — wider */}
+        <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.6)', width: 68, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
           {deathsStr ? `💀 ${deathsStr}` : ''}
         </span>
         {/* packs — right, fills remaining */}

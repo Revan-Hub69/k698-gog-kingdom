@@ -385,41 +385,36 @@ export default function KvkPage() {
                   {/* max warning note */}
                   <div style={{ fontSize: 11, color: 'rgba(255,200,100,0.6)', marginBottom: 10 }}>⚠ {t('maxPacksWarning')}</div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 16 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 16 }}>
                     {rows.filter(r => r.name.trim()).map((row, idx) => {
                       const total = row.p90 + row.p60 + row.p30;
                       return (
-                        <div key={row.id} style={{ background: idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)', borderRadius: 10, padding: '9px 12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                          {/* top row: # | nome Pt. xxx 💀 yyy | x/3 badges */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 7 }}>
-                            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', width: 16, flexShrink: 0 }}>{idx+1}</span>
-                            {/* name */}
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, maxWidth: 72, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
-                            {/* Pt. + deaths — left, flex fill */}
-                            <span style={{ flex: 1, fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', overflow: 'hidden', textAlign: 'left' }}>
-                              {row.score ? `Pt. ${fmt(row.score)}` : ''}
-                              {row.score && row.deaths ? '  ' : ''}
-                              {row.deaths ? `💀 ${fmt(row.deaths)}` : ''}
-                            </span>
-                            {/* x/3 + badges */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0 }}>
-                              <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : 'rgba(255,255,255,0.3)' }}>{total}/3</span>
-                              {([['p90','90',PC['90']],['p60','60',PC['60']],['p30','30',PC['30']]] as const).map(([k,label,color]) =>
-                                Array.from({length: row[k]}).map((_,i) => (
-                                  <span key={`${k}-${i}`} style={{ fontSize: 9, fontWeight: 800, padding: '1px 4px', borderRadius: 3, background: `${color}18`, color, border: `1px solid ${color}30` }}>{label}</span>
-                                ))
-                              )}
+                        <div key={row.id} style={{
+                          display: 'flex', alignItems: 'center', gap: 8,
+                          padding: '10px 12px', borderRadius: 10,
+                          background: idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.018)',
+                          border: `1px solid ${total > 0 ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.05)'}`,
+                        }}>
+                          {/* # */}
+                          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', width: 16, flexShrink: 0 }}>{idx+1}</span>
+                          {/* name + stats */}
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{row.name}</div>
+                            <div style={{ display: 'flex', gap: 6, fontSize: 10 }}>
+                              {row.score && <span style={{ color: 'rgba(255,255,255,0.35)', fontVariantNumeric: 'tabular-nums' }}>Pt. {fmt(row.score)}</span>}
+                              {row.deaths && <span style={{ color: 'rgba(248,113,113,0.45)', fontVariantNumeric: 'tabular-nums' }}>💀 {fmt(row.deaths)}</span>}
                             </div>
                           </div>
-                          {/* controls */}
-                          <div style={{ display: 'flex', gap: 6 }}>
-                            {([['p90',PC['90']],['p60',PC['60']],['p30',PC['30']]] as const).map(([k, color]) => (
-                              <div key={k} style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 3, background: `${color}08`, borderRadius: 8, padding: '4px 5px', border: `1px solid ${color}18` }}>
-                                <button onClick={() => changePack(row.id, k, -1)} style={{ width: 26, height: 26, borderRadius: 5, border: 'none', background: 'rgba(255,255,255,0.06)', color: '#fff', cursor: 'pointer', fontSize: 15, lineHeight: 1 }}>−</button>
-                                <span style={{ flex: 1, textAlign: 'center', fontSize: 14, fontWeight: 900, color }}>{row[k]}</span>
-                                <button onClick={() => changePack(row.id, k, +1)} disabled={total >= 3} style={{ width: 26, height: 26, borderRadius: 5, border: 'none', background: total >= 3 ? 'rgba(255,255,255,0.03)' : `${color}22`, color: total >= 3 ? 'rgba(255,255,255,0.15)' : color, cursor: total >= 3 ? 'not-allowed' : 'pointer', fontSize: 15, lineHeight: 1 }}>+</button>
+                          {/* pack controls inline */}
+                          <div style={{ display: 'flex', gap: 5, flexShrink: 0, alignItems: 'center' }}>
+                            {([['p90','90',PC['90']],['p60','60',PC['60']],['p30','30',PC['30']]] as const).map(([k, label, color]) => (
+                              <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 2, background: `${color}10`, borderRadius: 8, padding: '3px 5px', border: `1px solid ${color}${row[k] > 0 ? '40' : '18'}` }}>
+                                <button onClick={() => changePack(row.id, k, -1)} style={{ width: 22, height: 22, borderRadius: 5, border: 'none', background: row[k] > 0 ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.04)', color: row[k] > 0 ? '#fff' : 'rgba(255,255,255,0.2)', cursor: row[k] > 0 ? 'pointer' : 'default', fontSize: 14, lineHeight: 1 }}>−</button>
+                                <span style={{ fontSize: 12, fontWeight: 800, color: row[k] > 0 ? color : 'rgba(255,255,255,0.2)', width: 14, textAlign: 'center' }}>{row[k]}</span>
+                                <button onClick={() => changePack(row.id, k, +1)} disabled={total >= 3} style={{ width: 22, height: 22, borderRadius: 5, border: 'none', background: total >= 3 ? 'rgba(255,255,255,0.03)' : `${color}25`, color: total >= 3 ? 'rgba(255,255,255,0.1)' : color, cursor: total >= 3 ? 'not-allowed' : 'pointer', fontSize: 14, lineHeight: 1 }}>+</button>
                               </div>
                             ))}
+                            <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : total > 0 ? '#fbbf24' : 'rgba(255,255,255,0.2)', width: 22, textAlign: 'center' }}>{total}/3</span>
                           </div>
                         </div>
                       );
