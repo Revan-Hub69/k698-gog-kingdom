@@ -9,14 +9,14 @@ const LANGS = ['IT', 'EN', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 type Lang = KvkLang;
 
 const T: Record<Lang, Record<string, string>> = {
-  IT: { title: 'Pacchi KVK', active: 'EVENTI ATTIVI', past: 'EVENTI PASSATI', newEvent: '+ Nuovo Evento KVK', noActive: 'Nessun evento attivo.', noPast: 'Nessun evento passato.', players: 'giocatori', packs: 'pacchi', isActive: 'Attivo', closed: 'Chiuso', cancel: 'Annulla', saving: 'Salvataggio...', packsLabel: 'Pacchi disponibili', playersLabel: 'Lista Giocatori', addPlayer: '+ Aggiungi', colName: 'Nome', colScore: 'Punti (M)', step1: 'Passo 1: Giocatori', step2: 'Passo 2: Assegna Pacchi', generateList: 'Genera Lista', next: 'Avanti →', back: '← Indietro', remaining: 'rimanenti', total: 'totale' },
-  EN: { title: 'KVK Packages', active: 'ACTIVE EVENTS', past: 'PAST EVENTS', newEvent: '+ New KVK Event', noActive: 'No active events.', noPast: 'No past events.', players: 'players', packs: 'packs', isActive: 'Active', closed: 'Closed', cancel: 'Cancel', saving: 'Saving...', packsLabel: 'Available packs', playersLabel: 'Players List', addPlayer: '+ Add', colName: 'Name', colScore: 'Score (M)', step1: 'Step 1: Players', step2: 'Step 2: Assign Packs', generateList: 'Generate List', next: 'Next →', back: '← Back', remaining: 'remaining', total: 'total' },
-  PL: { title: 'Pakiety KvK', active: 'AKTYWNE', past: 'MINIONE', newEvent: '+ Nowe KVK', noActive: 'Brak.', noPast: 'Brak.', players: 'gracze', packs: 'paczki', isActive: 'Aktywny', closed: 'Zamknięty', cancel: 'Anuluj', saving: '...', packsLabel: 'Paczki', playersLabel: 'Lista graczy', addPlayer: '+ Dodaj', colName: 'Nazwa', colScore: 'Pkt (M)', step1: 'Krok 1', step2: 'Krok 2', generateList: 'Generuj listę', next: 'Dalej →', back: '← Wróć', remaining: 'pozostało', total: 'suma' },
-  ZH: { title: 'KVK礼包', active: '活跃', past: '历史', newEvent: '+ 新KVK', noActive: '无。', noPast: '无。', players: '玩家', packs: '礼包', isActive: '活跃', closed: '已关闭', cancel: '取消', saving: '...', packsLabel: '可用礼包', playersLabel: '玩家列表', addPlayer: '+ 添加', colName: '名称', colScore: '积分(M)', step1: '第1步', step2: '第2步', generateList: '生成列表', next: '下一步 →', back: '← 返回', remaining: '剩余', total: '总计' },
-  DE: { title: 'KVK-Pakete', active: 'AKTIV', past: 'VERGANGEN', newEvent: '+ Neues KVK', noActive: 'Keine.', noPast: 'Keine.', players: 'Spieler', packs: 'Pakete', isActive: 'Aktiv', closed: 'Geschlossen', cancel: 'Abbrechen', saving: '...', packsLabel: 'Pakete', playersLabel: 'Spielerliste', addPlayer: '+ Hinzufügen', colName: 'Name', colScore: 'Pkt (M)', step1: 'Schritt 1', step2: 'Schritt 2', generateList: 'Liste generieren', next: 'Weiter →', back: '← Zurück', remaining: 'verbleibend', total: 'gesamt' },
-  FR: { title: 'Packages KvK', active: 'ACTIFS', past: 'PASSÉS', newEvent: '+ Nouveau KVK', noActive: 'Aucun.', noPast: 'Aucun.', players: 'joueurs', packs: 'packages', isActive: 'Actif', closed: 'Fermé', cancel: 'Annuler', saving: '...', packsLabel: 'Packages', playersLabel: 'Liste joueurs', addPlayer: '+ Ajouter', colName: 'Nom', colScore: 'Score (M)', step1: 'Étape 1', step2: 'Étape 2', generateList: 'Générer la liste', next: 'Suivant →', back: '← Retour', remaining: 'restants', total: 'total' },
-  RU: { title: 'Пакеты KvK', active: 'АКТИВНЫЕ', past: 'ПРОШЕДШИЕ', newEvent: '+ Новое KVK', noActive: 'Нет.', noPast: 'Нет.', players: 'игроки', packs: 'пакеты', isActive: 'Активно', closed: 'Закрыто', cancel: 'Отмена', saving: '...', packsLabel: 'Пакеты', playersLabel: 'Список игроков', addPlayer: '+ Добавить', colName: 'Имя', colScore: 'Очки (M)', step1: 'Шаг 1', step2: 'Шаг 2', generateList: 'Создать список', next: 'Далее →', back: '← Назад', remaining: 'осталось', total: 'всего' },
-  ES: { title: 'Paquetes KvK', active: 'ACTIVOS', past: 'PASADOS', newEvent: '+ Nuevo KVK', noActive: 'No hay.', noPast: 'No hay.', players: 'jugadores', packs: 'paquetes', isActive: 'Activo', closed: 'Cerrado', cancel: 'Cancelar', saving: '...', packsLabel: 'Paquetes', playersLabel: 'Lista jugadores', addPlayer: '+ Agregar', colName: 'Nombre', colScore: 'Puntos (M)', step1: 'Paso 1', step2: 'Paso 2', generateList: 'Generar lista', next: 'Siguiente →', back: '← Volver', remaining: 'restantes', total: 'total' },
+  IT: { title: 'Pacchi KVK', active: 'EVENTI ATTIVI', past: 'EVENTI PASSATI', newEvent: '+ Nuovo Evento KVK', noActive: 'Nessun evento attivo.', noPast: 'Nessun evento passato.', players: 'giocatori', packs: 'pacchi', isActive: 'Attivo', closed: 'Chiuso', cancel: 'Annulla', saving: 'Salvataggio...', packsLabel: 'Pacchi disponibili', playersLabel: 'Lista Giocatori', addPlayer: '+ Aggiungi', colName: 'Nome', colScore: 'Punti (M)', step1: 'Passo 1: Giocatori', step2: 'Passo 2: Assegna Pacchi', generateList: 'Genera Lista', next: 'Avanti →', back: '← Indietro', remaining: 'rimanenti', total: 'totale', edit: 'Modifica', editTitle: 'Modifica Evento', view: 'Visualizza' },
+  EN: { title: 'KVK Packages', active: 'ACTIVE EVENTS', past: 'PAST EVENTS', newEvent: '+ New KVK Event', noActive: 'No active events.', noPast: 'No past events.', players: 'players', packs: 'packs', isActive: 'Active', closed: 'Closed', cancel: 'Cancel', saving: 'Saving...', packsLabel: 'Available packs', playersLabel: 'Players List', addPlayer: '+ Add', colName: 'Name', colScore: 'Score (M)', step1: 'Step 1: Players', step2: 'Step 2: Assign Packs', generateList: 'Generate List', next: 'Next →', back: '← Back', remaining: 'remaining', total: 'total', edit: 'Edit', editTitle: 'Edit Event', view: 'View' },
+  PL: { title: 'Pakiety KvK', active: 'AKTYWNE', past: 'MINIONE', newEvent: '+ Nowe KVK', noActive: 'Brak.', noPast: 'Brak.', players: 'gracze', packs: 'paczki', isActive: 'Aktywny', closed: 'Zamknięty', cancel: 'Anuluj', saving: '...', packsLabel: 'Paczki', playersLabel: 'Lista graczy', addPlayer: '+ Dodaj', colName: 'Nazwa', colScore: 'Pkt (M)', step1: 'Krok 1', step2: 'Krok 2', generateList: 'Generuj listę', next: 'Dalej →', back: '← Wróć', remaining: 'pozostało', total: 'suma', edit: 'Edytuj', editTitle: 'Edytuj', view: 'Zobacz' },
+  ZH: { title: 'KVK礼包', active: '活跃', past: '历史', newEvent: '+ 新KVK', noActive: '无。', noPast: '无。', players: '玩家', packs: '礼包', isActive: '活跃', closed: '已关闭', cancel: '取消', saving: '...', packsLabel: '可用礼包', playersLabel: '玩家列表', addPlayer: '+ 添加', colName: '名称', colScore: '积分(M)', step1: '第1步', step2: '第2步', generateList: '生成列表', next: '下一步 →', back: '← 返回', remaining: '剩余', total: '总计', edit: '编辑', editTitle: '编辑', view: '查看' },
+  DE: { title: 'KVK-Pakete', active: 'AKTIV', past: 'VERGANGEN', newEvent: '+ Neues KVK', noActive: 'Keine.', noPast: 'Keine.', players: 'Spieler', packs: 'Pakete', isActive: 'Aktiv', closed: 'Geschlossen', cancel: 'Abbrechen', saving: '...', packsLabel: 'Pakete', playersLabel: 'Spielerliste', addPlayer: '+ Hinzufügen', colName: 'Name', colScore: 'Pkt (M)', step1: 'Schritt 1', step2: 'Schritt 2', generateList: 'Liste generieren', next: 'Weiter →', back: '← Zurück', remaining: 'verbleibend', total: 'gesamt', edit: 'Bearbeiten', editTitle: 'Bearbeiten', view: 'Ansehen' },
+  FR: { title: 'Packages KvK', active: 'ACTIFS', past: 'PASSÉS', newEvent: '+ Nouveau KVK', noActive: 'Aucun.', noPast: 'Aucun.', players: 'joueurs', packs: 'packages', isActive: 'Actif', closed: 'Fermé', cancel: 'Annuler', saving: '...', packsLabel: 'Packages', playersLabel: 'Liste joueurs', addPlayer: '+ Ajouter', colName: 'Nom', colScore: 'Score (M)', step1: 'Étape 1', step2: 'Étape 2', generateList: 'Générer la liste', next: 'Suivant →', back: '← Retour', remaining: 'restants', total: 'total', edit: 'Modifier', editTitle: 'Modifier', view: 'Voir' },
+  RU: { title: 'Пакеты KvK', active: 'АКТИВНЫЕ', past: 'ПРОШЕДШИЕ', newEvent: '+ Новое KVK', noActive: 'Нет.', noPast: 'Нет.', players: 'игроки', packs: 'пакеты', isActive: 'Активно', closed: 'Закрыто', cancel: 'Отмена', saving: '...', packsLabel: 'Пакеты', playersLabel: 'Список игроков', addPlayer: '+ Добавить', colName: 'Имя', colScore: 'Очки (M)', step1: 'Шаг 1', step2: 'Шаг 2', generateList: 'Создать список', next: 'Далее →', back: '← Назад', remaining: 'осталось', total: 'всего', edit: 'Изменить', editTitle: 'Изменить', view: 'Просмотр' },
+  ES: { title: 'Paquetes KvK', active: 'ACTIVOS', past: 'PASADOS', newEvent: '+ Nuevo KVK', noActive: 'No hay.', noPast: 'No hay.', players: 'jugadores', packs: 'paquetes', isActive: 'Activo', closed: 'Cerrado', cancel: 'Cancelar', saving: '...', packsLabel: 'Paquetes', playersLabel: 'Lista jugadores', addPlayer: '+ Agregar', colName: 'Nombre', colScore: 'Puntos (M)', step1: 'Paso 1', step2: 'Paso 2', generateList: 'Generar lista', next: 'Siguiente →', back: '← Volver', remaining: 'restantes', total: 'total', edit: 'Editar', editTitle: 'Editar evento', view: 'Ver' },
 };
 
 interface PlayerRow { id: number; name: string; score: string; p90: number; p60: number; p30: number }
@@ -37,6 +37,7 @@ export default function KvkPage() {
 
   // Sheet state
   const [showSheet, setShowSheet] = useState(false);
+  const [editingEventId, setEditingEventId] = useState<number | null>(null);
   const [step, setStep] = useState<1 | 2>(1);
   const [packs, setPacks] = useState({ p90: '3', p60: '33', p30: '140' });
   const [rows, setRows] = useState<PlayerRow[]>([mkRow(), mkRow(), mkRow()]);
@@ -83,33 +84,48 @@ export default function KvkPage() {
     setSaving(true);
     const today = new Date();
     const date = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}/${today.getFullYear()}`;
-    const evRes = await fetch('/api/kvk/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ name: `Lista Pacchi KVK ${date}`, date, pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }),
-    });
-    if (!evRes.ok) { setSaving(false); return; }
-    const ev = await evRes.json();
     const valid = rows.filter(r => r.name.trim());
+
+    let eventId: number;
+
+    if (editingEventId) {
+      // PATCH existing event
+      await fetch(`/api/kvk/events/${editingEventId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }),
+      });
+      eventId = editingEventId;
+    } else {
+      // POST new event
+      const evRes = await fetch('/api/kvk/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ name: `Lista Pacchi KVK ${date}`, date, pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }),
+      });
+      if (!evRes.ok) { setSaving(false); return; }
+      const ev = await evRes.json();
+      eventId = ev.id;
+    }
+
     if (valid.length > 0) {
-      // first import players
+      // Replace all players
       await fetch('/api/kvk/players', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({
-          eventId: ev.id,
+          eventId,
           players: valid.map((r, i) => ({
-            pos: i + 1, name: r.name.trim(),
-            alliance: null,
+            pos: i + 1, name: r.name.trim(), alliance: null,
             score: Math.round(Number(r.score.replace(',', '.')) * 1e6) || 0,
             under100m: false, notes: null,
           })),
         }),
       });
-      // then patch packs on each player
-      const playersRes = await fetch(`/api/kvk/players?eventId=${ev.id}`);
+      // Patch packs
+      const playersRes = await fetch(`/api/kvk/players?eventId=${eventId}`);
       const playersList = await playersRes.json();
-      await Promise.all(playersList.map((p: { id: number; name: string }, idx: number) => {
+      await Promise.all(playersList.map((p: { id: number }, idx: number) => {
         const row = valid[idx];
         if (!row || (row.p90 === 0 && row.p60 === 0 && row.p30 === 0)) return Promise.resolve();
         return fetch(`/api/kvk/players/${p.id}`, {
@@ -119,13 +135,33 @@ export default function KvkPage() {
         });
       }));
     }
-    router.push(`/kvk/${ev.id}`);
+    router.push(`/kvk/${eventId}`);
   };
 
   const openSheet = () => {
+    setEditingEventId(null);
     setStep(1);
     setRows([mkRow(), mkRow(), mkRow()]);
     setPacks({ p90: '3', p60: '33', p30: '140' });
+    setShowSheet(true);
+  };
+
+  const openEditSheet = async (ev: KvkEvent) => {
+    setEditingEventId(ev.id);
+    setPacks({ p90: String(ev.pack90Total), p60: String(ev.pack60Total), p30: String(ev.pack30Total) });
+    // Load existing players
+    const res = await fetch(`/api/kvk/players?eventId=${ev.id}`);
+    const players = await res.json();
+    if (Array.isArray(players) && players.length > 0) {
+      setRows(players.map((p: { id: number; name: string; score: number; pack90: number; pack60: number; pack30: number }) => ({
+        id: _id++, name: p.name,
+        score: p.score > 0 ? String(Math.round(p.score / 1e6)) : '',
+        p90: p.pack90, p60: p.pack60, p30: p.pack30,
+      })));
+    } else {
+      setRows([mkRow(), mkRow(), mkRow()]);
+    }
+    setStep(1);
     setShowSheet(true);
   };
 
@@ -141,23 +177,31 @@ export default function KvkPage() {
   };
 
   const EventCard = ({ ev }: { ev: KvkEvent }) => (
-    <Link href={`/kvk/${ev.id}`} style={S.card(ev.isActive)}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
-        <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{ev.name}</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{ev.date} · {ev._count.players} {t('players')}</div>
+    <div style={{ position: 'relative', marginBottom: 6 }}>
+      <Link href={`/kvk/${ev.id}`} style={{ ...S.card(ev.isActive), marginBottom: 0, paddingRight: isAdmin ? 100 : 14 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{ev.name}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{ev.date} · {ev._count.players} {t('players')}</div>
+          </div>
+          {!isAdmin && <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 5, background: ev.isActive ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)', color: ev.isActive ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0 }}>
+            {ev.isActive ? t('isActive') : t('closed')}
+          </span>}
         </div>
-        <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 5, background: ev.isActive ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)', color: ev.isActive ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0 }}>
-          {ev.isActive ? t('isActive') : t('closed')}
-        </span>
-      </div>
-      <div style={{ display: 'flex', gap: 4, marginTop: 8, flexWrap: 'wrap' }}>
-        {([['90', ev.pack90Total, '#f87171'], ['60', ev.pack60Total, '#fbbf24'], ['30', ev.pack30Total, '#a78bfa']] as const).map(([type, count, color]) => (
-          <span key={type} style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 5, background: `${color}14`, color, border: `1px solid ${color}22` }}>{count}×{type}</span>
-        ))}
-        <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 5, background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.35)' }}>= {ev.pack90Total + ev.pack60Total + ev.pack30Total} {t('packs')}</span>
-      </div>
-    </Link>
+        <div style={{ display: 'flex', gap: 4, marginTop: 8, flexWrap: 'wrap' }}>
+          {([['90', ev.pack90Total, '#f87171'], ['60', ev.pack60Total, '#fbbf24'], ['30', ev.pack30Total, '#a78bfa']] as const).map(([type, count, color]) => (
+            <span key={type} style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 5, background: `${color}14`, color, border: `1px solid ${color}22` }}>{count}×{type}</span>
+          ))}
+          <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 5, background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.35)' }}>= {ev.pack90Total + ev.pack60Total + ev.pack30Total} {t('packs')}</span>
+        </div>
+      </Link>
+      {isAdmin && (
+        <button
+          onClick={e => { e.preventDefault(); openEditSheet(ev); }}
+          style={{ position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)', padding: '6px 12px', borderRadius: 8, border: '1px solid rgba(124,58,237,0.3)', background: 'rgba(124,58,237,0.12)', color: '#c084fc', fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}
+        >✏️ {t('edit')}</button>
+      )}
+    </div>
   );
 
   return (
@@ -200,7 +244,7 @@ export default function KvkPage() {
             {/* header */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 18px 10px', flexShrink: 0, borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
               <div>
-                <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{step === 1 ? t('step1') : t('step2')}</div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: '#fff' }}>{editingEventId ? (step === 1 ? t('editTitle') : t('step2')) : (step === 1 ? t('step1') : t('step2'))}</div>
                 <div style={{ display: 'flex', gap: 4, marginTop: 4 }}>
                   {[1, 2].map(s => <div key={s} style={{ height: 3, width: 28, borderRadius: 2, background: step >= s ? 'linear-gradient(90deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.1)' }} />)}
                 </div>
