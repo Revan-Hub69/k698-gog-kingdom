@@ -25,6 +25,20 @@ interface KvkEvent { id: number; name: string; date: string; pack90Total: number
 let _uid = 1;
 const mkRow = (): PlayerRow => ({ id: _uid++, name: '', score: '', deaths: '', p90: 0, p60: 0, p30: 0 });
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
+
+// Format a score stored in raw units (divide by 1e6 → M, with thousands dot, decimal comma)
+function formatScore(rawUnits: number): string {
+  const m = rawUnits / 1e6;
+  if (m === Math.floor(m)) return Math.floor(m).toLocaleString('it-IT') + 'M';
+  return m.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
+}
+// Format deaths stored as M float string ("0.7", "1.5")
+function formatDeaths(raw: string): string {
+  const n = parseFloat(raw.replace(',', '.'));
+  if (isNaN(n)) return raw + 'M';
+  if (n === Math.floor(n)) return Math.floor(n).toLocaleString('it-IT') + 'M';
+  return n.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
+}
 const IN: React.CSSProperties = { background: '#111115', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 7, color: '#fff', fontSize: 13, outline: 'none', padding: '7px 8px', boxSizing: 'border-box', width: '100%' };
 
 export default function KvkPage() {
@@ -113,6 +127,14 @@ export default function KvkPage() {
     await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null })) }) });
     await reloadEvents();
     setSaving(false); setSheetMode(null);
+  };
+
+  const savePacks = async () => {
+    if (!editingEventId) return;
+    setSaving(true);
+    await fetch(`/api/kvk/events/${editingEventId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }) });
+    await reloadEvents();
+    setSaving(false);
   };
 
   const generateList = async () => {
@@ -332,7 +354,7 @@ export default function KvkPage() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
                             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', width: 18, flexShrink: 0 }}>{idx+1}</span>
                             <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
-                            {row.score && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{row.score}M</span>}
+                            {row.score && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{parseFloat(row.score.replace(',','.')).toLocaleString('it-IT', {maximumFractionDigits:1})}M</span>}
                             <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0 }}>{total}/3</span>
                             <div style={{ display: 'flex', gap: 3 }}>
                               {([['p90','90',PC['90']],['p60','60',PC['60']],['p30','30',PC['30']]] as const).map(([k,label,color]) =>
@@ -355,12 +377,15 @@ export default function KvkPage() {
                       );
                     })}
                   </div>
-                  <div style={{ display: 'flex', gap: 10 }}>
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
                     <button onClick={() => setSheetMode(null)} style={{ ...S.btn(false), flex: 1 }}>{t('cancel')}</button>
-                    <button onClick={generateList} disabled={saving} style={{ ...S.btn(true), flex: 2, fontSize: 14, padding: '12px' }}>
-                      {saving ? t('saving') : t('generateList')}
+                    <button onClick={savePacks} disabled={saving} style={{ ...S.btn(false), flex: 1, border: '1px solid rgba(124,58,237,0.3)', color: '#c084fc' }}>
+                      {saving ? t('saving') : '💾 ' + t('packsLabel')}
                     </button>
                   </div>
+                  <button onClick={generateList} disabled={saving} style={{ ...S.btn(true), width: '100%', fontSize: 14, padding: '12px' }}>
+                    {saving ? t('saving') : t('generateList')}
+                  </button>
                 </>
               )}
             </div>

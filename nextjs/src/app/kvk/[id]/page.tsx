@@ -1,26 +1,49 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
+import { useParams } from 'next/navigation';
 import KvkHeader, { KvkLang } from '@/components/KvkHeader';
 
 const LANGS = ['IT', 'EN', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'] as const;
 type Lang = KvkLang;
 
 const T: Record<Lang, Record<string, string>> = {
-  IT: { back:'← Indietro', available:'Disponibili', assigned:'Assegnati', remaining:'Rimanenti', players:'GIOCATORI', under100:'SOTTO 100M', noPlayers:'Nessun giocatore.', priority:'MAX', deaths:'Morti' },
-  EN: { back:'← Back', available:'Available', assigned:'Assigned', remaining:'Remaining', players:'PLAYERS', under100:'UNDER 100M', noPlayers:'No players.', priority:'MAX', deaths:'Deaths' },
-  PL: { back:'← Wróć', available:'Dostępne', assigned:'Przypisane', remaining:'Pozostałe', players:'GRACZE', under100:'POD 100M', noPlayers:'Brak graczy.', priority:'MAX', deaths:'Śmierci' },
-  ZH: { back:'← 返回', available:'可用', assigned:'已分配', remaining:'剩余', players:'玩家', under100:'100M以下', noPlayers:'没有玩家。', priority:'优先', deaths:'死亡' },
-  DE: { back:'← Zurück', available:'Verfügbar', assigned:'Zugewiesen', remaining:'Verbleibend', players:'SPIELER', under100:'UNTER 100M', noPlayers:'Keine Spieler.', priority:'MAX', deaths:'Tode' },
-  FR: { back:'← Retour', available:'Disponibles', assigned:'Attribués', remaining:'Restants', players:'JOUEURS', under100:'MOINS 100M', noPlayers:'Aucun joueur.', priority:'MAX', deaths:'Morts' },
-  RU: { back:'← Назад', available:'Доступно', assigned:'Назначено', remaining:'Осталось', players:'ИГРОКИ', under100:'НИЖЕ 100M', noPlayers:'Нет игроков.', priority:'MAX', deaths:'Смерти' },
-  ES: { back:'← Volver', available:'Disponibles', assigned:'Asignados', remaining:'Restantes', players:'JUGADORES', under100:'MENOS 100M', noPlayers:'No hay jugadores.', priority:'MAX', deaths:'Muertes' },
+  IT: { back:'← Indietro', available:'Disponibili', assigned:'Assegnati', remaining:'Rimanenti', players:'PRINCIPALI', under100:'SOTTO 100M', noPlayers:'Nessun giocatore.', priority:'MAX', deaths:'💀' },
+  EN: { back:'← Back', available:'Available', assigned:'Assigned', remaining:'Remaining', players:'PLAYERS', under100:'UNDER 100M', noPlayers:'No players.', priority:'MAX', deaths:'💀' },
+  PL: { back:'← Wróć', available:'Dostępne', assigned:'Przypisane', remaining:'Pozostałe', players:'GRACZE', under100:'POD 100M', noPlayers:'Brak graczy.', priority:'MAX', deaths:'💀' },
+  ZH: { back:'← 返回', available:'可用', assigned:'已分配', remaining:'剩余', players:'玩家', under100:'100M以下', noPlayers:'没有玩家。', priority:'优先', deaths:'💀' },
+  DE: { back:'← Zurück', available:'Verfügbar', assigned:'Zugewiesen', remaining:'Verbleibend', players:'SPIELER', under100:'UNTER 100M', noPlayers:'Keine Spieler.', priority:'MAX', deaths:'💀' },
+  FR: { back:'← Retour', available:'Disponibles', assigned:'Attribués', remaining:'Restants', players:'JOUEURS', under100:'MOINS 100M', noPlayers:'Aucun joueur.', priority:'MAX', deaths:'💀' },
+  RU: { back:'← Назад', available:'Доступно', assigned:'Назначено', remaining:'Осталось', players:'ИГРОКИ', under100:'НИЖЕ 100M', noPlayers:'Нет игроков.', priority:'MAX', deaths:'💀' },
+  ES: { back:'← Volver', available:'Disponibles', assigned:'Asignados', remaining:'Restantes', players:'JUGADORES', under100:'MENOS 100M', noPlayers:'No hay jugadores.', priority:'MAX', deaths:'💀' },
 };
 
 interface Player { id: number; pos: number; name: string; score: number; notes: string | null; pack90: number; pack60: number; pack30: number; under100m: boolean }
 interface KvkEvent { id: number; name: string; date: string; pack90Total: number; pack60Total: number; pack30Total: number; players: Player[] }
 
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
+
+// Format a raw M-value (already in M units) with thousands separator and decimal comma
+// score is stored as raw units → divide by 1e6 to get M
+function formatScore(rawUnits: number): string {
+  const m = rawUnits / 1e6;
+  // format with thousands dot, decimal comma (Italian style)
+  if (m === Math.floor(m)) {
+    // integer M
+    return Math.floor(m).toLocaleString('it-IT') + 'M';
+  } else {
+    // has decimals — show 1 decimal with comma
+    return m.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
+  }
+}
+
+// Deaths are stored as "morti: 0.7" — the value after "morti: " is already in M
+function formatDeaths(raw: string): string {
+  const n = parseFloat(raw.replace(',', '.'));
+  if (isNaN(n)) return raw + 'M';
+  if (n === Math.floor(n)) return Math.floor(n).toLocaleString('it-IT') + 'M';
+  return n.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
+}
 
 function PackBadges({ p90, p60, p30 }: { p90: number; p60: number; p30: number }) {
   const b: React.ReactNode[] = [];
@@ -32,7 +55,8 @@ function PackBadges({ p90, p60, p30 }: { p90: number; p60: number; p30: number }
 }
 
 export default function KvkEventPage() {
-  const [id, setId] = useState('');
+  const params = useParams();
+  const id = params?.id as string;
   const [lang, setLang] = useState<Lang>('IT');
   const [event, setEvent] = useState<KvkEvent | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,13 +64,11 @@ export default function KvkEventPage() {
   const t = (k: string) => T[lang]?.[k] || T['EN'][k] || k;
 
   useEffect(() => {
-    const seg = window.location.pathname.split('/').pop() || '';
-    setId(seg);
     const s = localStorage.getItem('lang') as Lang | null;
     if (s && LANGS.includes(s)) setLang(s);
     else { const br = navigator.language.split('-')[0].toUpperCase() as Lang; if (LANGS.includes(br)) setLang(br); }
-    fetch(`/api/kvk/events/${seg}`).then(r => r.json()).then(d => { setEvent(d); setLoading(false); });
-  }, []);
+    fetch(`/api/kvk/events/${id}`).then(r => r.json()).then(d => { setEvent(d); setLoading(false); });
+  }, [id]);
 
   const totals = useMemo(() => event?.players.reduce((s, p) => ({ p90: s.p90+p.pack90, p60: s.p60+p.pack60, p30: s.p30+p.pack30 }), { p90:0, p60:0, p30:0 }) ?? { p90:0, p60:0, p30:0 }, [event]);
   const rem = useMemo(() => event ? { p90: event.pack90Total-totals.p90, p60: event.pack60Total-totals.p60, p30: event.pack30Total-totals.p30 } : { p90:0, p60:0, p30:0 }, [event, totals]);
@@ -58,14 +80,14 @@ export default function KvkEventPage() {
   const page: React.CSSProperties = { minHeight: '100vh', background: '#09090a', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif', paddingBottom: 40 };
 
   if (loading) return <div style={{ ...page, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)' }}>...</div>;
-  if (!event || !event.id) return <div style={{ ...page, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)' }}>Not found</div>;
+  if (!event?.id) return <div style={{ ...page, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.3)' }}>Not found</div>;
 
-  const StatBox = ({ label, p90, p60, p30, neg }: { label: string; p90: number; p60: number; p30: number; neg?: boolean }) => (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 0' }}>
-      <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 0.5, width: 72, flexShrink: 0 }}>{label}</span>
-      {([['90',p90,PC['90']],['60',p60,PC['60']],['30',p30,PC['30']]] as const).map(([type,val,color]) => (
+  const StatRow = ({ label, p90, p60, p30, neg }: { label: string; p90: number; p60: number; p30: number; neg?: boolean }) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 0' }}>
+      <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 0.5, width: 70, flexShrink: 0 }}>{label}</span>
+      {([['90', p90, PC['90']], ['60', p60, PC['60']], ['30', p30, PC['30']]] as const).map(([type, val, color]) => (
         <div key={type} style={{ flex: 1, textAlign: 'center', padding: '5px 0', borderRadius: 8, background: `${neg && val < 0 ? '#ef4444' : color}10`, border: `1px solid ${neg && val < 0 ? '#ef4444' : color}18` }}>
-          <div style={{ fontSize: 15, fontWeight: 900, color: neg && val < 0 ? '#ef4444' : color, lineHeight: 1 }}>{val}</div>
+          <div style={{ fontSize: 14, fontWeight: 900, color: neg && val < 0 ? '#ef4444' : color, lineHeight: 1 }}>{val}</div>
           <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)', marginTop: 2 }}>×{type}</div>
         </div>
       ))}
@@ -74,19 +96,34 @@ export default function KvkEventPage() {
 
   const PlayerRow = ({ p, idx, under }: { p: Player; idx: number; under?: boolean }) => {
     const deaths = p.notes?.replace('morti: ', '');
+    const priority = isPriority(p);
     return (
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '9px 12px',
-        background: isPriority(p) ? 'rgba(124,58,237,0.1)' : idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)',
-        borderLeft: isPriority(p) ? '3px solid rgba(124,58,237,0.5)' : '3px solid transparent',
-        borderRadius: 0,
+        display: 'flex', alignItems: 'center',
+        padding: '8px 12px',
+        background: priority ? 'rgba(124,58,237,0.1)' : idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)',
+        borderLeft: `3px solid ${priority ? 'rgba(124,58,237,0.5)' : 'transparent'}`,
       }}>
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', width: 24, flexShrink: 0, textAlign: 'right' }}>{p.pos}</span>
-        <span style={{ fontSize: 13, fontWeight: isPriority(p) ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
-        {p.score > 0 && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{(p.score/1e6 >= 1000 ? (p.score/1e9).toFixed(1)+'B' : (p.score/1e6).toFixed(0)+'M')}</span>}
-        {deaths && <span style={{ fontSize: 10, color: 'rgba(248,113,113,0.5)', flexShrink: 0 }}>{Number(deaths) >= 1000 ? (Number(deaths)/1000).toFixed(1)+'B' : deaths+'M'} 💀</span>}
-        <PackBadges p90={p.pack90} p60={p.pack60} p30={p.pack30} />
+        {/* # pos */}
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 22, flexShrink: 0, textAlign: 'right', paddingRight: 4 }}>{p.pos}</span>
+
+        {/* name */}
+        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', width: 110, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 6 }}>{p.name}</span>
+
+        {/* score + deaths — left aligned, compact */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+          {p.score > 0 && (
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap' }}>{formatScore(p.score)}</span>
+          )}
+          {deaths && (
+            <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.55)', whiteSpace: 'nowrap' }}>{t('deaths')}{formatDeaths(deaths)}</span>
+          )}
+        </div>
+
+        {/* packs — right */}
+        <div style={{ flexShrink: 0 }}>
+          <PackBadges p90={p.pack90} p60={p.pack60} p30={p.pack30} />
+        </div>
       </div>
     );
   };
@@ -102,11 +139,11 @@ export default function KvkEventPage() {
 
       {/* stats */}
       <div style={{ padding: '6px 16px 10px', maxWidth: 480, margin: '0 auto', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <StatBox label={t('available')} p90={event.pack90Total} p60={event.pack60Total} p30={event.pack30Total} />
+        <StatRow label={t('available')} p90={event.pack90Total} p60={event.pack60Total} p30={event.pack30Total} />
         <div style={{ height: 1, background: 'rgba(255,255,255,0.04)' }} />
-        <StatBox label={t('assigned')} p90={totals.p90} p60={totals.p60} p30={totals.p30} />
+        <StatRow label={t('assigned')} p90={totals.p90} p60={totals.p60} p30={totals.p30} />
         <div style={{ height: 1, background: 'rgba(255,255,255,0.04)' }} />
-        <StatBox label={t('remaining')} p90={rem.p90} p60={rem.p60} p30={rem.p30} neg />
+        <StatRow label={t('remaining')} p90={rem.p90} p60={rem.p60} p30={rem.p30} neg />
       </div>
 
       {/* player list */}
