@@ -77,7 +77,12 @@ export default function KvkPage() {
 
   useEffect(() => {
     const stored = localStorage.getItem('lang') as Lang | null;
-    if (stored && LANGS.includes(stored)) setLang(stored);
+    if (stored && LANGS.includes(stored)) {
+      setLang(stored);
+    } else {
+      const browser = navigator.language.split('-')[0].toUpperCase() as Lang;
+      if (LANGS.includes(browser)) setLang(browser);
+    }
     const token = localStorage.getItem('token');
     if (token) {
       try {
