@@ -348,12 +348,27 @@ export default function KvkPage() {
                       const total = row.p90 + row.p60 + row.p30;
                       return (
                         <div key={row.id} style={{ background: idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)', borderRadius: 10, padding: '9px 12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-                            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', width: 18, flexShrink: 0 }}>{idx+1}</span>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
-                            {row.score && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{fmt(row.score)}</span>}
-                            <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0 }}>{total}/3</span>
-                            <div style={{ display: 'flex', gap: 3 }}>
+                          {/* top row: # nome | Pt: xxx 💀 yyy | x/3 badges */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 7 }}>
+                            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', flexShrink: 0 }}>{idx+1}</span>
+                            {/* left: name */}
+                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', flex: '0 1 auto', minWidth: 0, maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
+                            {/* middle: pt + deaths */}
+                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+                              {row.score && (
+                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>
+                                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 10 }}>Pt </span>{fmt(row.score)}
+                                </span>
+                              )}
+                              {row.deaths && (
+                                <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.55)', whiteSpace: 'nowrap' }}>
+                                  💀 {fmt(row.deaths)}
+                                </span>
+                              )}
+                            </div>
+                            {/* right: x/3 + badges */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+                              <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : 'rgba(255,255,255,0.3)' }}>{total}/3</span>
                               {([['p90','90',PC['90']],['p60','60',PC['60']],['p30','30',PC['30']]] as const).map(([k,label,color]) =>
                                 Array.from({length: row[k]}).map((_,i) => (
                                   <span key={`${k}-${i}`} style={{ fontSize: 10, fontWeight: 800, padding: '1px 5px', borderRadius: 4, background: `${color}18`, color, border: `1px solid ${color}30` }}>{label}</span>
@@ -361,6 +376,7 @@ export default function KvkPage() {
                               )}
                             </div>
                           </div>
+                          {/* controls */}
                           <div style={{ display: 'flex', gap: 6 }}>
                             {([['p90',PC['90']],['p60',PC['60']],['p30',PC['30']]] as const).map(([k, color]) => (
                               <div key={k} style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 3, background: `${color}08`, borderRadius: 8, padding: '4px 5px', border: `1px solid ${color}18` }}>
