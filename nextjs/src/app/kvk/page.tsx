@@ -303,8 +303,44 @@ export default function KvkPage() {
             )}
             <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '10px 0 0', flexShrink: 0 }} />
 
-            {/* scrollable body — thin modern scrollbar */}
-            <div style={{ overflowY: 'auto', flex: 1, padding: '12px 16px 20px', width: '100%', boxSizing: 'border-box' }}>
+            {/* ── STATS BAR — sticky under header, packs mode only ── */}
+            {sheetMode === 'packs' && (() => {
+              const validRows = rows.filter(r => r.name.trim());
+              const withoutPacks = validRows.filter(r => r.p90 + r.p60 + r.p30 === 0).length;
+              const totalRem = rem.p90 + rem.p60 + rem.p30;
+              const media = withoutPacks > 0 ? (totalRem / withoutPacks) : 0;
+              return (
+                <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: '10px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(9,9,10,0.98)', gap: 0 }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>Rimanenti</div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      {([['90',rem.p90,PC['90']],['60',rem.p60,PC['60']],['30',rem.p30,PC['30']]] as const).map(([type,val,color]) => (
+                        <span key={type} style={{ fontSize: 13, fontWeight: 900, color: val < 0 ? '#ef4444' : color }}>{val}×{type}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <div style={{ width: 1, height: 32, background: 'rgba(255,255,255,0.08)', margin: '0 12px' }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(124,58,237,0.7)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>Media/player</div>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
+                      <span style={{ fontSize: 18, fontWeight: 900, color: '#c084fc', lineHeight: 1 }}>{withoutPacks > 0 ? media.toFixed(2).replace('.', ',') : '—'}</span>
+                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>({withoutPacks} senza)</span>
+                    </div>
+                  </div>
+                  <div style={{ width: 1, height: 32, background: 'rgba(255,255,255,0.08)', margin: '0 12px' }} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 3 }}>Assegnati</div>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
+                      <span style={{ fontSize: 18, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{assigned.p90+assigned.p60+assigned.p30}</span>
+                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>/{avail.p90+avail.p60+avail.p30}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* scrollable body */}
+            <div style={{ overflowY: 'auto', flex: 1, padding: '12px 16px 16px', width: '100%', boxSizing: 'border-box' }}>
 
               {/* PACKS INPUT */}
               {(sheetMode === 'packs' || (sheetMode === 'new' && newTab === 'packs')) && (
@@ -375,8 +411,7 @@ export default function KvkPage() {
               {sheetMode === 'packs' && (
                 <>
                   <div style={{ fontSize: 11, color: 'rgba(255,200,100,0.5)', marginBottom: 10 }}>⚠ {t('maxPacksWarning')}</div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 80 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {rows.filter(r => r.name.trim()).map((row, idx) => {
                       const total = row.p90 + row.p60 + row.p30;
                       return (
@@ -415,49 +450,21 @@ export default function KvkPage() {
               )}
             </div>
 
-            {/* ── STICKY STATS (packs mode) ── */}
-            {sheetMode === 'packs' && (() => {
-              const validRows = rows.filter(r => r.name.trim());
-              const withoutPacks = validRows.filter(r => r.p90 + r.p60 + r.p30 === 0).length;
-              const totalRem = rem.p90 + rem.p60 + rem.p30;
-              const media = withoutPacks > 0 ? (totalRem / withoutPacks) : 0;
-              return (
-                <div style={{ flexShrink: 0, padding: '7px 16px 8px', borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(9,9,10,0.98)', display: 'flex', gap: 10, alignItems: 'center' }}>
-                  {/* Rimanenti */}
-                  <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-                    <span style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Rim.</span>
-                    {([['90',rem.p90,PC['90']],['60',rem.p60,PC['60']],['30',rem.p30,PC['30']]] as const).map(([type,val,color]) => (
-                      <span key={type} style={{ fontSize: 11, fontWeight: 800, color: val < 0 ? '#ef4444' : color }}>{val}×{type}</span>
-                    ))}
-                  </div>
-                  <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-                  {/* Media */}
-                  <div style={{ display: 'flex', gap: 4, alignItems: 'baseline' }}>
-                    <span style={{ fontSize: 9, fontWeight: 700, color: 'rgba(124,58,237,0.6)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Media</span>
-                    <span style={{ fontSize: 14, fontWeight: 900, color: '#c084fc' }}>{withoutPacks > 0 ? media.toFixed(2).replace('.', ',') : '—'}</span>
-                    <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.25)' }}>({withoutPacks} senza)</span>
-                  </div>
-                  <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-                  {/* Assegnati */}
-                  <div style={{ display: 'flex', gap: 4, alignItems: 'baseline' }}>
-                    <span style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Ass.</span>
-                    <span style={{ fontSize: 14, fontWeight: 900, color: '#fff' }}>{assigned.p90+assigned.p60+assigned.p30}</span>
-                  </div>
-                </div>
-              );
-            })()}
-                  </div>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <button onClick={() => setSheetMode(null)} style={{ ...S.btn(false), flex: 1, padding: '8px 10px', fontSize: 12 }}>{t('cancel')}</button>
-                    <button onClick={savePacks} disabled={saving} style={{ ...S.btn(false), flex: 1, padding: '8px 10px', fontSize: 12, border: '1px solid rgba(124,58,237,0.3)', color: '#c084fc' }}>
-                      {saving ? '...' : '💾 Pacchi'}
-                    </button>
-                    <button onClick={generateList} disabled={saving} style={{ ...S.btn(true), flex: 2, padding: '8px 10px', fontSize: 12 }}>
-                      {saving ? '...' : t('generateList')}
-                    </button>
-                  </div>
-                </>
-              )}
+            {/* ── STICKY FOOTER BUTTONS (packs mode) ── */}
+            {sheetMode === 'packs' && (
+              <div style={{ flexShrink: 0, padding: '10px 16px 16px', borderTop: '1px solid rgba(255,255,255,0.07)', background: '#0d0d10', display: 'flex', gap: 8 }}>
+                <button onClick={() => setSheetMode(null)} style={{ ...S.btn(false), flex: 1, padding: '9px 12px', fontSize: 12 }}>{t('cancel')}</button>
+                <button onClick={savePacks} disabled={saving} style={{ ...S.btn(false), flex: 1, padding: '9px 12px', fontSize: 12, border: '1px solid rgba(124,58,237,0.3)', color: '#c084fc' }}>
+                  {saving ? '...' : '💾 Pacchi'}
+                </button>
+                <button onClick={generateList} disabled={saving} style={{ ...S.btn(true), flex: 2, padding: '9px 12px', fontSize: 12 }}>
+                  {saving ? '...' : t('generateList')}
+                </button>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       <style>{`
         ::-webkit-scrollbar { width: 4px; height: 4px; }
