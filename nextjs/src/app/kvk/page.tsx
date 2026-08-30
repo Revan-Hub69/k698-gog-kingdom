@@ -36,7 +36,7 @@ export default function KvkPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [token, setToken] = useState('');
   const [showCreate, setShowCreate] = useState(false);
-  const [form, setForm] = useState({ name: '', date: '', pack90Total: '3', pack60Total: '33', pack30Total: '140' });
+  const [form, setForm] = useState({ pack90Total: '3', pack60Total: '33', pack30Total: '140' });
   const [saving, setSaving] = useState(false);
 
   const t = (k: string) => T[lang]?.[k] || T['EN'][k] || k;
@@ -57,18 +57,20 @@ export default function KvkPage() {
   }, []);
 
   const createEvent = async () => {
-    if (!form.name.trim()) return;
     setSaving(true);
+    const today = new Date();
+    const date = `${String(today.getDate()).padStart(2,'0')}/${String(today.getMonth()+1).padStart(2,'0')}/${today.getFullYear()}`;
+    const name = `Lista Pacchi KVK ${date}`;
     const res = await fetch('/api/kvk/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ name: form.name, date: form.date, pack90Total: Number(form.pack90Total), pack60Total: Number(form.pack60Total), pack30Total: Number(form.pack30Total) }),
+      body: JSON.stringify({ name, date, pack90Total: Number(form.pack90Total), pack60Total: Number(form.pack60Total), pack30Total: Number(form.pack30Total) }),
     });
     if (res.ok) {
       const ev = await res.json();
       setEvents(prev => [{ ...ev, _count: { players: 0 } }, ...prev]);
       setShowCreate(false);
-      setForm({ name: '', date: '', pack90Total: '3', pack60Total: '33', pack30Total: '140' });
+      setForm({ pack90Total: '3', pack60Total: '33', pack30Total: '140' });
     }
     setSaving(false);
   };
@@ -131,22 +133,19 @@ export default function KvkPage() {
       {/* CREATE FORM */}
       {isAdmin && showCreate && (
         <div style={{ padding: '0 16px 12px' }}>
-          <div style={{ maxWidth: 480, margin: '0 auto', padding: '14px 16px', borderRadius: 12, background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.18)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <input style={S.input} placeholder={t('eventName')} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input style={{ ...S.input, flex: 2 }} placeholder={t('eventDate')} value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
-                {[['pack90Total', '90', '#f87171'], ['pack60Total', '60', '#fbbf24'], ['pack30Total', '30', '#a78bfa']].map(([k, label, color]) => (
-                  <div key={k} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <div style={{ fontSize: 9, fontWeight: 700, color: color as string, textAlign: 'center' }}>×{label}</div>
-                    <input style={{ ...S.input, textAlign: 'center', padding: '8px 4px' }} type="number" min="0" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
-                  </div>
-                ))}
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button style={{ ...S.btn(false), flex: 1, padding: '8px 12px', fontSize: 12 }} onClick={() => setShowCreate(false)}>{t('cancel')}</button>
-                <button style={{ ...S.btn(true), flex: 2, padding: '8px 12px', fontSize: 12 }} onClick={createEvent} disabled={saving}>{saving ? '...' : t('create')}</button>
-              </div>
+          <div style={{ maxWidth: 480, margin: '0 auto', padding: '12px 14px', borderRadius: 12, background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.18)' }}>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>Pacchi disponibili:</div>
+            <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+              {[['pack90Total', '90', '#f87171'], ['pack60Total', '60', '#fbbf24'], ['pack30Total', '30', '#a78bfa']].map(([k, label, color]) => (
+                <div key={k} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: color as string, textAlign: 'center' }}>×{label}</div>
+                  <input style={{ ...S.input, textAlign: 'center', padding: '8px 4px' }} type="number" min="0" value={form[k as keyof typeof form]} onChange={e => setForm(f => ({ ...f, [k]: e.target.value }))} />
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button style={{ ...S.btn(false), flex: 1, padding: '8px 12px', fontSize: 12 }} onClick={() => setShowCreate(false)}>{t('cancel')}</button>
+              <button style={{ ...S.btn(true), flex: 2, padding: '8px 12px', fontSize: 12 }} onClick={createEvent} disabled={saving}>{saving ? '...' : t('create')}</button>
             </div>
           </div>
         </div>

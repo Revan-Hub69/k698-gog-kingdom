@@ -235,7 +235,7 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
                   <button
                     type="button"
                     onClick={() => setShowPw(p => !p)}
-                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: showPw ? '#c084fc' : 'rgba(255,255,255,0.4)', padding: 4, display: 'flex', alignItems: 'center' }}
+                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(124,58,237,0.2)', border: '1px solid rgba(124,58,237,0.3)', borderRadius: 6, cursor: 'pointer', color: '#c084fc', padding: '3px 5px', display: 'flex', alignItems: 'center' }}
                   >
                     {showPw ? (
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
