@@ -26,20 +26,22 @@ let _uid = 1;
 const mkRow = (): PlayerRow => ({ id: _uid++, name: '', score: '', deaths: '', p90: 0, p60: 0, p30: 0 });
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
 
-// Format a value in M: accepts "1200", "1.200", "1,2", "1.200,5" etc → "1.200M", "1,2M"
+// Format a value in M: accepts "1200", "1.200", "1,2", "0.001" etc → "1.200M", "1,2M", "0,001M"
 function fmt(val: string | number): string {
   if (val === '' || val === undefined || val === null) return '';
-  // normalize: remove thousands separators (dots before 3 digits), replace comma decimal with dot
-  const raw = String(val)
-    .replace(/\.(?=\d{3}(?:[,.]|$))/g, '')  // remove thousands dots
-    .replace(',', '.');                        // decimal comma → dot
+  const raw = String(val).replace(/\.(?=\d{3}(?:[,.]|$))/g, '').replace(',', '.');
   const n = parseFloat(raw);
   if (isNaN(n) || n === 0) return '';
-  const rounded = Math.round(n * 10) / 10;
+  // determine decimal places needed
+  let decimals = 0;
+  if (n < 0.01) decimals = 3;
+  else if (n < 0.1) decimals = 2;
+  else if (n !== Math.floor(n)) decimals = 1;
+  const rounded = parseFloat(n.toFixed(decimals));
   const intPart = Math.floor(rounded);
-  const dec = Math.round((rounded - intPart) * 10);
+  const decPart = Math.round((rounded - intPart) * Math.pow(10, decimals));
   const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return dec > 0 ? `${intStr},${dec}M` : `${intStr}M`;
+  return decimals > 0 && decPart > 0 ? `${intStr},${String(decPart).padStart(decimals, '0')}M` : `${intStr}M`;
 }
 const IN: React.CSSProperties = { background: '#111115', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 7, color: '#fff', fontSize: 13, outline: 'none', padding: '7px 8px', boxSizing: 'border-box', width: '100%' };
 

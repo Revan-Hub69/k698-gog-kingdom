@@ -23,26 +23,35 @@ interface KvkEvent { id: number; name: string; date: string; pack90Total: number
 
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
 
-// Format score: raw units → M with thousands dot, decimal comma
-// e.g. 700000000 → "700M", 1200000000 → "1.200M", 40000000000 → "40.000M"
+// Format score: raw units → M with thousands dot, up to 3 decimals
 function formatScore(rawUnits: number): string {
-  const m = rawUnits / 1e6;
-  const rounded = Math.round(m * 10) / 10; // 1 decimal
+  if (!rawUnits) return '';
+  const n = rawUnits / 1e6;
+  let decimals = 0;
+  if (n < 0.01) decimals = 3;
+  else if (n < 0.1) decimals = 2;
+  else if (n !== Math.floor(n)) decimals = 1;
+  const rounded = parseFloat(n.toFixed(decimals));
   const intPart = Math.floor(rounded);
-  const dec = Math.round((rounded - intPart) * 10);
+  const decPart = Math.round((rounded - intPart) * Math.pow(10, decimals));
   const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return dec > 0 ? `${intStr},${dec}M` : `${intStr}M`;
+  return decimals > 0 && decPart > 0 ? `${intStr},${String(decPart).padStart(decimals,'0')}M` : `${intStr}M`;
 }
 
-// Format deaths: stored as float M string e.g. "0.7", "1.5", "7"
+// Format deaths: stored as float string e.g. "0.7", "6.3", "0.001"
 function formatDeaths(raw: string): string {
+  if (!raw) return '';
   const n = parseFloat(raw.replace(',', '.'));
-  if (isNaN(n)) return raw + 'M';
-  const rounded = Math.round(n * 10) / 10;
+  if (isNaN(n) || n === 0) return '';
+  let decimals = 0;
+  if (n < 0.01) decimals = 3;
+  else if (n < 0.1) decimals = 2;
+  else if (n !== Math.floor(n)) decimals = 1;
+  const rounded = parseFloat(n.toFixed(decimals));
   const intPart = Math.floor(rounded);
-  const dec = Math.round((rounded - intPart) * 10);
+  const decPart = Math.round((rounded - intPart) * Math.pow(10, decimals));
   const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return dec > 0 ? `${intStr},${dec}M` : `${intStr}M`;
+  return decimals > 0 && decPart > 0 ? `${intStr},${String(decPart).padStart(decimals,'0')}M` : `${intStr}M`;
 }
 
 function PackBadges({ p90, p60, p30 }: { p90: number; p60: number; p30: number }) {
@@ -97,33 +106,30 @@ export default function KvkEventPage() {
   const PlayerRow = ({ p, idx, under }: { p: Player; idx: number; under?: boolean }) => {
     const deaths = p.notes?.replace('morti: ', '');
     const priority = isPriority(p);
+    const scoreStr = p.score > 0 ? formatScore(p.score) : '';
+    const deathsStr = deaths ? formatDeaths(deaths) : '';
     return (
       <div style={{
         display: 'flex', alignItems: 'center',
         padding: '8px 10px',
         background: priority ? 'rgba(124,58,237,0.1)' : idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)',
         borderLeft: `3px solid ${priority ? 'rgba(124,58,237,0.5)' : 'transparent'}`,
-        gap: 6,
+        gap: 0,
       }}>
         {/* pos */}
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 18, flexShrink: 0, textAlign: 'right' }}>{p.pos}</span>
-
-        {/* name — small fixed, no long names expected */}
-        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', flex: '0 1 auto', minWidth: 0, maxWidth: 90, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
-
-        {/* score · deaths — left, auto flex fill */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, minWidth: 0, overflow: 'hidden' }}>
-          {p.score > 0 && (
-            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{formatScore(p.score)}</span>
-          )}
-          {p.score > 0 && deaths && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>·</span>}
-          {deaths && (
-            <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.5)', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>💀{formatDeaths(deaths)}</span>
-          )}
-        </div>
-
-        {/* packs — right */}
-        <div style={{ flexShrink: 0, display: 'flex', gap: 3 }}>
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 20, flexShrink: 0, textAlign: 'right', paddingRight: 6 }}>{p.pos}</span>
+        {/* name — fixed width */}
+        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', width: 80, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 8 }}>{p.name}</span>
+        {/* Pt. — fixed width */}
+        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 72, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+          {scoreStr ? `Pt. ${scoreStr}` : ''}
+        </span>
+        {/* 💀 — fixed width */}
+        <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.55)', width: 58, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+          {deathsStr ? `💀 ${deathsStr}` : ''}
+        </span>
+        {/* packs — right, fills remaining */}
+        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
           <PackBadges p90={p.pack90} p60={p.pack60} p30={p.pack30} />
         </div>
       </div>
