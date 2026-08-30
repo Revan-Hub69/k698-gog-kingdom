@@ -78,30 +78,30 @@ export default function KvkPage() {
 
   const S = {
     page: { minHeight: '100vh', background: '#09090a', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' } as React.CSSProperties,
-    sectionLabel: { fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.35)', letterSpacing: 1.5, textTransform: 'uppercase' as const, marginBottom: 10, marginLeft: 2 },
-    card: (active: boolean) => ({ display: 'block', padding: '14px 16px', borderRadius: 14, marginBottom: 8, background: active ? 'rgba(124,58,237,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${active ? 'rgba(124,58,237,0.25)' : 'rgba(255,255,255,0.06)'}`, textDecoration: 'none', cursor: 'pointer', transition: 'all 0.15s' } as React.CSSProperties),
-    input: { width: '100%', padding: '10px 12px', borderRadius: 10, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 13, outline: 'none', boxSizing: 'border-box' as const },
-    btn: (primary: boolean) => ({ padding: '10px 18px', borderRadius: 10, fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', background: primary ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: '#fff' }),
+    sectionLabel: { fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.3)', letterSpacing: 1.5, textTransform: 'uppercase' as const, marginBottom: 6, marginLeft: 2 },
+    card: (active: boolean) => ({ display: 'block', padding: '11px 14px', borderRadius: 12, marginBottom: 6, background: active ? 'rgba(124,58,237,0.1)' : 'rgba(255,255,255,0.03)', border: `1px solid ${active ? 'rgba(124,58,237,0.25)' : 'rgba(255,255,255,0.06)'}`, textDecoration: 'none', cursor: 'pointer' } as React.CSSProperties),
+    input: { width: '100%', padding: '9px 10px', borderRadius: 8, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', fontSize: 13, outline: 'none', boxSizing: 'border-box' as const },
+    btn: (primary: boolean) => ({ padding: '9px 14px', borderRadius: 9, fontSize: 13, fontWeight: 700, border: 'none', cursor: 'pointer', background: primary ? 'linear-gradient(135deg,#7c3aed,#2563eb)' : 'rgba(255,255,255,0.06)', color: '#fff' }),
   };
 
   const EventCard = ({ ev }: { ev: KvkEvent }) => (
     <Link href={`/kvk/${ev.id}`} style={S.card(ev.isActive)}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#fff', marginBottom: 3 }}>{ev.name}</div>
-          <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{ev.date} · {ev._count.players} {t('players')}</div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{ev.name}</div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{ev.date} · {ev._count.players} {t('players')}</div>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 800, padding: '3px 8px', borderRadius: 6, background: ev.isActive ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)', color: ev.isActive ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0, whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 5, background: ev.isActive ? 'rgba(34,197,94,0.12)' : 'rgba(255,255,255,0.05)', color: ev.isActive ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0, whiteSpace: 'nowrap' }}>
           {ev.isActive ? t('isActive') : t('closed')}
         </span>
       </div>
-      <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 4, marginTop: 8, flexWrap: 'wrap' }}>
         {[['90', ev.pack90Total, '#f87171'], ['60', ev.pack60Total, '#fbbf24'], ['30', ev.pack30Total, '#a78bfa']].map(([type, count, color]) => (
-          <span key={type as string} style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: `${color as string}14`, color: color as string, border: `1px solid ${color as string}22` }}>
+          <span key={type as string} style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 5, background: `${color as string}14`, color: color as string, border: `1px solid ${color as string}22` }}>
             {count as number}×{type}
           </span>
         ))}
-        <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.4)' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 5, background: 'rgba(255,255,255,0.04)', color: 'rgba(255,255,255,0.35)' }}>
           = {(ev.pack90Total + ev.pack60Total + ev.pack30Total)} {t('packs')}
         </span>
       </div>
@@ -117,14 +117,14 @@ export default function KvkPage() {
       />
 
       {/* TITLE */}
-      <div style={{ padding: '22px 16px 16px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: 'clamp(1.4rem,5vw,2rem)', fontWeight: 900, margin: 0, background: 'linear-gradient(135deg,#c084fc,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{t('title')}</h1>
+      <div style={{ padding: '14px 16px 10px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: 18, fontWeight: 800, margin: 0, background: 'linear-gradient(135deg,#c084fc,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{t('title')}</h1>
       </div>
 
       {/* ADMIN: CREATE BUTTON */}
       {isAdmin && (
-        <div style={{ padding: '0 16px 14px' }}>
-          <button onClick={() => setShowCreate(s => !s)} style={{ ...S.btn(true), width: '100%' }}>{t('newEvent')}</button>
+        <div style={{ padding: '0 16px 8px' }}>
+          <button onClick={() => setShowCreate(s => !s)} style={{ ...S.btn(showCreate), width: '100%', fontSize: 13, padding: '9px 16px' }}>{t('newEvent')}</button>
         </div>
       )}
 
@@ -153,7 +153,7 @@ export default function KvkPage() {
       )}
 
       {/* EVENTS */}
-      <div style={{ padding: '0 16px 40px' }}>
+      <div style={{ padding: '4px 12px 40px' }}>
         {loading && <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 14, padding: '30px 0' }}>...</p>}
 
         {!loading && (
@@ -167,7 +167,7 @@ export default function KvkPage() {
 
             {/* PAST */}
             {pastEvents.length > 0 && (
-              <div style={{ marginTop: 28 }}>
+              <div style={{ marginTop: 18 }}>
                 <div style={S.sectionLabel}>{t('past')} ({pastEvents.length})</div>
                 {pastEvents.map(ev => <EventCard key={ev.id} ev={ev} />)}
               </div>
