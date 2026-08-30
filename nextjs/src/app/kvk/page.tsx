@@ -291,28 +291,27 @@ export default function KvkPage() {
               {(sheetMode === 'list' || (sheetMode === 'new' && newTab === 'list')) && (
                 <>
                   {/* column headers */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '16px 1fr 56px 50px 28px', gap: 5, alignItems: 'center', padding: '0 4px', marginBottom: 5 }}>
-                    <span />
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700 }}>{t('colName')}</span>
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700, textAlign: 'center' }}>
-                      {t('colScore')} <span title={T[lang]?.scoreHint} style={{ color: 'rgba(124,58,237,0.6)', cursor: 'help' }}>ⓘ</span>
+                  <div style={{ display: 'flex', gap: 5, alignItems: 'center', padding: '0 3px 4px', marginLeft: 21 }}>
+                    <span style={{ flex: 3, fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700 }}>{t('colName')}</span>
+                    <span style={{ flex: 2, fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700, textAlign: 'center' }}>
+                      {t('colScore')} <span title={T[lang]?.scoreHint} style={{ color: 'rgba(124,58,237,0.5)', cursor: 'help' }}>ⓘ</span>
                     </span>
-                    <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700, textAlign: 'center' }}>
-                      {t('colDeaths')} <span title={T[lang]?.deathsHint} style={{ color: 'rgba(124,58,237,0.6)', cursor: 'help' }}>ⓘ</span>
+                    <span style={{ flex: 2, fontSize: 10, color: 'rgba(255,255,255,0.25)', fontWeight: 700, textAlign: 'center' }}>
+                      {t('colDeaths')} <span title={T[lang]?.deathsHint} style={{ color: 'rgba(124,58,237,0.5)', cursor: 'help' }}>ⓘ</span>
                     </span>
-                    <span />
+                    <span style={{ width: 30 }} />
                   </div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {rows.map((row, idx) => (
-                      <div key={row.id} style={{ display: 'grid', gridTemplateColumns: '16px 1fr 56px 50px 28px', gap: 5, alignItems: 'center', background: idx % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent', borderRadius: 8, padding: '4px' }}>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', textAlign: 'right', paddingRight: 2 }}>{idx + 1}</span>
-                        <input style={IN} placeholder={t('colName')} value={row.name}
+                      <div key={row.id} style={{ display: 'flex', gap: 5, alignItems: 'center', background: idx % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent', borderRadius: 8, padding: '3px' }}>
+                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', width: 16, flexShrink: 0, textAlign: 'right' }}>{idx + 1}</span>
+                        <input style={{ ...IN, flex: 3 }} placeholder={t('colName')} value={row.name}
                           autoFocus={idx === rows.length - 1 && rows.length > 1}
                           onChange={e => updateRow(row.id, 'name', e.target.value)} />
-                        <input style={{ ...IN, textAlign: 'center', padding: '7px 4px' }} placeholder="M" inputMode="decimal" value={row.score} onChange={e => updateRow(row.id, 'score', e.target.value)} />
-                        <input style={{ ...IN, textAlign: 'center', padding: '7px 4px' }} placeholder="M" inputMode="decimal" value={row.deaths} onChange={e => updateRow(row.id, 'deaths', e.target.value)} />
-                        <button onClick={() => removeRow(row.id)} style={{ width: 28, height: 32, borderRadius: 6, border: '1px solid rgba(255,80,80,0.15)', background: 'rgba(255,80,80,0.06)', cursor: 'pointer', color: 'rgba(255,100,100,0.5)', fontSize: 13 }}>✕</button>
+                        <input style={{ ...IN, flex: 2, textAlign: 'center', padding: '7px 6px' }} placeholder="es. 1200" inputMode="decimal" value={row.score} onChange={e => updateRow(row.id, 'score', e.target.value)} />
+                        <input style={{ ...IN, flex: 2, textAlign: 'center', padding: '7px 6px' }} placeholder="es. 0.7" inputMode="decimal" value={row.deaths} onChange={e => updateRow(row.id, 'deaths', e.target.value)} />
+                        <button onClick={() => removeRow(row.id)} style={{ width: 30, height: 34, borderRadius: 6, border: '1px solid rgba(255,80,80,0.2)', background: 'rgba(255,80,80,0.07)', cursor: 'pointer', color: 'rgba(255,100,100,0.6)', fontSize: 13, flexShrink: 0 }}>✕</button>
                       </div>
                     ))}
                     <div ref={listEndRef} />
