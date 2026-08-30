@@ -280,11 +280,12 @@ export default function KvkPage() {
       {/* ── SHEET ── */}
       {sheetMode && (
         <>
-          <div onClick={() => !saving && setSheetMode(null)} style={{ position: 'fixed', inset: 0, zIndex: 998, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)' }} />
-          <div style={{ position: 'fixed', zIndex: 999, left: '50%', transform: 'translateX(-50%)', bottom: 0, width: '100%', maxWidth: 560, maxHeight: '92dvh', background: '#0d0d10', borderTop: '1px solid rgba(124,58,237,0.3)', borderRadius: '20px 20px 0 0', display: 'flex', flexDirection: 'column', boxShadow: '0 -20px 80px rgba(0,0,0,0.8)' }}>
+          <div onClick={() => !saving && setSheetMode(null)} style={{ position: 'fixed', inset: 0, zIndex: 998, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)' }} />
+          <div style={{ position: 'fixed', zIndex: 999, left: '50%', transform: 'translateX(-50%)', top: 0, bottom: 0, width: '100%', maxWidth: 560, background: '#0d0d10', display: 'flex', flexDirection: 'column', boxShadow: '0 0 80px rgba(0,0,0,0.9)' }}>
 
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 0', flexShrink: 0 }}>
-              <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.15)' }} />
+            {/* handle */}
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 0', flexShrink: 0 }}>
+              <div style={{ width: 36, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.12)' }} />
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 18px 0', flexShrink: 0 }}>
               <div style={{ fontSize: 15, fontWeight: 800, color: '#fff' }}>
