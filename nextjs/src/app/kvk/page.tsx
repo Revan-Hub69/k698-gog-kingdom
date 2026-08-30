@@ -26,12 +26,16 @@ let _uid = 1;
 const mkRow = (): PlayerRow => ({ id: _uid++, name: '', score: '', deaths: '', p90: 0, p60: 0, p30: 0 });
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
 
-// Format score in M with thousands dot + decimal comma (manual, no locale dependency)
-function fmt(val: string | number, isRawUnits = false): string {
-  const n = typeof val === 'string' ? parseFloat(val.replace(',', '.')) : val;
+// Format a value in M: accepts "1200", "1.200", "1,2", "1.200,5" etc → "1.200M", "1,2M"
+function fmt(val: string | number): string {
+  if (val === '' || val === undefined || val === null) return '';
+  // normalize: remove thousands separators (dots before 3 digits), replace comma decimal with dot
+  const raw = String(val)
+    .replace(/\.(?=\d{3}(?:[,.]|$))/g, '')  // remove thousands dots
+    .replace(',', '.');                        // decimal comma → dot
+  const n = parseFloat(raw);
   if (isNaN(n) || n === 0) return '';
-  const m = isRawUnits ? n / 1e6 : n;
-  const rounded = Math.round(m * 10) / 10;
+  const rounded = Math.round(n * 10) / 10;
   const intPart = Math.floor(rounded);
   const dec = Math.round((rounded - intPart) * 10);
   const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -101,7 +105,7 @@ export default function KvkPage() {
       ? pls.map((p: { name: string; score: number; notes: string | null; pack90: number; pack60: number; pack30: number }) => ({
           id: _uid++, name: p.name,
           score: p.score > 0 ? String(p.score / 1e6) : '',
-          deaths: p.notes?.replace('morti: ', '') ?? '',
+          deaths: p.notes ? p.notes.replace('morti: ', '') : '',
           p90: p.pack90, p60: p.pack60, p30: p.pack30,
         }))
       : [mkRow()]);
@@ -348,30 +352,23 @@ export default function KvkPage() {
                       const total = row.p90 + row.p60 + row.p30;
                       return (
                         <div key={row.id} style={{ background: idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)', borderRadius: 10, padding: '9px 12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                          {/* top row: # nome | Pt: xxx 💀 yyy | x/3 badges */}
+                          {/* top row: # | nome Pt. xxx 💀 yyy | x/3 badges */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 7 }}>
-                            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', flexShrink: 0 }}>{idx+1}</span>
-                            {/* left: name */}
-                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', flex: '0 1 auto', minWidth: 0, maxWidth: 80, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
-                            {/* middle: pt + deaths */}
-                            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-                              {row.score && (
-                                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap' }}>
-                                  <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 10 }}>Pt </span>{fmt(row.score)}
-                                </span>
-                              )}
-                              {row.deaths && (
-                                <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.55)', whiteSpace: 'nowrap' }}>
-                                  💀 {fmt(row.deaths)}
-                                </span>
-                              )}
-                            </div>
-                            {/* right: x/3 + badges */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+                            <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)', width: 16, flexShrink: 0 }}>{idx+1}</span>
+                            {/* name */}
+                            <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, maxWidth: 72, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
+                            {/* Pt. + deaths — left, flex fill */}
+                            <span style={{ flex: 1, fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', overflow: 'hidden', textAlign: 'left' }}>
+                              {row.score ? `Pt. ${fmt(row.score)}` : ''}
+                              {row.score && row.deaths ? '  ' : ''}
+                              {row.deaths ? `💀 ${fmt(row.deaths)}` : ''}
+                            </span>
+                            {/* x/3 + badges */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 3, flexShrink: 0 }}>
                               <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : 'rgba(255,255,255,0.3)' }}>{total}/3</span>
                               {([['p90','90',PC['90']],['p60','60',PC['60']],['p30','30',PC['30']]] as const).map(([k,label,color]) =>
                                 Array.from({length: row[k]}).map((_,i) => (
-                                  <span key={`${k}-${i}`} style={{ fontSize: 10, fontWeight: 800, padding: '1px 5px', borderRadius: 4, background: `${color}18`, color, border: `1px solid ${color}30` }}>{label}</span>
+                                  <span key={`${k}-${i}`} style={{ fontSize: 9, fontWeight: 800, padding: '1px 4px', borderRadius: 3, background: `${color}18`, color, border: `1px solid ${color}30` }}>{label}</span>
                                 ))
                               )}
                             </div>
