@@ -160,6 +160,22 @@ export default function KvkPage() {
     await reloadEvents(); setConfirmDeleteId(null);
   };
 
+  const [inlinePackEdit, setInlinePackEdit] = useState<number | null>(null);
+  const [inlinePacks, setInlinePacks] = useState({ p90: '', p60: '', p30: '' });
+  const [inlineSaving, setInlineSaving] = useState(false);
+
+  const saveInlinePacks = async (eventId: number) => {
+    setInlineSaving(true);
+    await fetch(`/api/kvk/events/${eventId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ pack90Total: Number(inlinePacks.p90), pack60Total: Number(inlinePacks.p60), pack30Total: Number(inlinePacks.p30) }),
+    });
+    await reloadEvents();
+    setInlineSaving(false);
+    setInlinePackEdit(null);
+  };
+
   const activeEvents = events.filter(e => e.isActive);
   const pastEvents = events.filter(e => !e.isActive);
 
@@ -185,7 +201,7 @@ export default function KvkPage() {
           </span>
         </div>
         <div style={{ display: 'flex', gap: 4 }}>
-          {([['90','#f87171'],[`60`,'#fbbf24'],['30','#a78bfa']] as const).map(([type, color]) => (
+          {([['90','#f87171'],['60','#fbbf24'],['30','#a78bfa']] as const).map(([type, color]) => (
             <span key={type} style={{ fontSize: 10, fontWeight: 700, padding: '2px 6px', borderRadius: 5, background: `${color}14`, color, border: `1px solid ${color}22` }}>
               {type === '90' ? ev.pack90Total : type === '60' ? ev.pack60Total : ev.pack30Total}×{type}
             </span>
@@ -193,11 +209,31 @@ export default function KvkPage() {
         </div>
       </Link>
       {isAdmin && (
-        <div style={{ display: 'flex', gap: 5, marginTop: 4, paddingLeft: 2 }}>
-          <button onClick={() => loadEventData(ev).then(() => setSheetMode('list'))} style={S.btnXs('#c084fc')}>{t('editList')}</button>
-          <button onClick={() => loadEventData(ev).then(() => setSheetMode('packs'))} style={S.btnXs('#60a5fa')}>{t('assignPacks')}</button>
-          <button onClick={() => setConfirmDeleteId(ev.id)} style={S.btnXs('#f87171')}>{t('deleteEvent')}</button>
-        </div>
+        <>
+          <div style={{ display: 'flex', gap: 5, marginTop: 4, paddingLeft: 2 }}>
+            <button onClick={() => loadEventData(ev).then(() => setSheetMode('list'))} style={S.btnXs('#c084fc')}>{t('editList')}</button>
+            <button onClick={() => loadEventData(ev).then(() => setSheetMode('packs'))} style={S.btnXs('#60a5fa')}>{t('assignPacks')}</button>
+            <button onClick={() => { setInlinePackEdit(ev.id); setInlinePacks({ p90: String(ev.pack90Total), p60: String(ev.pack60Total), p30: String(ev.pack30Total) }); }} style={S.btnXs('#fbbf24')}>📦 {t('packsLabel')}</button>
+            <button onClick={() => setConfirmDeleteId(ev.id)} style={S.btnXs('#f87171')}>{t('deleteEvent')}</button>
+          </div>
+          {inlinePackEdit === ev.id && (
+            <div style={{ marginTop: 6, padding: '10px 12px', borderRadius: 10, background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.2)', display: 'flex', gap: 8, alignItems: 'center' }}>
+              {([['p90','90','#f87171'],['p60','60','#fbbf24'],['p30','30','#a78bfa']] as const).map(([k, label, color]) => (
+                <div key={k} style={{ flex: 1, textAlign: 'center' }}>
+                  <div style={{ fontSize: 9, fontWeight: 800, color, marginBottom: 3 }}>×{label}</div>
+                  <input type="number" min="0" value={inlinePacks[k]} onChange={e => setInlinePacks(p => ({ ...p, [k]: e.target.value }))}
+                    style={{ ...IN, textAlign: 'center', fontSize: 14, fontWeight: 800, padding: '6px 4px', border: `1px solid ${color}40` }} />
+                </div>
+              ))}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <button onClick={() => saveInlinePacks(ev.id)} disabled={inlineSaving} style={{ padding: '5px 10px', borderRadius: 7, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#7c3aed,#2563eb)', color: '#fff', fontSize: 11, fontWeight: 700 }}>
+                  {inlineSaving ? '...' : '💾'}
+                </button>
+                <button onClick={() => setInlinePackEdit(null)} style={{ padding: '5px 10px', borderRadius: 7, border: '1px solid rgba(255,255,255,0.1)', background: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', fontSize: 11 }}>✕</button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
