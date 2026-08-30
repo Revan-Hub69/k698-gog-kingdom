@@ -130,7 +130,9 @@ const translations: Record<Language, Record<string, string>> = {
     manageAccountsShort: 'Accounts',
     kvkPackagesShort: 'KVK',
     kvkPackages: 'KVK Packages',
-    
+    kvkPackTitle: 'KVK Package Assignment 30/08',
+    kvkPackSubtitle: 'Alliance event package distribution list',
+
     copyright: 'Guns of Glory',
   },
   IT: {
@@ -256,11 +258,13 @@ const translations: Record<Language, Record<string, string>> = {
       searchPh: 'Cerca per nickname...',
       manageAccounts: 'Gestisci Account',
       manageAccountsShort: 'Account',
-      kvkPackagesShort: 'KVK',
-      kvkPackages: 'Pacchi KvK',
-      
-      copyright: 'Guns of Glory',
-   },
+    kvkPackagesShort: 'KVK',
+    kvkPackages: 'Pacchi KvK',
+    kvkPackTitle: 'Assegnazione Pacchi KVK 30/08',
+    kvkPackSubtitle: 'Lista distribuzione pacchi evento alleanza',
+
+    copyright: 'Guns of Glory',
+  },
   PL: {
     headerBranding: 'Świetnie! Jesteśmy Regionem Mistrzów!!',
     projectName: 'k698 - Projekt Odrodzenia',
