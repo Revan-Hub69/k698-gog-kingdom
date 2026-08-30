@@ -23,26 +23,26 @@ interface KvkEvent { id: number; name: string; date: string; pack90Total: number
 
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
 
-// Format a raw M-value (already in M units) with thousands separator and decimal comma
-// score is stored as raw units → divide by 1e6 to get M
+// Format score: raw units → M with thousands dot, decimal comma
+// e.g. 700000000 → "700M", 1200000000 → "1.200M", 40000000000 → "40.000M"
 function formatScore(rawUnits: number): string {
   const m = rawUnits / 1e6;
-  // format with thousands dot, decimal comma (Italian style)
-  if (m === Math.floor(m)) {
-    // integer M
-    return Math.floor(m).toLocaleString('it-IT') + 'M';
-  } else {
-    // has decimals — show 1 decimal with comma
-    return m.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
-  }
+  const rounded = Math.round(m * 10) / 10; // 1 decimal
+  const intPart = Math.floor(rounded);
+  const dec = Math.round((rounded - intPart) * 10);
+  const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return dec > 0 ? `${intStr},${dec}M` : `${intStr}M`;
 }
 
-// Deaths are stored as "morti: 0.7" — the value after "morti: " is already in M
+// Format deaths: stored as float M string e.g. "0.7", "1.5", "7"
 function formatDeaths(raw: string): string {
   const n = parseFloat(raw.replace(',', '.'));
   if (isNaN(n)) return raw + 'M';
-  if (n === Math.floor(n)) return Math.floor(n).toLocaleString('it-IT') + 'M';
-  return n.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
+  const rounded = Math.round(n * 10) / 10;
+  const intPart = Math.floor(rounded);
+  const dec = Math.round((rounded - intPart) * 10);
+  const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return dec > 0 ? `${intStr},${dec}M` : `${intStr}M`;
 }
 
 function PackBadges({ p90, p60, p30 }: { p90: number; p60: number; p30: number }) {
@@ -70,11 +70,11 @@ export default function KvkEventPage() {
     fetch(`/api/kvk/events/${id}`).then(r => r.json()).then(d => { setEvent(d); setLoading(false); });
   }, [id]);
 
-  const totals = useMemo(() => event?.players.reduce((s, p) => ({ p90: s.p90+p.pack90, p60: s.p60+p.pack60, p30: s.p30+p.pack30 }), { p90:0, p60:0, p30:0 }) ?? { p90:0, p60:0, p30:0 }, [event]);
+  const totals = useMemo(() => (event?.players ?? []).reduce((s, p) => ({ p90: s.p90+p.pack90, p60: s.p60+p.pack60, p30: s.p30+p.pack30 }), { p90:0, p60:0, p30:0 }), [event]);
   const rem = useMemo(() => event ? { p90: event.pack90Total-totals.p90, p60: event.pack60Total-totals.p60, p30: event.pack30Total-totals.p30 } : { p90:0, p60:0, p30:0 }, [event, totals]);
 
-  const mainPlayers = useMemo(() => event?.players.filter(p => !p.under100m) ?? [], [event]);
-  const under100 = useMemo(() => event?.players.filter(p => p.under100m) ?? [], [event]);
+  const mainPlayers = useMemo(() => (event?.players ?? []).filter(p => !p.under100m), [event]);
+  const under100 = useMemo(() => (event?.players ?? []).filter(p => p.under100m), [event]);
   const isPriority = (p: Player) => p.pack90 + p.pack60 + p.pack30 >= 3;
 
   const page: React.CSSProperties = { minHeight: '100vh', background: '#09090a', fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif', paddingBottom: 40 };
@@ -100,28 +100,30 @@ export default function KvkEventPage() {
     return (
       <div style={{
         display: 'flex', alignItems: 'center',
-        padding: '8px 12px',
+        padding: '8px 10px',
         background: priority ? 'rgba(124,58,237,0.1)' : idx % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.015)',
         borderLeft: `3px solid ${priority ? 'rgba(124,58,237,0.5)' : 'transparent'}`,
+        gap: 6,
       }}>
-        {/* # pos */}
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 22, flexShrink: 0, textAlign: 'right', paddingRight: 4 }}>{p.pos}</span>
+        {/* pos */}
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 18, flexShrink: 0, textAlign: 'right' }}>{p.pos}</span>
 
-        {/* name */}
-        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', width: 110, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 6 }}>{p.name}</span>
+        {/* name — small fixed, no long names expected */}
+        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', flex: '0 1 auto', minWidth: 0, maxWidth: 90, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
 
-        {/* score + deaths — left aligned, compact */}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+        {/* score · deaths — left, auto flex fill */}
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 4, minWidth: 0, overflow: 'hidden' }}>
           {p.score > 0 && (
-            <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap' }}>{formatScore(p.score)}</span>
+            <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>{formatScore(p.score)}</span>
           )}
+          {p.score > 0 && deaths && <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>·</span>}
           {deaths && (
-            <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.55)', whiteSpace: 'nowrap' }}>{t('deaths')}{formatDeaths(deaths)}</span>
+            <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.5)', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>💀{formatDeaths(deaths)}</span>
           )}
         </div>
 
         {/* packs — right */}
-        <div style={{ flexShrink: 0 }}>
+        <div style={{ flexShrink: 0, display: 'flex', gap: 3 }}>
           <PackBadges p90={p.pack90} p60={p.pack60} p30={p.pack30} />
         </div>
       </div>

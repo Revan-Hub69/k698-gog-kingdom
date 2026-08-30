@@ -26,18 +26,16 @@ let _uid = 1;
 const mkRow = (): PlayerRow => ({ id: _uid++, name: '', score: '', deaths: '', p90: 0, p60: 0, p30: 0 });
 const PC = { '90': '#f87171', '60': '#fbbf24', '30': '#a78bfa' };
 
-// Format a score stored in raw units (divide by 1e6 → M, with thousands dot, decimal comma)
-function formatScore(rawUnits: number): string {
-  const m = rawUnits / 1e6;
-  if (m === Math.floor(m)) return Math.floor(m).toLocaleString('it-IT') + 'M';
-  return m.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
-}
-// Format deaths stored as M float string ("0.7", "1.5")
-function formatDeaths(raw: string): string {
-  const n = parseFloat(raw.replace(',', '.'));
-  if (isNaN(n)) return raw + 'M';
-  if (n === Math.floor(n)) return Math.floor(n).toLocaleString('it-IT') + 'M';
-  return n.toLocaleString('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }) + 'M';
+// Format score in M with thousands dot + decimal comma (manual, no locale dependency)
+function fmt(val: string | number, isRawUnits = false): string {
+  const n = typeof val === 'string' ? parseFloat(val.replace(',', '.')) : val;
+  if (isNaN(n) || n === 0) return '';
+  const m = isRawUnits ? n / 1e6 : n;
+  const rounded = Math.round(m * 10) / 10;
+  const intPart = Math.floor(rounded);
+  const dec = Math.round((rounded - intPart) * 10);
+  const intStr = intPart.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return dec > 0 ? `${intStr},${dec}M` : `${intStr}M`;
 }
 const IN: React.CSSProperties = { background: '#111115', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 7, color: '#fff', fontSize: 13, outline: 'none', padding: '7px 8px', boxSizing: 'border-box', width: '100%' };
 
@@ -354,7 +352,7 @@ export default function KvkPage() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
                             <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', width: 18, flexShrink: 0 }}>{idx+1}</span>
                             <span style={{ fontSize: 14, fontWeight: 700, color: '#fff', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</span>
-                            {row.score && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{parseFloat(row.score.replace(',','.')).toLocaleString('it-IT', {maximumFractionDigits:1})}M</span>}
+                            {row.score && <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)', flexShrink: 0 }}>{fmt(row.score)}</span>}
                             <span style={{ fontSize: 11, fontWeight: 800, color: total >= 3 ? '#4ade80' : 'rgba(255,255,255,0.3)', flexShrink: 0 }}>{total}/3</span>
                             <div style={{ display: 'flex', gap: 3 }}>
                               {([['p90','90',PC['90']],['p60','60',PC['60']],['p30','30',PC['30']]] as const).map(([k,label,color]) =>
