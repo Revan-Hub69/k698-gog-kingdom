@@ -263,6 +263,61 @@ const translations: Record<Language, Record<string, string>> = {
     kvkPackTitle: 'Assegnazione Pacchi KVK 30/08',
     kvkPackSubtitle: 'Lista distribuzione pacchi evento alleanza',
 
+    // Guides
+    guides: {
+      title: 'Guide Strategiche',
+      subtitle: 'Padroneggia ogni aspetto del gioco',
+      backToIndex: '← Torna alle guide',
+      readMore: 'Leggi la guida',
+      tableOfContents: 'Indice',
+      guardWeapons: {
+        title: 'Guida Armi Gvardia',
+        desc: 'Strategie per ottimizzare le tue armi guardie',
+        sections: {
+          intro: { title: 'Introduzione', content: '' },
+          cavalry: { title: 'Cavalleria', content: '' },
+          ranged: { title: 'Distanza', content: '' },
+          infantry: { title: 'Fanteria', content: '' },
+          exceptions: { title: 'Eccezioni', content: '' },
+        },
+      },
+      curiosities: {
+        title: 'Guida Curiosità',
+        desc: 'Gestione ottimale delle curiosità per ogni truppa',
+        sections: {
+          intro: { title: 'Introduzione', content: '' },
+          cavalry: { title: 'Cavalleria', content: '' },
+          ranged: { title: 'Distanza', content: '' },
+          infantry: { title: 'Fanteria', content: '' },
+        },
+      },
+      herbarzi: {
+        title: 'Guida Herbarzi R17',
+        desc: 'Sostituzione ottimale degli stemmi R17',
+        sections: {
+          intro: { title: 'Introduzione', content: '' },
+          cavalry: { title: 'Cavalleria', content: '' },
+          ranged: { title: 'Distanza', content: '' },
+          infantry: { title: 'Fanteria', content: '' },
+        },
+      },
+      events: {
+        title: 'Guida Eventi',
+        desc: '5 passi per massimizzare i punti evento',
+        sections: {
+          intro: { title: 'Introduzione', content: '' },
+          step1: { title: 'Passo 1: Rimuovi Equip Lord', content: '' },
+          step2: { title: 'Passo 2: Rimuovi Parti Nave', content: '' },
+          step3: { title: 'Passo 3: Riassembla e Migliora', content: '' },
+          step4: { title: 'Passo 4: Rimuovi Superfluo', content: '' },
+          step5: { title: 'Passo 5: Ripristina Nave ed Equip', content: '' },
+        },
+      },
+      backToIndex: '← Torna alle guide',
+      readMore: 'Leggi la guida',
+      tableOfContents: 'Indice',
+    },
+
     copyright: 'Guns of Glory',
   },
   PL: {
@@ -387,12 +442,67 @@ const translations: Record<Language, Record<string, string>> = {
        newEmailPh: 'nowy@email.com',
        searchPh: 'Szukaj po pseudonimie...',
        manageAccounts: 'Zarządzaj Kontami',
-       manageAccountsShort: 'Konta',
-       kvkPackagesShort: 'KVK',
-       kvkPackages: 'Pakiety KvK',
-       
-       copyright: 'Guns of Glory',
-       },
+manageAccountsShort: 'Konta',
+      kvkPackagesShort: 'KVK',
+      kvkPackages: 'Pakiety KvK',
+
+      // Guides
+      guides: {
+        title: 'Przewodniki Strategiczne',
+        subtitle: 'Opanuj każdy aspekt gry',
+        backToIndex: '← Powrót do przewodników',
+        readMore: 'Przeczytaj przewodnik',
+        tableOfContents: 'Spis treści',
+        guardWeapons: {
+          title: 'Przewodnik Broń Gwardii',
+          desc: 'Strategie optymalizacji broni gwardii',
+          sections: {
+            intro: { title: 'Wstęp', content: '' },
+            cavalry: { title: 'Kawaleria', content: '' },
+            ranged: { title: 'Dystans', content: '' },
+            infantry: { title: 'Piechota', content: '' },
+            exceptions: { title: 'Wyjątki', content: '' },
+          },
+        },
+        curiosities: {
+          title: 'Przewodnik Osobliwości',
+          desc: 'Optymalna gestia osobliwości dla każdego oddziału',
+          sections: {
+            intro: { title: 'Wstęp', content: '' },
+            cavalry: { title: 'Kawaleria', content: '' },
+            ranged: { title: 'Dystans', content: '' },
+            infantry: { title: 'Piechota', content: '' },
+          },
+        },
+        herbarzi: {
+          title: 'Przewodnik Herbarze R17',
+          desc: 'Optymalna zamiana herbów R17',
+          sections: {
+            intro: { title: 'Wstęp', content: '' },
+            cavalry: { title: 'Kawaleria', content: '' },
+            ranged: { title: 'Dystans', content: '' },
+            infantry: { title: 'Piechota', content: '' },
+          },
+        },
+        events: {
+          title: 'Przewodnik Eventów',
+          desc: '5 kroków do maksymalizacji punktów eventu',
+          sections: {
+            intro: { title: 'Wstęp', content: '' },
+            step1: { title: 'Krok 1: Zdejmij Ekwipunek Lorda', content: '' },
+            step2: { title: 'Krok 2: Zdejmij Części Statku', content: '' },
+            step3: { title: 'Krok 3: Przebuduj i Ulepsz', content: '' },
+            step4: { title: 'Krok 4: Usuń Nadmiar', content: '' },
+            step5: { title: 'Krok 5: Przywróć Statek i Ekwipunek', content: '' },
+          },
+        },
+        backToIndex: '← Powrót do przewodników',
+        readMore: 'Przeczytaj przewodnik',
+        tableOfContents: 'Spis treści',
+      },
+
+      copyright: 'Guns of Glory',
+    },
   ZH: {
     headerBranding: '做得好！我们是冠军地区！！',
     projectName: 'k698 - 复兴计划',
@@ -518,9 +628,66 @@ const translations: Record<Language, Record<string, string>> = {
         kvkPackagesShort: 'KVK',
         kvkPackages: 'KVK礼包',
         
-        renaissance: '复兴',
-        copyright: 'Guns of Glory',
-       },
+renaissance: '复兴',
+    copyright: 'Guns of Glory',
+
+    // Guides
+    guides: {
+      title: '战略指南',
+      subtitle: '掌握游戏的每个方面',
+      backToIndex: '← 返回指南列表',
+      readMore: '阅读指南',
+      tableOfContents: '目录',
+      guardWeapons: {
+        title: '护卫武器指南',
+        desc: '优化你的护卫武器策略',
+        sections: {
+          intro: { title: '简介', content: '' },
+          cavalry: { title: '骑兵', content: '' },
+          ranged: { title: '远程', content: '' },
+          infantry: { title: '步兵', content: '' },
+          exceptions: { title: '例外', content: '' },
+        },
+      },
+      curiosities: {
+        title: '奇特物品指南',
+        desc: '为每种兵种优化奇特物品管理',
+        sections: {
+          intro: { title: '简介', content: '' },
+          cavalry: { title: '骑兵', content: '' },
+          ranged: { title: '远程', content: '' },
+          infantry: { title: '步兵', content: '' },
+        },
+      },
+      herbarzi: {
+        title: '纹章 R17 指南',
+        desc: 'R17 纹章的最佳替换策略',
+        sections: {
+          intro: { title: '简介', content: '' },
+          cavalry: { title: '骑兵', content: '' },
+          ranged: { title: '远程', content: '' },
+          infantry: { title: '步兵', content: '' },
+        },
+      },
+      events: {
+        title: '活动指南',
+        desc: '5 步最大化活动得分',
+        sections: {
+          intro: { title: '简介', content: '' },
+          step1: { title: '步骤 1: 卸下领主装备', content: '' },
+          step2: { title: '步骤 2: 卸下船只部件', content: '' },
+          step3: { title: '步骤 3: 重新组装并升级', content: '' },
+          step4: { title: '步骤 4: 移除多余物品', content: '' },
+          step5: { title: '步骤 5: 恢复船只和装备', content: '' },
+        },
+      },
+      backToIndex: '← 返回指南列表',
+      readMore: '阅读指南',
+      tableOfContents: '目录',
+    },
+
+    copyright: 'Guns of Glory',
+  },
   DE: {
     headerBranding: 'Gut Gemacht! Wir Sind Championregion!!',
     projectName: 'k698 - Wiedergeburtsprojekt',
