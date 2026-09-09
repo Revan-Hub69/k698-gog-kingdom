@@ -30,7 +30,7 @@ export default function RootLayout({
   const gaID = process.env.NEXT_PUBLIC_GOOGLE_TAG;
   return (
     <html lang="en">
-    <body className={theme}>
+    <body className={theme} suppressHydrationWarning>
       <LanguageProvider>
         {children}
       </LanguageProvider>
