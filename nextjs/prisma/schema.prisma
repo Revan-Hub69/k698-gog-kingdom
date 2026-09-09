@@ -73,3 +73,26 @@ model KvkPlayer {
 
   @@index([eventId])
 }
+
+// Farm Management
+model Farm {
+  id                  Int       @id @default(autoincrement())
+  loginType           String    // "funplus" | "google"
+  loginName           String    // account identifier
+  castleName          String    // display name
+  castleLevel         String    // e.g. "C40"
+  m5Type              String    @default("no")   // "no" | "cavalry" | "ranged"
+  m5Count             Int       @default(0)      // troop count if m5Type != "no"
+  crystalForge        Boolean   @default(false)  // forgia per cristalli
+  crystalForgeNote    String?                    // reason if false
+  pelicano            Boolean   @default(false)  // has pelican setup
+  pelicanoTroops      Int       @default(0)      // troops per pelican hit
+  lastPelicanSent     DateTime?                  // last pellicanata data
+  lastPelicanReceived DateTime?                  // last pellicanata subita
+  nwDone              Boolean   @default(false)  // NW event completed
+  hospitalCapacity    Int       @default(0)      // hospital capacity
+  notes               String?                   // free notes
+  sortOrder           Int       @default(0)      // manual sort
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
