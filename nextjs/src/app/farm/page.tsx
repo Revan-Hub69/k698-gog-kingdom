@@ -687,7 +687,13 @@ export default function FarmPage() {
               <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
                 <div>
                   <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('cLvl')}</label>
-                  <input type="text" style={IN} value={form.castleLevel||''} onChange={e=>upd('castleLevel',e.target.value)}/>
+                  <div style={{position:'relative',display:'flex',alignItems:'center'}}>
+                    <span style={{position:'absolute',left:10,fontSize:13,fontWeight:800,color:C.purple,pointerEvents:'none'}}>C</span>
+                    <input type="number" min="1" style={{...IN, paddingLeft:22}}
+                      placeholder="40"
+                      value={form.castleLevel ? form.castleLevel.replace(/^C/i,'') : ''}
+                      onChange={e=>upd('castleLevel', e.target.value ? `C${e.target.value}` : '')}/>
+                  </div>
                 </div>
                 <div>
                   <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('hosp')}</label>
