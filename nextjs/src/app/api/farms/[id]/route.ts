@@ -21,6 +21,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (b.pelicano         !== undefined) data.pelicano         = Boolean(b.pelicano);
   if (b.pelicanoTroops   !== undefined) data.pelicanoTroops   = Number(b.pelicanoTroops);
   if (b.nwOptimized      !== undefined) data.nwOptimized      = Boolean(b.nwOptimized);
+  if (b.talentoCura      !== undefined) data.talentoCura      = Boolean(b.talentoCura);
   if (b.hospitalCapacity !== undefined) data.hospitalCapacity = Number(b.hospitalCapacity);
   if (b.notes            !== undefined) data.notes            = b.notes;
   if (b.sortOrder        !== undefined) data.sortOrder        = Number(b.sortOrder);

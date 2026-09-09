@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
       lastPelicanReceived: b.lastPelicanReceived ? new Date(b.lastPelicanReceived) : null,
       nwLastDone:          b.nwLastDone          ? new Date(b.nwLastDone)          : null,
       nwOptimized:         Boolean(b.nwOptimized),
+      talentoCura:         Boolean(b.talentoCura),
       hospitalCapacity: Number(b.hospitalCapacity) || 0,
       notes:            b.notes ?? null,
       sortOrder:        Number(b.sortOrder) || 0,

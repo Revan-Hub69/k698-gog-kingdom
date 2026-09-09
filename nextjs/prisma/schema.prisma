@@ -91,6 +91,7 @@ model Farm {
   lastPelicanReceived DateTime?
   nwLastDone          DateTime? // timestamp of when NW was marked done
   nwOptimized         Boolean   @default(false)  // NW castle optimization
+  talentoCura         Boolean   @default(false)  // talento cura da assegnare
   hospitalCapacity    Int       @default(0)
   notes               String?
   sortOrder           Int       @default(0)

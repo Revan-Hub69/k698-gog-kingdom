@@ -79,13 +79,14 @@ interface Farm {
   crystalForge:boolean; crystalForgeNote:string|null;
   pelicano:boolean; pelicanoTroops:number; lastPelicanSent:string|null;
   lastPelicanReceived:string|null; nwLastDone:string|null; nwOptimized:boolean;
+  talentoCura:boolean;
   hospitalCapacity:number; notes:string|null; sortOrder:number;
 }
 const EMPTY: Omit<Farm,'id'|'sortOrder'> = {
   loginType:'funplus', loginName:'', castleName:'', castleLevel:'',
   m5Cavalry:0, m5Ranged:0, crystalForge:false, crystalForgeNote:null,
   pelicano:false, pelicanoTroops:0, lastPelicanSent:null,
-  lastPelicanReceived:null, nwLastDone:null, nwOptimized:false, hospitalCapacity:0, notes:null,
+  lastPelicanReceived:null, nwLastDone:null, nwOptimized:false, talentoCura:false, hospitalCapacity:0, notes:null,
 };
 
 function fmtTroops(n:number) {
@@ -748,8 +749,8 @@ export default function FarmPage() {
                   <input type="number" min="0" style={{...IN,padding:'6px 9px',fontSize:12}} value={form.hospitalCapacity||''} onChange={e=>upd('hospitalCapacity',Number(e.target.value))}/>
                 </div>
               </div>
-              {/* Row 4: NW Ottimizzato | NW Fatto | Notes */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:8}}>
+              {/* Row 4: NW Ottimizzato | NW Fatto | Talento Cura | Notes */}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr 1fr',gap:8,marginBottom:8}}>
                 <div>
                   <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>NW Ottimizzato <span style={{color:C.amber}}>★</span></label>
                   <div style={{display:'flex',gap:4}}>
@@ -767,6 +768,15 @@ export default function FarmPage() {
                       background: form.nwLastDone ? 'linear-gradient(135deg,#16a34a,#15803d)' : C.surface2,
                       color: form.nwLastDone ? '#fff' : C.muted}}>
                     {form.nwLastDone ? '✓ Sì' : '— No'}
+                  </button>
+                </div>
+                <div>
+                  <label style={{fontSize:10,color:C.red,fontWeight:700,display:'block',marginBottom:3}}>💊 Talento Cura</label>
+                  <button onClick={()=>upd('talentoCura', !form.talentoCura)}
+                    style={{width:'100%',padding:'6px',borderRadius:7,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',
+                      background: form.talentoCura ? 'linear-gradient(135deg,#dc2626,#b91c1c)' : C.surface2,
+                      color: form.talentoCura ? '#fff' : C.muted}}>
+                    {form.talentoCura ? '✓ Da fare' : '— OK'}
                   </button>
                 </div>
                 <div>
