@@ -173,24 +173,43 @@ export default function FarmPage() {
   const handleAuth = useCallback((tok:string|null, _n:string|null, admin:boolean) => { setToken(tok||''); setIsAdmin(admin); }, []);
   const reload = async () => { const d = await (await fetch('/api/farms')).json(); setFarms(Array.isArray(d)?d:[]); };
 
-  const openAdd  = () => { setForm({...EMPTY, loginType: lastAccount.current.loginType, loginName: lastAccount.current.loginName}); setEditing(null); setSheet('add'); };
-  const openEdit = (f:Farm) => { setForm({...f}); setEditing(f); setSheet('edit'); setActionFarm(null); };
+  const openAdd  = () => { setForm({...EMPTY, loginType: lastAccount.current.loginType, loginName: lastAccount.current.loginName}); setEditing(null); setSavedName(null); setSaveError(null); setSheet('add'); };
+  const openEdit = (f:Farm) => { setForm({...f}); setEditing(f); setSaveError(null); setSheet('edit'); setActionFarm(null); };
   const upd = (k:keyof typeof form, v:unknown) => setForm(p=>({...p,[k]:v}));
+
+  const [saveError, setSaveError] = useState<string|null>(null);
 
   const saveFarm = async () => {
     setSaving(true);
-    if (sheet==='add') {
-      lastAccount.current = { loginType: form.loginType, loginName: form.loginName };
-      await fetch('/api/farms',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(form)});
-      await reload();
+    setSaveError(null);
+    try {
+      if (sheet==='add') {
+        lastAccount.current = { loginType: form.loginType, loginName: form.loginName };
+        const res = await fetch('/api/farms',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(form)});
+        if (!res.ok) {
+          const err = await res.json().catch(()=>({}));
+          setSaveError(`Errore ${res.status}: ${err.error || res.statusText}`);
+          setSaving(false);
+          return;
+        }
+        await reload();
+        setSaving(false);
+        setSavedName(form.castleName);
+        setForm(p=>({...EMPTY, loginType:p.loginType, loginName:p.loginName}));
+        setTimeout(()=>setSavedName(null), 3000);
+      } else if (editing) {
+        const res = await fetch(`/api/farms/${editing.id}`,{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(form)});
+        if (!res.ok) {
+          const err = await res.json().catch(()=>({}));
+          setSaveError(`Errore ${res.status}: ${err.error || res.statusText}`);
+          setSaving(false);
+          return;
+        }
+        await reload(); setSaving(false); setSheet(null);
+      }
+    } catch(e) {
+      setSaveError(`Errore di rete: ${e instanceof Error ? e.message : String(e)}`);
       setSaving(false);
-      setSavedName(form.castleName);
-      // Reset only castle-specific fields, keep account
-      setForm(p=>({...EMPTY, loginType:p.loginType, loginName:p.loginName}));
-      setTimeout(()=>setSavedName(null), 3000);
-    } else if (editing) {
-      await fetch(`/api/farms/${editing.id}`,{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(form)});
-      await reload(); setSaving(false); setSheet(null);
     }
   };
 
@@ -658,6 +677,13 @@ export default function FarmPage() {
               <div style={{flexShrink:0,padding:'8px 20px',background:'rgba(74,222,128,0.1)',borderBottom:`1px solid rgba(74,222,128,0.2)`,display:'flex',alignItems:'center',gap:8}}>
                 <span style={{fontSize:14,color:C.green}}>✓</span>
                 <span style={{fontSize:12,fontWeight:700,color:C.green}}>«{savedName}» salvato! Puoi aggiungere un altro castello.</span>
+              </div>
+            )}
+            {/* Error banner */}
+            {saveError && (
+              <div style={{flexShrink:0,padding:'8px 20px',background:'rgba(248,113,113,0.1)',borderBottom:`1px solid rgba(248,113,113,0.2)`,display:'flex',alignItems:'center',gap:8}}>
+                <span style={{fontSize:14,color:C.red}}>✕</span>
+                <span style={{fontSize:12,fontWeight:700,color:C.red}}>{saveError}</span>
               </div>
             )}
             {/* Body — compact 3-col grid, no scroll on desktop */}
