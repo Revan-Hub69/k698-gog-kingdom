@@ -152,6 +152,7 @@ export default function FarmPage() {
   const [pelLoading, setPelLoading] = useState<Record<number,string>>({});
   const lastAccount = useRef<{loginType:string; loginName:string}>({loginType:'funplus', loginName:''});
   const [search, setSearch] = useState('');
+  const [savedName, setSavedName] = useState<string|null>(null);
   const [nw,         setNw]         = useState(getNwStatus());
 
   const t = (k:string) => T[lang]?.[k] ?? T.EN[k] ?? k;
@@ -180,10 +181,16 @@ export default function FarmPage() {
     if (sheet==='add') {
       lastAccount.current = { loginType: form.loginType, loginName: form.loginName };
       await fetch('/api/farms',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(form)});
+      await reload();
+      setSaving(false);
+      setSavedName(form.castleName);
+      // Reset only castle-specific fields, keep account
+      setForm(p=>({...EMPTY, loginType:p.loginType, loginName:p.loginName}));
+      setTimeout(()=>setSavedName(null), 3000);
     } else if (editing) {
       await fetch(`/api/farms/${editing.id}`,{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify(form)});
+      await reload(); setSaving(false); setSheet(null);
     }
-    await reload(); setSaving(false); setSheet(null);
   };
 
   const deleteFarm = async (id:number) => {
@@ -643,8 +650,15 @@ export default function FarmPage() {
             {/* Header */}
             <div style={{flexShrink:0,padding:'16px 20px 14px',borderBottom:`1px solid ${C.border}`,display:'flex',alignItems:'center',gap:8}}>
               <div style={{flex:1,fontSize:15,fontWeight:800,color:C.text}}>{sheet==='add'?t('add'):t('edit')}</div>
-              <button onClick={()=>setSheet(null)} style={{width:36,height:36,borderRadius:9,border:`1px solid ${C.border}`,background:C.surface2,color:C.text,cursor:'pointer',fontSize:16,display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
+              <button onClick={()=>{ setSheet(null); setSavedName(null); }} style={{width:36,height:36,borderRadius:9,border:`1px solid ${C.border}`,background:C.surface2,color:C.text,cursor:'pointer',fontSize:16,display:'flex',alignItems:'center',justifyContent:'center'}}>✕</button>
             </div>
+            {/* Success banner */}
+            {savedName && (
+              <div style={{flexShrink:0,padding:'8px 20px',background:'rgba(74,222,128,0.1)',borderBottom:`1px solid rgba(74,222,128,0.2)`,display:'flex',alignItems:'center',gap:8}}>
+                <span style={{fontSize:14,color:C.green}}>✓</span>
+                <span style={{fontSize:12,fontWeight:700,color:C.green}}>«{savedName}» salvato! Puoi aggiungere un altro castello.</span>
+              </div>
+            )}
             {/* Body — 2-column grid */}
             <div style={{overflowY:'auto',flex:1,padding:'16px 20px 0'}}>
               {/* Row: Login type full width */}
