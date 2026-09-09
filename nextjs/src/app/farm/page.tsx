@@ -659,130 +659,120 @@ export default function FarmPage() {
                 <span style={{fontSize:12,fontWeight:700,color:C.green}}>«{savedName}» salvato! Puoi aggiungere un altro castello.</span>
               </div>
             )}
-            {/* Body — 2-column grid */}
-            <div style={{overflowY:'auto',flex:1,padding:'16px 20px 0'}}>
-              {/* Row: Login type full width */}
-              <div style={{marginBottom:12}}>
-                <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:5}}>{t('lType')}</label>
-                <div style={{display:'flex',gap:8}}>
-                  {['funplus','google'].map(lt=>(
-                    <button key={lt} onClick={()=>upd('loginType',lt)} style={{flex:1,padding:'9px',borderRadius:9,fontSize:12,fontWeight:700,border:'none',cursor:'pointer',background:form.loginType===lt?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.loginType===lt?'#fff':C.muted}}>
-                      {lt==='funplus'?t('fp'):t('goo')}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {/* Row 2: Account | Castle Name */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
+            {/* Body — compact 3-col grid, no scroll on desktop */}
+            <div style={{overflowY:'auto',flex:1,padding:'12px 18px 0'}}>
+              {/* Row 1: Login type | Castle Name | Castle Level */}
+              <div style={{display:'grid',gridTemplateColumns:'120px 1fr 80px',gap:8,marginBottom:8}}>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('lName')}</label>
-                  <input type="text" style={IN} value={form.loginName||''} onChange={e=>upd('loginName',e.target.value)}/>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('lType')}</label>
+                  <div style={{display:'flex',gap:4}}>
+                    {['funplus','google'].map(lt=>(
+                      <button key={lt} onClick={()=>upd('loginType',lt)} style={{flex:1,padding:'6px 4px',borderRadius:7,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.loginType===lt?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.loginType===lt?'#fff':C.muted}}>
+                        {lt==='funplus'?t('fp'):t('goo')}
+                      </button>
+                    ))}
+                  </div>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('cName')}</label>
-                  <input type="text" style={IN} value={form.castleName||''} onChange={e=>upd('castleName',e.target.value)}/>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('cName')}</label>
+                  <input type="text" style={{...IN,padding:'6px 9px',fontSize:12}} value={form.castleName||''} onChange={e=>upd('castleName',e.target.value)}/>
                 </div>
-              </div>
-              {/* Row 3: Castle Level | Hospital */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('cLvl')}</label>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('cLvl')}</label>
                   <div style={{position:'relative',display:'flex',alignItems:'center'}}>
-                    <span style={{position:'absolute',left:10,fontSize:13,fontWeight:800,color:C.purple,pointerEvents:'none'}}>C</span>
-                    <input type="number" min="1" style={{...IN, paddingLeft:22}}
-                      placeholder="40"
+                    <span style={{position:'absolute',left:8,fontSize:12,fontWeight:800,color:C.purple,pointerEvents:'none'}}>C</span>
+                    <input type="number" min="1" style={{...IN,padding:'6px 9px 6px 20px',fontSize:12}} placeholder="40"
                       value={form.castleLevel ? form.castleLevel.replace(/^C/i,'') : ''}
                       onChange={e=>upd('castleLevel', e.target.value ? `C${e.target.value}` : '')}/>
                   </div>
                 </div>
-                <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('hosp')}</label>
-                  <input type="number" min="0" style={IN} value={form.hospitalCapacity||''} onChange={e=>upd('hospitalCapacity',Number(e.target.value))}/>
-                </div>
               </div>
-              {/* Row 4: M5 CAV | M5 DIS */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
+              {/* Row 2: Account | M5 CAV | M5 DIS */}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:8}}>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('m5Type')}</label>
-                  <div style={{fontSize:10,color:C.red,fontWeight:700,marginBottom:4}}>CAV (0 = nessuna)</div>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('lName')}</label>
+                  <input type="text" style={{...IN,padding:'6px 9px',fontSize:12}} value={form.loginName||''} onChange={e=>upd('loginName',e.target.value)}/>
+                </div>
+                <div>
+                  <label style={{fontSize:10,color:C.red,fontWeight:700,display:'block',marginBottom:3}}>M5 CAV <span style={{color:C.muted,fontWeight:400}}>(k)</span></label>
                   <div style={{position:'relative'}}>
-                    <input type="number" min="0" style={IN} placeholder="0"
+                    <input type="number" min="0" style={{...IN,padding:'6px 28px 6px 9px',fontSize:12}} placeholder="0"
                       value={form.m5Cavalry ? Math.round(form.m5Cavalry/1000) : ''}
                       onChange={e=>upd('m5Cavalry', Number(e.target.value)*1000)}/>
-                    <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
+                    <span style={{position:'absolute',right:9,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
                   </div>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>&nbsp;</label>
-                  <div style={{fontSize:10,color:C.blue,fontWeight:700,marginBottom:4}}>DIS (0 = nessuna)</div>
+                  <label style={{fontSize:10,color:C.blue,fontWeight:700,display:'block',marginBottom:3}}>M5 DIS <span style={{color:C.muted,fontWeight:400}}>(k)</span></label>
                   <div style={{position:'relative'}}>
-                    <input type="number" min="0" style={IN} placeholder="0"
+                    <input type="number" min="0" style={{...IN,padding:'6px 28px 6px 9px',fontSize:12}} placeholder="0"
                       value={form.m5Ranged ? Math.round(form.m5Ranged/1000) : ''}
                       onChange={e=>upd('m5Ranged', Number(e.target.value)*1000)}/>
-                    <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
+                    <span style={{position:'absolute',right:9,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
                   </div>
                 </div>
               </div>
-              {/* Row 5: Forge | Pelicano */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
+              {/* Row 3: Forge | Pelicano troops | Hospital */}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:8}}>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('forge')}</label>
-                  <div style={{display:'flex',gap:6,marginBottom:!form.crystalForge?6:0}}>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('forge')}</label>
+                  <div style={{display:'flex',gap:4}}>
                     {[true,false].map(v=>(
-                      <button key={String(v)} onClick={()=>upd('crystalForge',v)} style={{flex:1,padding:'9px',borderRadius:8,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.crystalForge===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.crystalForge===v?'#fff':C.muted}}>
+                      <button key={String(v)} onClick={()=>upd('crystalForge',v)} style={{flex:1,padding:'6px',borderRadius:7,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.crystalForge===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.crystalForge===v?'#fff':C.muted}}>
                         {v?t('yes'):t('no')}
                       </button>
                     ))}
                   </div>
-                  {!form.crystalForge&&<input type="text" style={IN} placeholder={t('forgeNote')} value={form.crystalForgeNote||''} onChange={e=>upd('crystalForgeNote',e.target.value)}/>}
+                  {!form.crystalForge&&<input type="text" style={{...IN,padding:'5px 8px',fontSize:11,marginTop:4}} placeholder={t('forgeNote')} value={form.crystalForgeNote||''} onChange={e=>upd('crystalForgeNote',e.target.value)}/>}
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('pelicano')}</label>
-                  <div style={{display:'flex',gap:6,marginBottom:form.pelicano?6:0}}>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('pelicano')}</label>
+                  <div style={{display:'flex',gap:4,marginBottom:form.pelicano?4:0}}>
                     {[true,false].map(v=>(
-                      <button key={String(v)} onClick={()=>upd('pelicano',v)} style={{flex:1,padding:'9px',borderRadius:8,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.pelicano===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.pelicano===v?'#fff':C.muted}}>
+                      <button key={String(v)} onClick={()=>upd('pelicano',v)} style={{flex:1,padding:'6px',borderRadius:7,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.pelicano===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.pelicano===v?'#fff':C.muted}}>
                         {v?t('yes'):t('no')}
                       </button>
                     ))}
                   </div>
                   {form.pelicano&&(
                     <div style={{position:'relative'}}>
-                      <input type="number" style={IN} placeholder={t('pelTroops')}
+                      <input type="number" style={{...IN,padding:'5px 28px 5px 8px',fontSize:11}} placeholder={t('pelTroops')}
                         value={form.pelicanoTroops ? Math.round(form.pelicanoTroops/1000) : ''}
                         onChange={e=>upd('pelicanoTroops', Number(e.target.value)*1000)}/>
-                      <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
+                      <span style={{position:'absolute',right:9,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
                     </div>
                   )}
                 </div>
-              </div>
-              {/* Row 6: NW Ottimizzato | NW Fatto */}
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>NW Ottimizzato <span style={{color:C.amber}}>★</span></label>
-                  <div style={{display:'flex',gap:6}}>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('hosp')}</label>
+                  <input type="number" min="0" style={{...IN,padding:'6px 9px',fontSize:12}} value={form.hospitalCapacity||''} onChange={e=>upd('hospitalCapacity',Number(e.target.value))}/>
+                </div>
+              </div>
+              {/* Row 4: NW Ottimizzato | NW Fatto | Notes */}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:8,marginBottom:8}}>
+                <div>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>NW Ottimizzato <span style={{color:C.amber}}>★</span></label>
+                  <div style={{display:'flex',gap:4}}>
                     {[true,false].map(v=>(
-                      <button key={String(v)} onClick={()=>upd('nwOptimized',v)} style={{flex:1,padding:'9px',borderRadius:8,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.nwOptimized===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.nwOptimized===v?'#fff':C.muted}}>
+                      <button key={String(v)} onClick={()=>upd('nwOptimized',v)} style={{flex:1,padding:'6px',borderRadius:7,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.nwOptimized===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.nwOptimized===v?'#fff':C.muted}}>
                         {v?t('yes'):t('no')}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div>
-                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>NW Fatto</label>
-                  <div style={{display:'flex',gap:6}}>
-                    <button onClick={()=>upd('nwLastDone', form.nwLastDone ? null : new Date().toISOString())}
-                      style={{flex:1,padding:'9px',borderRadius:8,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',
-                        background: form.nwLastDone ? 'linear-gradient(135deg,#16a34a,#15803d)' : C.surface2,
-                        color: form.nwLastDone ? '#fff' : C.muted}}>
-                      {form.nwLastDone ? `✓ Sì` : '— No'}
-                    </button>
-                  </div>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>NW Fatto</label>
+                  <button onClick={()=>upd('nwLastDone', form.nwLastDone ? null : new Date().toISOString())}
+                    style={{width:'100%',padding:'6px',borderRadius:7,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',
+                      background: form.nwLastDone ? 'linear-gradient(135deg,#16a34a,#15803d)' : C.surface2,
+                      color: form.nwLastDone ? '#fff' : C.muted}}>
+                    {form.nwLastDone ? '✓ Sì' : '— No'}
+                  </button>
                 </div>
-              </div>
-              {/* Row 7: Notes full width */}
-              <div style={{marginBottom:10}}>
-                <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('notes')}</label>
-                <input type="text" style={IN} value={form.notes||''} onChange={e=>upd('notes',e.target.value)}/>
+                <div>
+                  <label style={{fontSize:10,color:C.muted,display:'block',marginBottom:3}}>{t('notes')}</label>
+                  <input type="text" style={{...IN,padding:'6px 9px',fontSize:12}} value={form.notes||''} onChange={e=>upd('notes',e.target.value)}/>
+                </div>
               </div>
             </div>
             {/* Footer buttons */}
