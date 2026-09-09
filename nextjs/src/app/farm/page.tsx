@@ -699,12 +699,22 @@ export default function FarmPage() {
                 <div>
                   <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('m5Type')}</label>
                   <div style={{fontSize:10,color:C.red,fontWeight:700,marginBottom:4}}>CAV (0 = nessuna)</div>
-                  <input type="number" min="0" style={IN} placeholder="0" value={form.m5Cavalry||''} onChange={e=>upd('m5Cavalry',Number(e.target.value))}/>
+                  <div style={{position:'relative'}}>
+                    <input type="number" min="0" style={IN} placeholder="0"
+                      value={form.m5Cavalry ? Math.round(form.m5Cavalry/1000) : ''}
+                      onChange={e=>upd('m5Cavalry', Number(e.target.value)*1000)}/>
+                    <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
+                  </div>
                 </div>
                 <div>
                   <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>&nbsp;</label>
                   <div style={{fontSize:10,color:C.blue,fontWeight:700,marginBottom:4}}>DIS (0 = nessuna)</div>
-                  <input type="number" min="0" style={IN} placeholder="0" value={form.m5Ranged||''} onChange={e=>upd('m5Ranged',Number(e.target.value))}/>
+                  <div style={{position:'relative'}}>
+                    <input type="number" min="0" style={IN} placeholder="0"
+                      value={form.m5Ranged ? Math.round(form.m5Ranged/1000) : ''}
+                      onChange={e=>upd('m5Ranged', Number(e.target.value)*1000)}/>
+                    <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
+                  </div>
                 </div>
               </div>
               {/* Row 5: Forge | Pelicano */}
@@ -729,7 +739,14 @@ export default function FarmPage() {
                       </button>
                     ))}
                   </div>
-                  {form.pelicano&&<input type="number" style={IN} placeholder={t('pelTroops')} value={form.pelicanoTroops||''} onChange={e=>upd('pelicanoTroops',Number(e.target.value))}/>}
+                  {form.pelicano&&(
+                    <div style={{position:'relative'}}>
+                      <input type="number" style={IN} placeholder={t('pelTroops')}
+                        value={form.pelicanoTroops ? Math.round(form.pelicanoTroops/1000) : ''}
+                        onChange={e=>upd('pelicanoTroops', Number(e.target.value)*1000)}/>
+                      <span style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',fontSize:11,fontWeight:700,color:C.muted,pointerEvents:'none'}}>k</span>
+                    </div>
+                  )}
                 </div>
               </div>
               {/* Row 6: Notes full width */}
