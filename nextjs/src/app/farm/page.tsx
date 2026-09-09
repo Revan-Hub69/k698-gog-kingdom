@@ -755,7 +755,31 @@ export default function FarmPage() {
                   )}
                 </div>
               </div>
-              {/* Row 6: Notes full width */}
+              {/* Row 6: NW Ottimizzato | NW Fatto */}
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginBottom:10}}>
+                <div>
+                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>NW Ottimizzato <span style={{color:C.amber}}>★</span></label>
+                  <div style={{display:'flex',gap:6}}>
+                    {[true,false].map(v=>(
+                      <button key={String(v)} onClick={()=>upd('nwOptimized',v)} style={{flex:1,padding:'9px',borderRadius:8,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',background:form.nwOptimized===v?'linear-gradient(135deg,#7c3aed,#2563eb)':C.surface2,color:form.nwOptimized===v?'#fff':C.muted}}>
+                        {v?t('yes'):t('no')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>NW Fatto</label>
+                  <div style={{display:'flex',gap:6}}>
+                    <button onClick={()=>upd('nwLastDone', form.nwLastDone ? null : new Date().toISOString())}
+                      style={{flex:1,padding:'9px',borderRadius:8,fontSize:11,fontWeight:700,border:'none',cursor:'pointer',
+                        background: form.nwLastDone ? 'linear-gradient(135deg,#16a34a,#15803d)' : C.surface2,
+                        color: form.nwLastDone ? '#fff' : C.muted}}>
+                      {form.nwLastDone ? `✓ Sì` : '— No'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {/* Row 7: Notes full width */}
               <div style={{marginBottom:10}}>
                 <label style={{fontSize:11,color:C.muted,display:'block',marginBottom:4}}>{t('notes')}</label>
                 <input type="text" style={IN} value={form.notes||''} onChange={e=>upd('notes',e.target.value)}/>
