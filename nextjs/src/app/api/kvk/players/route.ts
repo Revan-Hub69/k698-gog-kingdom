@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     data: players.map((p: {
       pos?: number; name: string; alliance?: string;
       score?: number | string; notes?: string; under100m?: boolean;
+      pack90?: number; pack60?: number; pack30?: number;
     }, i: number) => ({
       eventId: Number(eventId),
       pos: Number(p.pos ?? i + 1),
@@ -38,9 +39,9 @@ export async function POST(req: NextRequest) {
       score: BigInt(Math.round(Number(p.score ?? 0))),
       notes: p.notes ? String(p.notes).trim() : null,
       under100m: Boolean(p.under100m),
-      pack90: 0,
-      pack60: 0,
-      pack30: 0,
+      pack90: Math.max(0, Number(p.pack90 ?? 0)),
+      pack60: Math.max(0, Number(p.pack60 ?? 0)),
+      pack30: Math.max(0, Number(p.pack30 ?? 0)),
     })),
   });
   return NextResponse.json({ count: created.count });

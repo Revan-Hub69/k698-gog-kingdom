@@ -128,7 +128,7 @@ export default function KvkPage() {
     } else {
       await fetch(`/api/kvk/events/${eventId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }) });
     }
-    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null })) }) });
+    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null, pack90: r.p90, pack60: r.p60, pack30: r.p30 })) }) });
     await reloadEvents();
     setSaving(false); setSheetMode(null);
   };
@@ -141,19 +141,15 @@ export default function KvkPage() {
     setSaving(false);
   };
 
-  const generateList = async () => {
-    setSaving(true);
-    const valid = rows.filter(r => r.name.trim());
-    if (!editingEventId || !valid.length) { setSaving(false); return; }
-    await fetch(`/api/kvk/events/${editingEventId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }) });
-    await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId: editingEventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null })) }) });
-    const pList = await (await fetch(`/api/kvk/players?eventId=${editingEventId}`)).json();
-    await Promise.all(pList.map((p: { id: number }, idx: number) => {
-      const row = valid[idx]; if (!row) return Promise.resolve();
-      return fetch(`/api/kvk/players/${p.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90: row.p90, pack60: row.p60, pack30: row.p30 }) });
-    }));
-    router.push(`/kvk/${editingEventId}`);
-  };
+const generateList = async () => {
+     setSaving(true);
+     const valid = rows.filter(r => r.name.trim());
+     if (!editingEventId || !valid.length) { setSaving(false); return; }
+     await fetch(`/api/kvk/events/${editingEventId}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ pack90Total: avail.p90, pack60Total: avail.p60, pack30Total: avail.p30 }) });
+     await fetch('/api/kvk/players', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ eventId: editingEventId, players: valid.map((r, i) => ({ pos: i+1, name: r.name.trim(), alliance: null, score: Math.round(Number(r.score.replace(',','.')) * 1e6) || 0, under100m: false, notes: r.deaths ? `morti: ${r.deaths.replace(',','.')}` : null, pack90: r.p90, pack60: r.p60, pack30: r.p30 })) }) });
+     await reloadEvents();
+     router.push(`/kvk/${editingEventId}`);
+   };
 
   const deleteEvent = async (id: number) => {
     await fetch(`/api/kvk/events/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
