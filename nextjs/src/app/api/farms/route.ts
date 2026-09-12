@@ -9,7 +9,8 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const user = verifyToken(req);
-  if (!user?.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!user) return NextResponse.json({ error: 'Unauthorized: missing or invalid token' }, { status: 401 });
+  if (!user.isAdmin) return NextResponse.json({ error: 'Forbidden: admin required' }, { status: 403 });
   try {
     const b = await req.json();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

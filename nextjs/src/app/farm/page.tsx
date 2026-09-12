@@ -154,11 +154,15 @@ export default function FarmPage() {
   const lastAccount = useRef<{loginType:string; loginName:string}>({loginType:'funplus', loginName:''});
   const [search, setSearch] = useState('');
   const [savedName, setSavedName] = useState<string|null>(null);
-  const [nw,         setNw]         = useState(getNwStatus());
+  const [nw, setNw] = useState<ReturnType<typeof getNwStatus> | null>(null);
 
   const t = (k:string) => T[lang]?.[k] ?? T.EN[k] ?? k;
 
-  useEffect(() => { const i = setInterval(()=>setNw(getNwStatus()),30000); return ()=>clearInterval(i); }, []);
+  useEffect(() => {
+    setNw(getNwStatus());
+    const i = setInterval(()=>setNw(getNwStatus()),30000);
+    return ()=>clearInterval(i);
+  }, []);
 
   useEffect(() => {
     const s = localStorage.getItem('lang') as Lang|null;
@@ -343,12 +347,12 @@ export default function FarmPage() {
       <KvkHeader lang={lang} onLang={l=>{setLang(l);localStorage.setItem('lang',l);}} onAuthChange={handleAuth}/>
 
       {/* NW Banner */}
-      <div style={{background:nw.active?'rgba(34,197,94,0.1)':C.surface, borderBottom:`1px solid ${nw.active?'rgba(74,222,128,0.25)':C.border}`, padding:'8px 14px', display:'flex', alignItems:'center', gap:8}}>
-        <div style={{width:7,height:7,borderRadius:'50%',background:nw.active?C.green:C.faint,flexShrink:0,boxShadow:nw.active?`0 0 5px ${C.green}`:'none'}}/>
-        <span style={{fontSize:11,fontWeight:800,color:nw.active?C.green:C.muted}}>{nw.active?t('nwActive'):t('nwInactive')}</span>
+      <div style={{background:nw?.active?'rgba(34,197,94,0.1)':C.surface, borderBottom:`1px solid ${nw?.active?'rgba(74,222,128,0.25)':C.border}`, padding:'8px 14px', display:'flex', alignItems:'center', gap:8}}>
+        <div style={{width:7,height:7,borderRadius:'50%',background:nw?.active?C.green:C.faint,flexShrink:0,boxShadow:nw?.active?`0 0 5px ${C.green}`:'none'}}/>
+        <span style={{fontSize:11,fontWeight:800,color:nw?.active?C.green:C.muted}}>{nw?.active?t('nwActive'):t('nwInactive')}</span>
         <span style={{fontSize:11,color:C.muted}}>—</span>
-        <span style={{fontSize:11,color:nw.active?C.green:C.muted}}>{nw.active?t('nwEnds'):t('nwStarts')}</span>
-        <span style={{fontSize:12,fontWeight:800,color:C.text}}>{fmtCountdown(nw.ms)}</span>
+        <span style={{fontSize:11,color:nw?.active?C.green:C.muted}}>{nw?.active?t('nwEnds'):t('nwStarts')}</span>
+        <span style={{fontSize:12,fontWeight:800,color:C.text}}>{nw ? fmtCountdown(nw.ms) : ''}</span>
       </div>
 
       {/* Controls */}
@@ -521,7 +525,7 @@ export default function FarmPage() {
                     {/* NW — Sì/No solo durante NW attivo, — altrimenti + micro star se ottimizzato */}
                     <td style={{...TD,textAlign:'center'}}>
                       <div style={{position:'relative',display:'inline-flex',alignItems:'center',justifyContent:'center'}}>
-                        {nw.active
+                        {nw?.active
                           ? <span style={{fontSize:11,fontWeight:800,color:nwDoneInCurrentCycle(f.nwLastDone)?C.green:C.red}}>
                               {nwDoneInCurrentCycle(f.nwLastDone)?'Sì':'No'}
                             </span>
@@ -579,7 +583,7 @@ export default function FarmPage() {
                 </button>
               </>}
               {/* NW actions — only show during active NW */}
-              {nw.active && (
+              {nw?.active && (
                 nwDoneInCurrentCycle(actionFarm.nwLastDone)
                   ? <button onClick={async()=>{ await fetch(`/api/farms/${actionFarm.id}`,{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${token}`},body:JSON.stringify({nwResetNow:true})}); await reload(); setActionFarm(null); }} style={actionBtnStyle()}>
                       <span style={{width:20,textAlign:'center',fontSize:13,color:C.amber}}>↺</span>

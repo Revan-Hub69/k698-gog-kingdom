@@ -55,12 +55,33 @@ function formatDeaths(raw: string): string {
 }
 
 function PackBadges({ p90, p60, p30 }: { p90: number; p60: number; p30: number }) {
+  const total = p90 + p60 + p30;
+  if (total === 0) return <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.15)' }}>—</span>;
+  
+  // If 3 packs, show compact summary instead of individual badges
+  if (total >= 3) {
+    const parts: string[] = [];
+    if (p90) parts.push(`${p90}×90`);
+    if (p60) parts.push(`${p60}×60`);
+    if (p30) parts.push(`${p30}×30`);
+    return (
+      <span style={{
+        fontSize: 11, fontWeight: 800, padding: '2px 8px', borderRadius: 6,
+        background: 'rgba(124,58,237,0.15)', color: '#c084fc', border: '1px solid rgba(124,58,237,0.3)',
+        whiteSpace: 'nowrap'
+      }}>
+        {parts.join(' ')} <span style={{ color: '#4ade80' }}>{total}/3</span>
+      </span>
+    );
+  }
+  
+  // 1-2 packs: show individual badges but more compact
   const b: React.ReactNode[] = [];
-  for (let i = 0; i < p90; i++) b.push(<span key={`9${i}`} style={{ fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 4, background: `${PC['90']}18`, color: PC['90'], border: `1px solid ${PC['90']}30` }}>90</span>);
-  for (let i = 0; i < p60; i++) b.push(<span key={`6${i}`} style={{ fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 4, background: `${PC['60']}18`, color: PC['60'], border: `1px solid ${PC['60']}30` }}>60</span>);
-  for (let i = 0; i < p30; i++) b.push(<span key={`3${i}`} style={{ fontSize: 10, fontWeight: 800, padding: '1px 6px', borderRadius: 4, background: `${PC['30']}18`, color: PC['30'], border: `1px solid ${PC['30']}30` }}>30</span>);
-  if (!b.length) return <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.15)' }}>—</span>;
-  return <div style={{ display: 'flex', gap: 3 }}>{b}</div>;
+  const badgeStyle = { fontSize: 9, fontWeight: 800, padding: '1px 5px', borderRadius: 4, background: '', color: '', border: '' };
+  for (let i = 0; i < p90; i++) b.push(<span key={`9${i}`} style={{ ...badgeStyle, background: `${PC['90']}20`, color: PC['90'], border: `1px solid ${PC['90']}40` }}>90</span>);
+  for (let i = 0; i < p60; i++) b.push(<span key={`6${i}`} style={{ ...badgeStyle, background: `${PC['60']}20`, color: PC['60'], border: `1px solid ${PC['60']}40` }}>60</span>);
+  for (let i = 0; i < p30; i++) b.push(<span key={`3${i}`} style={{ ...badgeStyle, background: `${PC['30']}20`, color: PC['30'], border: `1px solid ${PC['30']}40` }}>30</span>);
+  return <div style={{ display: 'flex', gap: 2 }}>{b}</div>;
 }
 
 export default function KvkEventPage() {
@@ -117,19 +138,19 @@ export default function KvkEventPage() {
         gap: 0,
       }}>
         {/* pos */}
-        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 20, flexShrink: 0, textAlign: 'right', paddingRight: 6 }}>{p.pos}</span>
-        {/* name — wider */}
-        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', width: 120, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingRight: 10 }}>{p.name}</span>
-        {/* Pt. — wider */}
-        <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', width: 82, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.25)', width: 16, flexShrink: 0, textAlign: 'right', paddingRight: 6 }}>{p.pos}</span>
+        {/* name — flexible but not too wide on mobile */}
+        <span style={{ fontSize: 13, fontWeight: priority ? 700 : 500, color: under ? 'rgba(255,255,255,0.6)' : '#fff', flex: 1, flexShrink: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0, paddingRight: 6 }}>{p.name}</span>
+        {/* Pt. — smaller on mobile */}
+        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums', maxWidth: 60, overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {scoreStr ? `Pt. ${scoreStr}` : ''}
         </span>
-        {/* 💀 — wider */}
-        <span style={{ fontSize: 11, color: 'rgba(248,113,113,0.6)', width: 68, flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+        {/* 💀 — smaller on mobile */}
+        <span style={{ fontSize: 10, color: 'rgba(248,113,113,0.5)', flexShrink: 0, whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums', maxWidth: 50, overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {deathsStr ? `💀 ${deathsStr}` : ''}
         </span>
-        {/* packs — right, fills remaining */}
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+        {/* packs — right, fills remaining but compact */}
+        <div style={{ flexShrink: 0, display: 'flex', justifyContent: 'flex-end' }}>
           <PackBadges p90={p.pack90} p60={p.pack60} p30={p.pack30} />
         </div>
       </div>

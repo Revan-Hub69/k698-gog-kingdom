@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = verifyToken(req);
-  if (!user?.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!user) return NextResponse.json({ error: 'Unauthorized: missing or invalid token' }, { status: 401 });
+  if (!user.isAdmin) return NextResponse.json({ error: 'Forbidden: admin required' }, { status: 403 });
   try {
     const { id } = await params;
     const b = await req.json();
@@ -51,7 +52,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = verifyToken(req);
-  if (!user?.isAdmin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!user) return NextResponse.json({ error: 'Unauthorized: missing or invalid token' }, { status: 401 });
+  if (!user.isAdmin) return NextResponse.json({ error: 'Forbidden: admin required' }, { status: 403 });
   const { id } = await params;
   await prisma.farm.delete({ where: { id: Number(id) } });
   return NextResponse.json({ ok: true });
