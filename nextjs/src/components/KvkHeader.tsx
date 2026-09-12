@@ -45,14 +45,23 @@ export default function KvkHeader({ lang, onLang, backHref, backLabel, onAuthCha
 
   useEffect(() => {
     const tok = localStorage.getItem('token');
-    if (tok) {
-      try {
-        const p = JSON.parse(atob(tok.split('.')[1]));
-        setNickname(p.nickname);
-        setIsAdmin(p.isAdmin);
-        onAuthChange?.(tok, p.nickname, p.isAdmin);
-      } catch { localStorage.removeItem('token'); }
-    }
+    if (!tok) return;
+    fetch('/api/auth/me', { headers: { Authorization: `Bearer ${tok}` } })
+      .then(res => {
+        if (!res.ok) throw new Error('invalid token');
+        return res.json();
+      })
+      .then(data => {
+        setNickname(data.user.nickname);
+        setIsAdmin(data.user.isAdmin);
+        onAuthChange?.(tok, data.user.nickname, data.user.isAdmin);
+      })
+      .catch(() => {
+        localStorage.removeItem('token');
+        setNickname(null);
+        setIsAdmin(false);
+        onAuthChange?.(null, null, false);
+      });
   }, []);
 
   const doLogin = async () => {

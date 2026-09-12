@@ -252,11 +252,11 @@ const generateList = async () => {
         {loading && <p style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: 13, padding: '24px 0' }}>...</p>}
         {!loading && <>
           <div style={S.sl}>{t('active')} ({activeEvents.length})</div>
-          {activeEvents.length === 0 ? <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', marginBottom: 20 }}>{t('noActive')}</p> : activeEvents.map(ev => <EventCard key={ev.id} ev={ev} />)}
-          {pastEvents.length > 0 && <div style={{ marginTop: 18 }}>
-            <div style={S.sl}>{t('past')} ({pastEvents.length})</div>
-            {pastEvents.map(ev => <EventCard key={ev.id} ev={ev} />)}
-          </div>}
+{activeEvents.length === 0 ? <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', marginBottom: 20 }}>{t('noActive')}</p> : activeEvents.map(ev => <EventCard key={ev.id} ev={ev} />)}
+            {pastEvents.length > 0 ? <div style={{ marginTop: 18 }}>
+              <div style={S.sl}>{t('past')} ({pastEvents.length})</div>
+              {pastEvents.map(ev => <EventCard key={ev.id} ev={ev} />)}
+            </div> : <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)', marginTop: 18 }}>{t('noPast')}</p>}
         </>}
       </div>
 
