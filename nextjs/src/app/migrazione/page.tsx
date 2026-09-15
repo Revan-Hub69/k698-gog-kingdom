@@ -696,21 +696,33 @@ export default function MigazionePage() {
 
               {/* Screenshots with × remove button */}
               <div>
-                <label style={labelStyle}>{t('addScreenshot')}</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {[0, 1].map(idx => {
                     const isRequired = idx === 0;
                     const hasPhoto = !!screenshots[idx];
-                    const isHidden = idx === 1 && !screenshots[0]; // hide slot 2 until slot 1 filled
+                    const isHidden = idx === 1 && !screenshots[0];
                     if (isHidden) return null;
+                    const hasError = idx === 0 && !!formErrors.screenshots;
                     return (
                       <div key={idx} style={{ position: 'relative' }}>
                         <label style={{
-                          display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
-                          padding: '12px 14px',
-                          background: hasPhoto ? 'rgba(74,222,128,0.05)' : C.surface,
-                          border: `1px dashed ${hasPhoto ? C.green : (idx === 0 && formErrors.screenshots ? C.red : C.border)}`,
-                          borderRadius: 8,
+                          display: 'flex', flexDirection: 'column', alignItems: 'center',
+                          justifyContent: 'center', gap: 10,
+                          cursor: 'pointer',
+                          padding: hasPhoto ? '14px 16px' : '28px 16px',
+                          background: hasPhoto
+                            ? 'rgba(74,222,128,0.07)'
+                            : hasError
+                              ? 'rgba(248,113,113,0.07)'
+                              : 'rgba(124,58,237,0.08)',
+                          border: `2px dashed ${hasPhoto ? C.green : hasError ? C.red : '#7c3aed'}`,
+                          borderRadius: 14,
+                          transition: 'all 0.2s',
+                          boxShadow: hasPhoto
+                            ? '0 0 0 0 transparent'
+                            : hasError
+                              ? `0 0 0 3px rgba(248,113,113,0.15)`
+                              : `0 0 0 3px rgba(124,58,237,0.12), inset 0 0 30px rgba(124,58,237,0.05)`,
                         }}>
                           <input
                             ref={idx === 0 ? fileRef0 : fileRef1}
@@ -718,30 +730,50 @@ export default function MigazionePage() {
                             style={{ display: 'none' }}
                             onChange={e => handleFile(e, idx)}
                           />
-                          <span style={{ fontSize: 20 }}>{hasPhoto ? '✅' : '📷'}</span>
-                          <span style={{ fontSize: 13, color: hasPhoto ? C.green : C.muted, flex: 1 }}>
-                            {hasPhoto
-                              ? `Screenshot ${idx + 1} ✓`
-                              : (isRequired ? t('addScreenshot') : t('addMore'))}
-                          </span>
-                          {hasPhoto && (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={screenshots[idx]!} alt="" style={{ width: 52, height: 34, objectFit: 'cover', borderRadius: 4 }} />
+                          {hasPhoto ? (
+                            /* Filled state — compact row */
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={screenshots[idx]!} alt="" style={{ width: 72, height: 48, objectFit: 'cover', borderRadius: 6, border: `1px solid ${C.green}` }} />
+                              <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: 800, fontSize: 14, color: C.green }}>✅ Screenshot {idx + 1}</div>
+                                <div style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>Tocca per cambiare</div>
+                              </div>
+                            </div>
+                          ) : (
+                            /* Empty state — big CTA */
+                            <>
+                              <div style={{ fontSize: 48, lineHeight: 1 }}>📸</div>
+                              <div style={{ textAlign: 'center' }}>
+                                <div style={{
+                                  fontWeight: 900, fontSize: isRequired ? 17 : 14,
+                                  color: hasError ? C.red : '#c084fc',
+                                  letterSpacing: '0.01em',
+                                }}>
+                                  {isRequired ? '👆 TOCCA QUI PER AGGIUNGERE SCREENSHOT' : '+ Aggiungi 2° screenshot (opzionale)'}
+                                </div>
+                                {isRequired && (
+                                  <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>
+                                    Seleziona un&apos;immagine dalla galleria del telefono
+                                  </div>
+                                )}
+                              </div>
+                            </>
                           )}
                         </label>
-                        {/* × remove button — outside the label */}
+                        {/* × remove button */}
                         {hasPhoto && (
                           <button
                             type="button"
                             onClick={() => removeScreenshot(idx)}
                             title={t('removePhoto')}
                             style={{
-                              position: 'absolute', top: -8, right: -8,
-                              width: 22, height: 22, borderRadius: '50%',
-                              background: C.red, border: 'none', cursor: 'pointer',
-                              color: '#fff', fontWeight: 900, fontSize: 13,
+                              position: 'absolute', top: -10, right: -10,
+                              width: 26, height: 26, borderRadius: '50%',
+                              background: C.red, border: '2px solid #0f0c1a',
+                              cursor: 'pointer', color: '#fff', fontWeight: 900, fontSize: 14,
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              lineHeight: 1, zIndex: 2,
+                              lineHeight: 1, zIndex: 2, boxShadow: '0 2px 8px rgba(0,0,0,0.5)',
                             }}
                           >×</button>
                         )}
@@ -894,6 +926,13 @@ export default function MigazionePage() {
       <footer style={{ textAlign: 'center', padding: '20px 16px', borderTop: `1px solid ${C.border}`, color: C.faint, fontSize: 12 }}>
         © {new Date().getFullYear()} k698 · Guns of Glory
       </footer>
+
+      <style>{`
+        @keyframes screenshotPulse {
+          0%, 100% { box-shadow: 0 0 0 3px rgba(124,58,237,0.12), inset 0 0 30px rgba(124,58,237,0.05); }
+          50% { box-shadow: 0 0 0 6px rgba(124,58,237,0.22), inset 0 0 40px rgba(124,58,237,0.10); }
+        }
+      `}</style>
     </div>
   );
 }
