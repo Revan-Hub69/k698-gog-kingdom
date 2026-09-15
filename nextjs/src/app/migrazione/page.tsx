@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type Lang = 'EN' | 'IT' | 'PL' | 'ZH' | 'DE' | 'FR' | 'RU' | 'ES';
@@ -29,20 +28,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: 'Take a screenshot',
     step3Desc: 'Take a screenshot showing your position in the kingdom ranking and your castle power clearly visible. You can attach 1 or 2 screenshots.',
     uploadTitle: 'Submit your data',
+    ctaGuide: '📸 Submit My Power Now',
     namePh: 'Your castle name',
     positionPh: 'Your position in the kingdom (e.g. 42)',
     powerPh: 'Your historical power (e.g. 850M)',
     notesPh: 'Notes (optional)',
-    addScreenshot: 'Add screenshot',
-    addMore: 'Add another screenshot',
-    submit: 'Submit',
+    addScreenshot: 'Tap to add screenshot',
+    addMore: 'Tap to add 2nd screenshot (optional)',
+    removePhoto: 'Remove photo',
+    submit: '📸 Submit My Power',
     submitting: 'Submitting…',
     successMsg: 'Submitted! Thank you.',
     errorMsg: 'Error submitting. Try again.',
-    listTitle: 'Submissions',
+    listTitle: 'Power Ranking',
     noSubmissions: 'No submissions yet.',
-    details: 'View screenshots',
-    hideDetails: 'Hide',
     position: 'Position',
     power: 'Power',
     submittedOn: 'Submitted',
@@ -51,9 +50,15 @@ const T: Record<Lang, Record<string, string>> = {
     powerRequired: 'Power is required',
     screenshotRequired: 'At least one screenshot is required',
     guideTab: 'Guide',
-    uploadTab: 'Submit',
-    listTab: 'Submissions',
+    uploadTab: 'Upload',
+    listTab: 'Power Ranking',
     loading: 'Loading…',
+    edit: 'Edit',
+    delete: 'Delete',
+    confirmDelete: 'Delete this submission?',
+    save: 'Save',
+    cancel: 'Cancel',
+    editTitle: 'Edit submission',
   },
   IT: {
     title: 'Caricate il Potere Storico dei Vostri Castelli',
@@ -65,21 +70,21 @@ const T: Record<Lang, Record<string, string>> = {
     step2Desc: 'Nella ricerca migrazione, cerca il regno 698 come destinazione.',
     step3Title: 'Fai uno screenshot',
     step3Desc: 'Scatta uno screenshot che mostri chiaramente la tua posizione nella classifica e il potere del tuo castello. Puoi allegare 1 o 2 screenshot.',
-    uploadTitle: 'Invia i tuoi dati',
+    uploadTitle: 'Inserisci i tuoi dati',
+    ctaGuide: '📸 Carica il Mio Potere Ora',
     namePh: 'Nome del tuo castello',
     positionPh: 'La tua posizione nel regno (es. 42)',
     powerPh: 'Potere storico (es. 850M)',
     notesPh: 'Note (opzionale)',
-    addScreenshot: 'Aggiungi screenshot',
-    addMore: 'Aggiungi un altro screenshot',
-    submit: 'Invia',
+    addScreenshot: 'Tocca per aggiungere screenshot',
+    addMore: 'Tocca per aggiungere 2° screenshot (opzionale)',
+    removePhoto: 'Rimuovi foto',
+    submit: '📸 Invia il Mio Potere',
     submitting: 'Invio in corso…',
     successMsg: 'Inviato! Grazie.',
     errorMsg: 'Errore nell\'invio. Riprova.',
-    listTitle: 'Invii',
+    listTitle: 'Classifica Potere',
     noSubmissions: 'Nessun invio ancora.',
-    details: 'Vedi screenshot',
-    hideDetails: 'Nascondi',
     position: 'Posizione',
     power: 'Potere',
     submittedOn: 'Inviato',
@@ -88,9 +93,15 @@ const T: Record<Lang, Record<string, string>> = {
     powerRequired: 'Il potere è obbligatorio',
     screenshotRequired: 'Almeno uno screenshot è obbligatorio',
     guideTab: 'Guida',
-    uploadTab: 'Invia',
-    listTab: 'Invii',
+    uploadTab: 'Carica',
+    listTab: 'Classifica Potere',
     loading: 'Caricamento…',
+    edit: 'Modifica',
+    delete: 'Elimina',
+    confirmDelete: 'Eliminare questo invio?',
+    save: 'Salva',
+    cancel: 'Annulla',
+    editTitle: 'Modifica invio',
   },
   PL: {
     title: 'Prześlij Moc Historyczną Swojego Zamku',
@@ -103,20 +114,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: 'Zrób zrzut ekranu',
     step3Desc: 'Zrób zrzut ekranu wyraźnie pokazujący Twoją pozycję w rankingu i moc zamku. Możesz dodać 1 lub 2 zrzuty.',
     uploadTitle: 'Prześlij swoje dane',
+    ctaGuide: '📸 Prześlij Moją Moc Teraz',
     namePh: 'Nazwa Twojego zamku',
     positionPh: 'Twoja pozycja w królestwie (np. 42)',
     powerPh: 'Moc historyczna (np. 850M)',
     notesPh: 'Notatki (opcjonalne)',
-    addScreenshot: 'Dodaj zrzut ekranu',
-    addMore: 'Dodaj kolejny zrzut',
-    submit: 'Prześlij',
+    addScreenshot: 'Dotknij, aby dodać zrzut',
+    addMore: 'Dotknij, aby dodać 2. zrzut (opcjonalnie)',
+    removePhoto: 'Usuń zdjęcie',
+    submit: '📸 Prześlij Moją Moc',
     submitting: 'Przesyłanie…',
     successMsg: 'Przesłano! Dziękujemy.',
     errorMsg: 'Błąd przesyłania. Spróbuj ponownie.',
-    listTitle: 'Przesłane zgłoszenia',
+    listTitle: 'Ranking Mocy',
     noSubmissions: 'Brak zgłoszeń.',
-    details: 'Pokaż zrzuty',
-    hideDetails: 'Ukryj',
     position: 'Pozycja',
     power: 'Moc',
     submittedOn: 'Przesłano',
@@ -126,8 +137,14 @@ const T: Record<Lang, Record<string, string>> = {
     screenshotRequired: 'Wymagany co najmniej jeden zrzut ekranu',
     guideTab: 'Przewodnik',
     uploadTab: 'Prześlij',
-    listTab: 'Zgłoszenia',
+    listTab: 'Ranking Mocy',
     loading: 'Ładowanie…',
+    edit: 'Edytuj',
+    delete: 'Usuń',
+    confirmDelete: 'Usunąć to zgłoszenie?',
+    save: 'Zapisz',
+    cancel: 'Anuluj',
+    editTitle: 'Edytuj zgłoszenie',
   },
   ZH: {
     title: '上传你的城堡历史战力',
@@ -140,20 +157,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: '截图',
     step3Desc: '截取一张清晰显示你在排名中的位置和城堡战力的截图。可以附上1或2张截图。',
     uploadTitle: '提交你的数据',
+    ctaGuide: '📸 立即上传我的战力',
     namePh: '你的城堡名称',
     positionPh: '你在王国中的排名（如 42）',
     powerPh: '历史战力（如 850M）',
     notesPh: '备注（可选）',
-    addScreenshot: '添加截图',
-    addMore: '再添加一张',
-    submit: '提交',
+    addScreenshot: '点击添加截图',
+    addMore: '点击添加第2张截图（可选）',
+    removePhoto: '删除图片',
+    submit: '📸 提交我的战力',
     submitting: '提交中…',
     successMsg: '提交成功！谢谢。',
     errorMsg: '提交出错，请重试。',
-    listTitle: '提交记录',
+    listTitle: '战力排行榜',
     noSubmissions: '暂无提交。',
-    details: '查看截图',
-    hideDetails: '隐藏',
     position: '排名',
     power: '战力',
     submittedOn: '提交时间',
@@ -162,9 +179,15 @@ const T: Record<Lang, Record<string, string>> = {
     powerRequired: '战力为必填项',
     screenshotRequired: '至少需要一张截图',
     guideTab: '指南',
-    uploadTab: '提交',
-    listTab: '记录',
+    uploadTab: '上传',
+    listTab: '战力排行榜',
     loading: '加载中…',
+    edit: '编辑',
+    delete: '删除',
+    confirmDelete: '删除此提交？',
+    save: '保存',
+    cancel: '取消',
+    editTitle: '编辑提交',
   },
   DE: {
     title: 'Ladet Eure Historische Macht Hoch',
@@ -177,20 +200,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: 'Mache einen Screenshot',
     step3Desc: 'Mache einen Screenshot, der deine Position in der Rangliste und deine Burgmacht deutlich zeigt. Du kannst 1 oder 2 Screenshots anhängen.',
     uploadTitle: 'Sende deine Daten',
+    ctaGuide: '📸 Jetzt Meine Macht Hochladen',
     namePh: 'Name deiner Burg',
     positionPh: 'Deine Position im Königreich (z.B. 42)',
     powerPh: 'Historische Macht (z.B. 850M)',
     notesPh: 'Notizen (optional)',
-    addScreenshot: 'Screenshot hinzufügen',
-    addMore: 'Weiteren Screenshot hinzufügen',
-    submit: 'Senden',
+    addScreenshot: 'Tippen, um Screenshot hinzuzufügen',
+    addMore: 'Tippen für 2. Screenshot (optional)',
+    removePhoto: 'Foto entfernen',
+    submit: '📸 Meine Macht Senden',
     submitting: 'Wird gesendet…',
     successMsg: 'Gesendet! Danke.',
     errorMsg: 'Fehler beim Senden. Erneut versuchen.',
-    listTitle: 'Einsendungen',
+    listTitle: 'Macht-Rangliste',
     noSubmissions: 'Noch keine Einsendungen.',
-    details: 'Screenshots ansehen',
-    hideDetails: 'Verbergen',
     position: 'Position',
     power: 'Macht',
     submittedOn: 'Gesendet',
@@ -199,9 +222,15 @@ const T: Record<Lang, Record<string, string>> = {
     powerRequired: 'Macht ist erforderlich',
     screenshotRequired: 'Mindestens ein Screenshot ist erforderlich',
     guideTab: 'Anleitung',
-    uploadTab: 'Senden',
-    listTab: 'Einsendungen',
+    uploadTab: 'Hochladen',
+    listTab: 'Macht-Rangliste',
     loading: 'Laden…',
+    edit: 'Bearbeiten',
+    delete: 'Löschen',
+    confirmDelete: 'Diese Einsendung löschen?',
+    save: 'Speichern',
+    cancel: 'Abbrechen',
+    editTitle: 'Einsendung bearbeiten',
   },
   FR: {
     title: 'Chargez la Puissance Historique de Votre Château',
@@ -214,20 +243,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: 'Prenez une capture d\'écran',
     step3Desc: 'Prenez une capture d\'écran montrant clairement votre position dans le classement et la puissance de votre château. Vous pouvez joindre 1 ou 2 captures.',
     uploadTitle: 'Envoyez vos données',
+    ctaGuide: '📸 Soumettre Ma Puissance Maintenant',
     namePh: 'Nom de votre château',
     positionPh: 'Votre position dans le royaume (ex. 42)',
     powerPh: 'Puissance historique (ex. 850M)',
     notesPh: 'Notes (optionnel)',
-    addScreenshot: 'Ajouter une capture',
-    addMore: 'Ajouter une autre capture',
-    submit: 'Envoyer',
+    addScreenshot: 'Toucher pour ajouter une capture',
+    addMore: 'Toucher pour ajouter 2e capture (optionnel)',
+    removePhoto: 'Supprimer la photo',
+    submit: '📸 Soumettre Ma Puissance',
     submitting: 'Envoi en cours…',
     successMsg: 'Envoyé ! Merci.',
     errorMsg: 'Erreur d\'envoi. Réessayez.',
-    listTitle: 'Envois',
+    listTitle: 'Classement de Puissance',
     noSubmissions: 'Aucun envoi pour l\'instant.',
-    details: 'Voir les captures',
-    hideDetails: 'Masquer',
     position: 'Position',
     power: 'Puissance',
     submittedOn: 'Envoyé le',
@@ -237,8 +266,14 @@ const T: Record<Lang, Record<string, string>> = {
     screenshotRequired: 'Au moins une capture est requise',
     guideTab: 'Guide',
     uploadTab: 'Envoyer',
-    listTab: 'Envois',
+    listTab: 'Classement de Puissance',
     loading: 'Chargement…',
+    edit: 'Modifier',
+    delete: 'Supprimer',
+    confirmDelete: 'Supprimer cet envoi ?',
+    save: 'Enregistrer',
+    cancel: 'Annuler',
+    editTitle: 'Modifier l\'envoi',
   },
   RU: {
     title: 'Загрузите Историческую Мощь Вашего Замка',
@@ -251,20 +286,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: 'Сделайте скриншот',
     step3Desc: 'Сделайте скриншот, на котором чётко видны ваша позиция в рейтинге и мощь замка. Можно приложить 1 или 2 скриншота.',
     uploadTitle: 'Отправьте свои данные',
+    ctaGuide: '📸 Загрузить Мою Мощь Сейчас',
     namePh: 'Название вашего замка',
     positionPh: 'Ваша позиция в королевстве (напр. 42)',
     powerPh: 'Историческая мощь (напр. 850M)',
     notesPh: 'Заметки (необязательно)',
-    addScreenshot: 'Добавить скриншот',
-    addMore: 'Добавить ещё скриншот',
-    submit: 'Отправить',
+    addScreenshot: 'Нажмите, чтобы добавить скриншот',
+    addMore: 'Нажмите для 2-го скриншота (необязательно)',
+    removePhoto: 'Удалить фото',
+    submit: '📸 Отправить Мою Мощь',
     submitting: 'Отправка…',
     successMsg: 'Отправлено! Спасибо.',
     errorMsg: 'Ошибка при отправке. Попробуйте ещё раз.',
-    listTitle: 'Отправленные',
+    listTitle: 'Рейтинг Мощи',
     noSubmissions: 'Пока нет отправленных.',
-    details: 'Смотреть скриншоты',
-    hideDetails: 'Скрыть',
     position: 'Позиция',
     power: 'Мощь',
     submittedOn: 'Отправлено',
@@ -273,9 +308,15 @@ const T: Record<Lang, Record<string, string>> = {
     powerRequired: 'Мощь обязательна',
     screenshotRequired: 'Необходим хотя бы один скриншот',
     guideTab: 'Гид',
-    uploadTab: 'Отправить',
-    listTab: 'Отправленные',
+    uploadTab: 'Загрузить',
+    listTab: 'Рейтинг Мощи',
     loading: 'Загрузка…',
+    edit: 'Изменить',
+    delete: 'Удалить',
+    confirmDelete: 'Удалить эту запись?',
+    save: 'Сохранить',
+    cancel: 'Отмена',
+    editTitle: 'Редактировать запись',
   },
   ES: {
     title: 'Sube el Poder Histórico de tu Castillo',
@@ -288,20 +329,20 @@ const T: Record<Lang, Record<string, string>> = {
     step3Title: 'Haz una captura de pantalla',
     step3Desc: 'Haz una captura de pantalla que muestre claramente tu posición en el ranking y el poder de tu castillo. Puedes adjuntar 1 o 2 capturas.',
     uploadTitle: 'Envía tus datos',
+    ctaGuide: '📸 Subir Mi Poder Ahora',
     namePh: 'Nombre de tu castillo',
     positionPh: 'Tu posición en el reino (ej. 42)',
     powerPh: 'Poder histórico (ej. 850M)',
     notesPh: 'Notas (opcional)',
-    addScreenshot: 'Añadir captura',
-    addMore: 'Añadir otra captura',
-    submit: 'Enviar',
+    addScreenshot: 'Toca para añadir captura',
+    addMore: 'Toca para añadir 2ª captura (opcional)',
+    removePhoto: 'Eliminar foto',
+    submit: '📸 Enviar Mi Poder',
     submitting: 'Enviando…',
     successMsg: '¡Enviado! Gracias.',
     errorMsg: 'Error al enviar. Inténtalo de nuevo.',
-    listTitle: 'Envíos',
+    listTitle: 'Clasificación de Poder',
     noSubmissions: 'Aún no hay envíos.',
-    details: 'Ver capturas',
-    hideDetails: 'Ocultar',
     position: 'Posición',
     power: 'Poder',
     submittedOn: 'Enviado',
@@ -310,9 +351,15 @@ const T: Record<Lang, Record<string, string>> = {
     powerRequired: 'El poder es obligatorio',
     screenshotRequired: 'Se requiere al menos una captura',
     guideTab: 'Guía',
-    uploadTab: 'Enviar',
-    listTab: 'Envíos',
+    uploadTab: 'Subir',
+    listTab: 'Clasificación de Poder',
     loading: 'Cargando…',
+    edit: 'Editar',
+    delete: 'Eliminar',
+    confirmDelete: '¿Eliminar este envío?',
+    save: 'Guardar',
+    cancel: 'Cancelar',
+    editTitle: 'Editar envío',
   },
 };
 
@@ -320,7 +367,6 @@ const T: Record<Lang, Record<string, string>> = {
 const C = {
   bg: '#0f0c1a',
   surface: 'rgba(255,255,255,0.04)',
-  surfaceHover: 'rgba(255,255,255,0.07)',
   border: 'rgba(124,58,237,0.2)',
   borderStrong: 'rgba(124,58,237,0.5)',
   purple: '#7c3aed',
@@ -338,8 +384,6 @@ const LANGS: Lang[] = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'];
 type Tab = 'guide' | 'upload' | 'list';
 
 // ─── Step guide image ────────────────────────────────────────────────────────
-// Shows the real screenshot if available in /public/images/migration-stepN.png
-// otherwise shows a numbered placeholder
 function StepImage({ n }: { n: number }) {
   const [hasImg, setHasImg] = useState(true);
   const src = `/images/migration-step${n}.png`;
@@ -350,23 +394,17 @@ function StepImage({ n }: { n: number }) {
       border: `1px solid ${C.border}`,
       borderRadius: 12, overflow: 'hidden',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0, position: 'relative',
+      flexShrink: 0,
     }}>
       {hasImg ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={src}
-          alt={`step ${n}`}
-          onError={() => setHasImg(false)}
-          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-        />
+        <img src={src} alt={`step ${n}`} onError={() => setHasImg(false)}
+          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} />
       ) : (
         <span style={{
           fontSize: 48, fontWeight: 900,
           background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          opacity: 0.4,
+          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', opacity: 0.4,
         }}>{n}</span>
       )}
     </div>
@@ -377,13 +415,15 @@ export default function MigazionePage() {
   const [lang, setLang] = useState<Lang>('IT');
   const [langOpen, setLangOpen] = useState(false);
   const [tab, setTab] = useState<Tab>('guide');
+  const [token, setToken] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Form state
   const [name, setName] = useState('');
   const [position, setPosition] = useState('');
   const [power, setPower] = useState('');
   const [notes, setNotes] = useState('');
-  const [screenshots, setScreenshots] = useState<string[]>([]);
+  const [screenshots, setScreenshots] = useState<(string | null)[]>([null, null]);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -394,18 +434,34 @@ export default function MigazionePage() {
   const [loadingList, setLoadingList] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
 
+  // Admin edit state
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editPosition, setEditPosition] = useState('');
+  const [editPower, setEditPower] = useState('');
+  const [editNotes, setEditNotes] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
+
+  const fileRef0 = useRef<HTMLInputElement>(null);
   const fileRef1 = useRef<HTMLInputElement>(null);
-  const fileRef2 = useRef<HTMLInputElement>(null);
 
   const t = (k: string) => T[lang]?.[k] ?? T.EN[k] ?? k;
 
-  // Auto-detect language
+  // Auto-detect language + read token from localStorage
   useEffect(() => {
     const bl = navigator.language.split('-')[0].toUpperCase() as Lang;
     if (LANGS.includes(bl)) setLang(bl);
+    const tk = localStorage.getItem('token');
+    if (tk) {
+      setToken(tk);
+      // Decode JWT to check isAdmin (no verification needed client-side)
+      try {
+        const payload = JSON.parse(atob(tk.split('.')[1]));
+        if (payload.isAdmin) setIsAdmin(true);
+      } catch { /* not admin */ }
+    }
   }, []);
 
-  // Load submissions when list tab is opened
   useEffect(() => {
     if (tab === 'list') loadSubmissions();
   }, [tab]);
@@ -416,11 +472,8 @@ export default function MigazionePage() {
       const r = await fetch('/api/migration');
       const data = await r.json();
       if (Array.isArray(data)) setSubmissions(data);
-    } catch {
-      // silently fail
-    } finally {
-      setLoadingList(false);
-    }
+    } catch { /* silent */ }
+    finally { setLoadingList(false); }
   }
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>, idx: number) {
@@ -429,14 +482,16 @@ export default function MigazionePage() {
     const reader = new FileReader();
     reader.onload = (ev) => {
       const b64 = ev.target?.result as string;
-      setScreenshots(prev => {
-        const next = [...prev];
-        next[idx] = b64;
-        return next;
-      });
+      setScreenshots(prev => { const n = [...prev]; n[idx] = b64; return n; });
       setFormErrors(prev => ({ ...prev, screenshots: '' }));
     };
     reader.readAsDataURL(file);
+  }
+
+  function removeScreenshot(idx: number) {
+    setScreenshots(prev => { const n = [...prev]; n[idx] = null; return n; });
+    if (idx === 0 && fileRef0.current) fileRef0.current.value = '';
+    if (idx === 1 && fileRef1.current) fileRef1.current.value = '';
   }
 
   function validate() {
@@ -444,7 +499,7 @@ export default function MigazionePage() {
     if (!name.trim()) errs.name = t('nameRequired');
     if (!position.trim()) errs.position = t('posRequired');
     if (!power.trim()) errs.power = t('powerRequired');
-    if (screenshots.filter(Boolean).length === 0) errs.screenshots = t('screenshotRequired');
+    if (!screenshots[0]) errs.screenshots = t('screenshotRequired');
     setFormErrors(errs);
     return Object.keys(errs).length === 0;
   }
@@ -452,68 +507,81 @@ export default function MigazionePage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
-    setSubmitting(true);
-    setSuccessMsg('');
-    setErrorMsg('');
+    setSubmitting(true); setSuccessMsg(''); setErrorMsg('');
     try {
       const r = await fetch('/api/migration', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          playerName: name,
-          position,
-          power,
+          playerName: name, position, power,
           screenshots: screenshots.filter(Boolean),
           notes: notes || null,
         }),
       });
-      if (!r.ok) {
-        const d = await r.json().catch(() => ({}));
-        throw new Error(d.error || 'Unknown error');
-      }
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.error || 'error'); }
       setSuccessMsg(t('successMsg'));
       setName(''); setPosition(''); setPower(''); setNotes('');
-      setScreenshots([]);
+      setScreenshots([null, null]);
+      if (fileRef0.current) fileRef0.current.value = '';
       if (fileRef1.current) fileRef1.current.value = '';
-      if (fileRef2.current) fileRef2.current.value = '';
     } catch (err: unknown) {
       setErrorMsg(t('errorMsg') + (err instanceof Error ? ` (${err.message})` : ''));
-    } finally {
-      setSubmitting(false);
-    }
+    } finally { setSubmitting(false); }
   }
 
-  // ─── Styles ─────────────────────────────────────────────────────────────────
+  function startEdit(s: Submission) {
+    setEditingId(s.id);
+    setEditName(s.playerName);
+    setEditPosition(s.position);
+    setEditPower(s.power);
+    setEditNotes(s.notes ?? '');
+  }
+
+  async function saveEdit(id: number) {
+    setEditSaving(true);
+    try {
+      const r = await fetch(`/api/migration/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ playerName: editName, position: editPosition, power: editPower, notes: editNotes }),
+      });
+      if (!r.ok) throw new Error('failed');
+      setEditingId(null);
+      loadSubmissions();
+    } catch { /* show nothing */ }
+    finally { setEditSaving(false); }
+  }
+
+  async function deleteSubmission(id: number) {
+    if (!confirm(t('confirmDelete'))) return;
+    await fetch(`/api/migration/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setExpanded(null);
+    loadSubmissions();
+  }
+
+  // ─── Styles ──────────────────────────────────────────────────────────────────
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '10px 14px',
-    background: 'rgba(255,255,255,0.05)',
-    border: `1px solid ${C.border}`,
+    background: 'rgba(255,255,255,0.05)', border: `1px solid ${C.border}`,
     borderRadius: 8, color: C.text, fontSize: 14,
     outline: 'none', boxSizing: 'border-box',
   };
-
   const labelStyle: React.CSSProperties = {
     fontSize: 12, fontWeight: 700, color: C.muted,
-    textTransform: 'uppercase', letterSpacing: '0.05em',
-    marginBottom: 4, display: 'block',
+    textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4, display: 'block',
   };
-
-  const errorStyle: React.CSSProperties = {
-    fontSize: 11, color: C.red, marginTop: 3,
-  };
-
-  const tabBtnStyle = (active: boolean): React.CSSProperties => ({
-    flex: 1, padding: '10px 8px',
-    borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 700,
-    fontSize: 13, transition: 'all 0.2s',
-    background: active
-      ? 'linear-gradient(135deg, #7c3aed, #3b82f6)'
-      : 'rgba(255,255,255,0.05)',
+  const errStyle: React.CSSProperties = { fontSize: 11, color: C.red, marginTop: 3 };
+  const tabBtn = (active: boolean): React.CSSProperties => ({
+    flex: 1, padding: '10px 8px', borderRadius: 8, border: 'none', cursor: 'pointer',
+    fontWeight: 700, fontSize: 13, transition: 'all 0.2s',
+    background: active ? 'linear-gradient(135deg, #7c3aed, #3b82f6)' : 'rgba(255,255,255,0.05)',
     color: active ? '#fff' : C.muted,
     boxShadow: active ? '0 2px 12px rgba(124,58,237,0.4)' : 'none',
   });
-
-  const stepNumStyle: React.CSSProperties = {
+  const stepNum: React.CSSProperties = {
     width: 44, height: 44, borderRadius: 10, flexShrink: 0,
     background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -526,54 +594,27 @@ export default function MigazionePage() {
     <div style={{
       minHeight: '100vh',
       background: 'linear-gradient(180deg, #0f0c1a 0%, #0a0714 60%, #0f0c1a 100%)',
-      fontFamily: 'system-ui, -apple-system, sans-serif',
-      color: C.text,
+      fontFamily: 'system-ui, -apple-system, sans-serif', color: C.text,
     }}>
 
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <header style={{
         position: 'sticky', top: 0, zIndex: 9999,
-        background: 'rgba(15,12,26,0.95)',
-        backdropFilter: 'blur(12px)',
-        borderBottom: `1px solid ${C.border}`,
-        padding: '12px 16px',
+        background: 'rgba(15,12,26,0.95)', backdropFilter: 'blur(12px)',
+        borderBottom: `1px solid ${C.border}`, padding: '12px 16px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{
-            fontWeight: 900, fontSize: 20,
-            background: 'linear-gradient(135deg, #a78bfa, #60a5fa)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          }}>k698</span>
+          <span style={{ fontWeight: 900, fontSize: 20, background: 'linear-gradient(135deg, #a78bfa, #60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>k698</span>
           <span style={{ color: C.faint }}>·</span>
-          <span style={{ fontWeight: 700, fontSize: 13, color: C.purpleLight, letterSpacing: '0.08em' }}>
-            MIGRAZIONE
-          </span>
+          <span style={{ fontWeight: 700, fontSize: 13, color: C.purpleLight, letterSpacing: '0.08em' }}>MIGRAZIONE</span>
         </div>
-        {/* Language picker */}
         <div style={{ position: 'relative' }}>
-          <button onClick={() => setLangOpen(!langOpen)} style={{
-            width: 40, height: 40, borderRadius: 8,
-            border: `1px solid ${C.borderStrong}`,
-            background: 'rgba(124,58,237,0.1)',
-            color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer',
-          }}>{lang}</button>
+          <button onClick={() => setLangOpen(!langOpen)} style={{ width: 40, height: 40, borderRadius: 8, border: `1px solid ${C.borderStrong}`, background: 'rgba(124,58,237,0.1)', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>{lang}</button>
           {langOpen && (
-            <div style={{
-              position: 'absolute', top: '100%', right: 0, marginTop: 8,
-              background: 'rgba(15,10,30,0.97)',
-              border: `1px solid ${C.border}`,
-              borderRadius: 10, overflow: 'hidden', zIndex: 100, minWidth: 80,
-              boxShadow: '0 8px 32px rgba(0,0,0,0.6)',
-            }}>
+            <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 8, background: 'rgba(15,10,30,0.97)', border: `1px solid ${C.border}`, borderRadius: 10, overflow: 'hidden', zIndex: 100, minWidth: 80, boxShadow: '0 8px 32px rgba(0,0,0,0.6)' }}>
               {LANGS.map((l, i) => (
-                <button key={l} onClick={() => { setLang(l); setLangOpen(false); }} style={{
-                  width: '100%', padding: '8px 16px', border: 'none', cursor: 'pointer',
-                  background: l === lang ? 'rgba(124,58,237,0.2)' : 'transparent',
-                  color: l === lang ? '#fff' : C.muted,
-                  fontWeight: 700, fontSize: 13, textAlign: 'center',
-                  borderTop: i > 0 ? `1px solid ${C.border}` : 'none',
-                }}>{l}</button>
+                <button key={l} onClick={() => { setLang(l); setLangOpen(false); }} style={{ width: '100%', padding: '8px 16px', border: 'none', cursor: 'pointer', background: l === lang ? 'rgba(124,58,237,0.2)' : 'transparent', color: l === lang ? '#fff' : C.muted, fontWeight: 700, fontSize: 13, textAlign: 'center', borderTop: i > 0 ? `1px solid ${C.border}` : 'none' }}>{l}</button>
               ))}
             </div>
           )}
@@ -582,212 +623,158 @@ export default function MigazionePage() {
 
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 16px 64px' }}>
 
-        {/* ── Hero ───────────────────────────────────────────────────────────── */}
+        {/* ── Hero ─────────────────────────────────────────────────────────── */}
         <div style={{ textAlign: 'center', padding: '48px 0 32px', position: 'relative' }}>
-          {/* glow decoration */}
-          <div style={{
-            position: 'absolute', left: '50%', top: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400, height: 120, background: 'rgba(124,58,237,0.12)',
-            borderRadius: '50%', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
-          }} />
-          <h1 style={{ position: 'relative', zIndex: 1,
-            fontSize: 'clamp(22px, 5vw, 36px)', fontWeight: 900,
-            lineHeight: 1.2, marginBottom: 12,
-            background: 'linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #60a5fa 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-          }}>{t('title')}</h1>
-          <p style={{ position: 'relative', zIndex: 1, fontSize: 14, color: C.muted, maxWidth: 500, margin: '0 auto', lineHeight: 1.6 }}>
-            {t('subtitle')}
-          </p>
-          <div style={{ marginTop: 20, height: 2, width: 80, background: 'linear-gradient(90deg, #7c3aed, #3b82f6)', borderRadius: 2, margin: '20px auto 0' }} />
+          <div style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%,-50%)', width: 400, height: 120, background: 'rgba(124,58,237,0.12)', borderRadius: '50%', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0 }} />
+          <h1 style={{ position: 'relative', zIndex: 1, fontSize: 'clamp(22px,5vw,36px)', fontWeight: 900, lineHeight: 1.2, marginBottom: 12, background: 'linear-gradient(135deg,#c084fc 0%,#818cf8 50%,#60a5fa 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{t('title')}</h1>
+          <p style={{ position: 'relative', zIndex: 1, fontSize: 14, color: C.muted, maxWidth: 500, margin: '0 auto', lineHeight: 1.6 }}>{t('subtitle')}</p>
+          <div style={{ height: 2, width: 80, background: 'linear-gradient(90deg,#7c3aed,#3b82f6)', borderRadius: 2, margin: '20px auto 0' }} />
         </div>
 
-        {/* ── Tabs ───────────────────────────────────────────────────────────── */}
-        <div style={{
-          display: 'flex', gap: 8, padding: '0 0 24px',
-          position: 'sticky', top: 65, zIndex: 10,
-          background: 'rgba(15,12,26,0.9)', backdropFilter: 'blur(8px)',
-          paddingTop: 12,
-        }}>
-          <button style={tabBtnStyle(tab === 'guide')} onClick={() => setTab('guide')}>{t('guideTab')}</button>
-          <button style={tabBtnStyle(tab === 'upload')} onClick={() => setTab('upload')}>{t('uploadTab')}</button>
-          <button style={tabBtnStyle(tab === 'list')} onClick={() => setTab('list')}>{t('listTab')}</button>
+        {/* ── Tabs ─────────────────────────────────────────────────────────── */}
+        <div style={{ display: 'flex', gap: 8, position: 'sticky', top: 65, zIndex: 10, background: 'rgba(15,12,26,0.9)', backdropFilter: 'blur(8px)', paddingTop: 12, paddingBottom: 24 }}>
+          <button style={tabBtn(tab === 'guide')} onClick={() => setTab('guide')}>{t('guideTab')}</button>
+          <button style={tabBtn(tab === 'upload')} onClick={() => setTab('upload')}>{t('uploadTab')}</button>
+          <button style={tabBtn(tab === 'list')} onClick={() => setTab('list')}>{t('listTab')}</button>
         </div>
 
-        {/* ── GUIDE TAB ──────────────────────────────────────────────────────── */}
+        {/* ── GUIDE TAB ────────────────────────────────────────────────────── */}
         {tab === 'guide' && (
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, color: C.purpleLight, marginBottom: 24 }}>
-              {t('guideTitle')}
-            </h2>
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: C.purpleLight, marginBottom: 24 }}>{t('guideTitle')}</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               {[1, 2, 3].map(n => (
-                <div key={n} style={{
-                  background: C.surface,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 14, overflow: 'hidden',
-                }}>
-                  {/* Step header */}
-                  <div style={{
-                    padding: '16px 20px',
-                    display: 'flex', alignItems: 'flex-start', gap: 14,
-                    background: 'rgba(124,58,237,0.06)',
-                    borderBottom: `1px solid ${C.border}`,
-                  }}>
-                    <div style={stepNumStyle}>{n}</div>
+                <div key={n} style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 14, overflow: 'hidden' }}>
+                  <div style={{ padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 14, background: 'rgba(124,58,237,0.06)', borderBottom: `1px solid ${C.border}` }}>
+                    <div style={stepNum}>{n}</div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: 15, color: '#fff', marginBottom: 4 }}>
-                        {t(`step${n}Title`)}
-                      </div>
-                      <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>
-                        {t(`step${n}Desc`)}
-                      </div>
+                      <div style={{ fontWeight: 800, fontSize: 15, color: '#fff', marginBottom: 4 }}>{t(`step${n}Title`)}</div>
+                      <div style={{ fontSize: 13, color: C.muted, lineHeight: 1.6 }}>{t(`step${n}Desc`)}</div>
                     </div>
                   </div>
-                  {/* Step image placeholder */}
-                  <div style={{ padding: '16px 20px' }}>
-                    <StepImage n={n} />
-                  </div>
+                  <div style={{ padding: '16px 20px' }}><StepImage n={n} /></div>
                 </div>
               ))}
             </div>
-
-            {/* CTA to upload */}
-            <div style={{ textAlign: 'center', marginTop: 32 }}>
+            {/* CTA */}
+            <div style={{ textAlign: 'center', marginTop: 36 }}>
               <button onClick={() => setTab('upload')} style={{
-                padding: '14px 40px', borderRadius: 10, border: 'none', cursor: 'pointer',
-                background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-                color: '#fff', fontWeight: 800, fontSize: 15,
-                boxShadow: '0 4px 20px rgba(124,58,237,0.5)',
-                transition: 'transform 0.15s',
+                padding: '16px 48px', borderRadius: 12, border: 'none', cursor: 'pointer',
+                background: 'linear-gradient(135deg,#7c3aed,#3b82f6)',
+                color: '#fff', fontWeight: 900, fontSize: 16,
+                boxShadow: '0 4px 24px rgba(124,58,237,0.6)', letterSpacing: '0.02em',
               }}>
-                {t('uploadTab')} →
+                {t('ctaGuide')}
               </button>
             </div>
           </div>
         )}
 
-        {/* ── UPLOAD TAB ─────────────────────────────────────────────────────── */}
+        {/* ── UPLOAD TAB ───────────────────────────────────────────────────── */}
         {tab === 'upload' && (
           <div>
-            <h2 style={{ fontSize: 18, fontWeight: 800, color: C.purpleLight, marginBottom: 24 }}>
-              {t('uploadTitle')}
-            </h2>
+            <h2 style={{ fontSize: 18, fontWeight: 800, color: C.purpleLight, marginBottom: 24 }}>{t('uploadTitle')}</h2>
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-              {/* Name */}
               <div>
                 <label style={labelStyle}>{t('namePh')}</label>
-                <input
-                  value={name} onChange={e => { setName(e.target.value); setFormErrors(p => ({ ...p, name: '' })); }}
-                  placeholder={t('namePh')} style={{ ...inputStyle, borderColor: formErrors.name ? C.red : undefined }}
-                />
-                {formErrors.name && <p style={errorStyle}>{formErrors.name}</p>}
+                <input value={name} onChange={e => { setName(e.target.value); setFormErrors(p => ({ ...p, name: '' })); }} placeholder={t('namePh')} style={{ ...inputStyle, borderColor: formErrors.name ? C.red : undefined }} />
+                {formErrors.name && <p style={errStyle}>{formErrors.name}</p>}
               </div>
 
-              {/* Position */}
               <div>
                 <label style={labelStyle}>{t('position')}</label>
-                <input
-                  value={position} onChange={e => { setPosition(e.target.value); setFormErrors(p => ({ ...p, position: '' })); }}
-                  placeholder={t('positionPh')} style={{ ...inputStyle, borderColor: formErrors.position ? C.red : undefined }}
-                />
-                {formErrors.position && <p style={errorStyle}>{formErrors.position}</p>}
+                <input value={position} onChange={e => { setPosition(e.target.value); setFormErrors(p => ({ ...p, position: '' })); }} placeholder={t('positionPh')} style={{ ...inputStyle, borderColor: formErrors.position ? C.red : undefined }} />
+                {formErrors.position && <p style={errStyle}>{formErrors.position}</p>}
               </div>
 
-              {/* Power */}
               <div>
                 <label style={labelStyle}>{t('power')}</label>
-                <input
-                  value={power} onChange={e => { setPower(e.target.value); setFormErrors(p => ({ ...p, power: '' })); }}
-                  placeholder={t('powerPh')} style={{ ...inputStyle, borderColor: formErrors.power ? C.red : undefined }}
-                />
-                {formErrors.power && <p style={errorStyle}>{formErrors.power}</p>}
+                <input value={power} onChange={e => { setPower(e.target.value); setFormErrors(p => ({ ...p, power: '' })); }} placeholder={t('powerPh')} style={{ ...inputStyle, borderColor: formErrors.power ? C.red : undefined }} />
+                {formErrors.power && <p style={errStyle}>{formErrors.power}</p>}
               </div>
 
-              {/* Screenshots */}
+              {/* Screenshots with × remove button */}
               <div>
                 <label style={labelStyle}>{t('addScreenshot')}</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  {/* Screenshot 1 */}
-                  <label style={{
-                    display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
-                    padding: '12px 14px',
-                    background: screenshots[0] ? 'rgba(74,222,128,0.05)' : C.surface,
-                    border: `1px dashed ${screenshots[0] ? C.green : (formErrors.screenshots ? C.red : C.border)}`,
-                    borderRadius: 8,
-                  }}>
-                    <input ref={fileRef1} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => handleFile(e, 0)} />
-                    <span style={{ fontSize: 20 }}>{screenshots[0] ? '✅' : '📷'}</span>
-                    <span style={{ fontSize: 13, color: screenshots[0] ? C.green : C.muted }}>
-                      {screenshots[0] ? 'Screenshot 1 ✓' : `Screenshot 1 — ${t('addScreenshot')}`}
-                    </span>
-                    {screenshots[0] && (
-                      <img src={screenshots[0]} alt="s1" style={{ width: 48, height: 32, objectFit: 'cover', borderRadius: 4, marginLeft: 'auto' }} />
-                    )}
-                  </label>
-
-                  {/* Screenshot 2 — only show if first is added */}
-                  {screenshots[0] && (
-                    <label style={{
-                      display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
-                      padding: '12px 14px',
-                      background: screenshots[1] ? 'rgba(74,222,128,0.05)' : C.surface,
-                      border: `1px dashed ${screenshots[1] ? C.green : C.border}`,
-                      borderRadius: 8,
-                    }}>
-                      <input ref={fileRef2} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => handleFile(e, 1)} />
-                      <span style={{ fontSize: 20 }}>{screenshots[1] ? '✅' : '📷'}</span>
-                      <span style={{ fontSize: 13, color: screenshots[1] ? C.green : C.muted }}>
-                        {screenshots[1] ? 'Screenshot 2 ✓' : `Screenshot 2 — ${t('addMore')}`}
-                      </span>
-                      {screenshots[1] && (
-                        <img src={screenshots[1]} alt="s2" style={{ width: 48, height: 32, objectFit: 'cover', borderRadius: 4, marginLeft: 'auto' }} />
-                      )}
-                    </label>
-                  )}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {[0, 1].map(idx => {
+                    const isRequired = idx === 0;
+                    const hasPhoto = !!screenshots[idx];
+                    const isHidden = idx === 1 && !screenshots[0]; // hide slot 2 until slot 1 filled
+                    if (isHidden) return null;
+                    return (
+                      <div key={idx} style={{ position: 'relative' }}>
+                        <label style={{
+                          display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer',
+                          padding: '12px 14px',
+                          background: hasPhoto ? 'rgba(74,222,128,0.05)' : C.surface,
+                          border: `1px dashed ${hasPhoto ? C.green : (idx === 0 && formErrors.screenshots ? C.red : C.border)}`,
+                          borderRadius: 8,
+                        }}>
+                          <input
+                            ref={idx === 0 ? fileRef0 : fileRef1}
+                            type="file" accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={e => handleFile(e, idx)}
+                          />
+                          <span style={{ fontSize: 20 }}>{hasPhoto ? '✅' : '📷'}</span>
+                          <span style={{ fontSize: 13, color: hasPhoto ? C.green : C.muted, flex: 1 }}>
+                            {hasPhoto
+                              ? `Screenshot ${idx + 1} ✓`
+                              : (isRequired ? t('addScreenshot') : t('addMore'))}
+                          </span>
+                          {hasPhoto && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={screenshots[idx]!} alt="" style={{ width: 52, height: 34, objectFit: 'cover', borderRadius: 4 }} />
+                          )}
+                        </label>
+                        {/* × remove button — outside the label */}
+                        {hasPhoto && (
+                          <button
+                            type="button"
+                            onClick={() => removeScreenshot(idx)}
+                            title={t('removePhoto')}
+                            style={{
+                              position: 'absolute', top: -8, right: -8,
+                              width: 22, height: 22, borderRadius: '50%',
+                              background: C.red, border: 'none', cursor: 'pointer',
+                              color: '#fff', fontWeight: 900, fontSize: 13,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              lineHeight: 1, zIndex: 2,
+                            }}
+                          >×</button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-                {formErrors.screenshots && <p style={errorStyle}>{formErrors.screenshots}</p>}
+                {formErrors.screenshots && <p style={errStyle}>{formErrors.screenshots}</p>}
               </div>
 
-              {/* Notes */}
               <div>
                 <label style={labelStyle}>{t('notesPh')}</label>
-                <textarea
-                  value={notes} onChange={e => setNotes(e.target.value)}
-                  placeholder={t('notesPh')}
-                  rows={2}
-                  style={{ ...inputStyle, resize: 'vertical' }}
-                />
+                <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder={t('notesPh')} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
               </div>
 
-              {/* Submit btn */}
               <button type="submit" disabled={submitting} style={{
-                padding: '13px 0', borderRadius: 10, border: 'none', cursor: submitting ? 'wait' : 'pointer',
-                background: submitting ? 'rgba(124,58,237,0.4)' : 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-                color: '#fff', fontWeight: 800, fontSize: 15,
-                boxShadow: submitting ? 'none' : '0 4px 20px rgba(124,58,237,0.4)',
+                padding: '15px 0', borderRadius: 10, border: 'none',
+                cursor: submitting ? 'wait' : 'pointer',
+                background: submitting ? 'rgba(124,58,237,0.4)' : 'linear-gradient(135deg,#7c3aed,#3b82f6)',
+                color: '#fff', fontWeight: 900, fontSize: 16,
+                boxShadow: submitting ? 'none' : '0 4px 20px rgba(124,58,237,0.45)',
+                letterSpacing: '0.02em',
               }}>
                 {submitting ? t('submitting') : t('submit')}
               </button>
 
-              {/* Success/Error banners */}
               {successMsg && (
-                <div style={{
-                  padding: '12px 16px', borderRadius: 8,
-                  background: 'rgba(74,222,128,0.1)', border: `1px solid rgba(74,222,128,0.4)`,
-                  color: C.green, fontWeight: 700, fontSize: 14, textAlign: 'center',
-                }}>
+                <div style={{ padding: '12px 16px', borderRadius: 8, background: 'rgba(74,222,128,0.1)', border: `1px solid rgba(74,222,128,0.4)`, color: C.green, fontWeight: 700, fontSize: 14, textAlign: 'center' }}>
                   {successMsg}
                 </div>
               )}
               {errorMsg && (
-                <div style={{
-                  padding: '12px 16px', borderRadius: 8,
-                  background: 'rgba(248,113,113,0.1)', border: `1px solid rgba(248,113,113,0.4)`,
-                  color: C.red, fontWeight: 700, fontSize: 13, textAlign: 'center',
-                }}>
+                <div style={{ padding: '12px 16px', borderRadius: 8, background: 'rgba(248,113,113,0.1)', border: `1px solid rgba(248,113,113,0.4)`, color: C.red, fontWeight: 700, fontSize: 13, textAlign: 'center' }}>
                   {errorMsg}
                 </div>
               )}
@@ -795,17 +782,14 @@ export default function MigazionePage() {
           </div>
         )}
 
-        {/* ── LIST TAB ───────────────────────────────────────────────────────── */}
+        {/* ── LIST / RANKING TAB ───────────────────────────────────────────── */}
         {tab === 'list' && (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
               <h2 style={{ fontSize: 18, fontWeight: 800, color: C.purpleLight, margin: 0 }}>
                 {t('listTitle')} {!loadingList && `(${submissions.length})`}
               </h2>
-              <button onClick={loadSubmissions} style={{
-                padding: '6px 14px', borderRadius: 6, border: `1px solid ${C.border}`,
-                background: C.surface, color: C.muted, cursor: 'pointer', fontSize: 12, fontWeight: 700,
-              }}>↺</button>
+              <button onClick={loadSubmissions} style={{ padding: '6px 14px', borderRadius: 6, border: `1px solid ${C.border}`, background: C.surface, color: C.muted, cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>↺</button>
             </div>
 
             {loadingList ? (
@@ -814,85 +798,89 @@ export default function MigazionePage() {
               <p style={{ color: C.muted, textAlign: 'center', padding: 40 }}>{t('noSubmissions')}</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {submissions.map(s => (
+                {/* rank index shown as sequential position in list */}
+                {submissions.map((s, rankIdx) => (
                   <div key={s.id} style={{
                     background: C.surface,
                     border: `1px solid ${expanded === s.id ? C.borderStrong : C.border}`,
-                    borderRadius: 10, overflow: 'hidden',
+                    borderRadius: 10, overflow: 'visible',
                     transition: 'border-color 0.2s',
                   }}>
                     {/* Row */}
-                    <div style={{
-                      display: 'flex', alignItems: 'center', gap: 12,
-                      padding: '12px 16px', cursor: 'pointer',
-                    }} onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
-                      {/* Avatar letter */}
-                      <div style={{
-                        width: 36, height: 36, borderRadius: 8, flexShrink: 0,
-                        background: 'linear-gradient(135deg, #7c3aed44, #3b82f644)',
-                        border: `1px solid ${C.border}`,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontWeight: 900, fontSize: 14, color: C.purpleLight,
-                      }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px', cursor: 'pointer' }}
+                      onClick={() => setExpanded(expanded === s.id ? null : s.id)}>
+                      {/* Rank number */}
+                      <div style={{ width: 28, height: 28, borderRadius: 6, background: rankIdx === 0 ? 'rgba(251,191,36,0.2)' : rankIdx === 1 ? 'rgba(156,163,175,0.2)' : rankIdx === 2 ? 'rgba(180,120,60,0.2)' : 'rgba(255,255,255,0.05)', border: `1px solid ${rankIdx < 3 ? C.amber : C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 12, color: rankIdx < 3 ? C.amber : C.muted, flexShrink: 0 }}>
+                        {rankIdx + 1}
+                      </div>
+                      {/* Avatar */}
+                      <div style={{ width: 32, height: 32, borderRadius: 8, flexShrink: 0, background: 'linear-gradient(135deg,#7c3aed44,#3b82f644)', border: `1px solid ${C.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 13, color: C.purpleLight }}>
                         {s.playerName[0]?.toUpperCase() ?? '?'}
                       </div>
-                      {/* Name */}
+                      {/* Name + date */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {s.playerName}
-                        </div>
-                        <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>
-                          {new Date(s.createdAt).toLocaleDateString()}
-                        </div>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.playerName}</div>
+                        <div style={{ fontSize: 11, color: C.muted, marginTop: 1 }}>{new Date(s.createdAt).toLocaleDateString()}</div>
                       </div>
                       {/* Position badge */}
-                      <div style={{
-                        padding: '3px 8px', borderRadius: 6,
-                        background: 'rgba(124,58,237,0.15)', border: `1px solid rgba(124,58,237,0.3)`,
-                        fontSize: 12, fontWeight: 700, color: C.purpleLight, flexShrink: 0,
-                      }}>
+                      <div style={{ padding: '3px 8px', borderRadius: 6, background: 'rgba(124,58,237,0.15)', border: `1px solid rgba(124,58,237,0.3)`, fontSize: 12, fontWeight: 700, color: C.purpleLight, flexShrink: 0 }}>
                         #{s.position}
                       </div>
                       {/* Power badge */}
-                      <div style={{
-                        padding: '3px 8px', borderRadius: 6,
-                        background: 'rgba(251,191,36,0.1)', border: `1px solid rgba(251,191,36,0.3)`,
-                        fontSize: 12, fontWeight: 700, color: C.amber, flexShrink: 0,
-                      }}>
+                      <div style={{ padding: '3px 8px', borderRadius: 6, background: 'rgba(251,191,36,0.1)', border: `1px solid rgba(251,191,36,0.3)`, fontSize: 12, fontWeight: 700, color: C.amber, flexShrink: 0 }}>
                         {s.power}
                       </div>
-                      {/* Expand chevron */}
-                      <span style={{ color: C.muted, fontSize: 12, transition: 'transform 0.2s', transform: expanded === s.id ? 'rotate(180deg)' : 'none' }}>
-                        ▼
-                      </span>
+                      <span style={{ color: C.muted, fontSize: 12, transform: expanded === s.id ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▼</span>
                     </div>
 
-                    {/* Accordion — screenshots */}
+                    {/* Accordion */}
                     {expanded === s.id && (
-                      <div style={{
-                        padding: '4px 16px 16px',
-                        borderTop: `1px solid ${C.border}`,
-                      }}>
-                        {s.notes && (
-                          <p style={{ fontSize: 13, color: C.muted, marginBottom: 12, fontStyle: 'italic' }}>{s.notes}</p>
-                        )}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+                      <div style={{ padding: '8px 16px 16px', borderTop: `1px solid ${C.border}` }}>
+
+                        {/* Admin edit form */}
+                        {isAdmin && editingId === s.id ? (
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 14 }}>
+                            <div style={{ fontSize: 12, fontWeight: 800, color: C.purpleLight, marginBottom: 2 }}>{t('editTitle')}</div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                              <input value={editName} onChange={e => setEditName(e.target.value)} placeholder="Name" style={{ padding: '8px 10px', background: 'rgba(255,255,255,0.07)', border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: 13, outline: 'none' }} />
+                              <input value={editPosition} onChange={e => setEditPosition(e.target.value)} placeholder="Position" style={{ padding: '8px 10px', background: 'rgba(255,255,255,0.07)', border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: 13, outline: 'none' }} />
+                              <input value={editPower} onChange={e => setEditPower(e.target.value)} placeholder="Power" style={{ padding: '8px 10px', background: 'rgba(255,255,255,0.07)', border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: 13, outline: 'none' }} />
+                              <input value={editNotes} onChange={e => setEditNotes(e.target.value)} placeholder="Notes" style={{ padding: '8px 10px', background: 'rgba(255,255,255,0.07)', border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: 13, outline: 'none' }} />
+                            </div>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                              <button onClick={() => saveEdit(s.id)} disabled={editSaving} style={{ padding: '7px 18px', borderRadius: 6, border: 'none', cursor: 'pointer', background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', color: '#fff', fontWeight: 700, fontSize: 13 }}>
+                                {editSaving ? '…' : t('save')}
+                              </button>
+                              <button onClick={() => setEditingId(null)} style={{ padding: '7px 14px', borderRadius: 6, border: `1px solid ${C.border}`, cursor: 'pointer', background: 'transparent', color: C.muted, fontWeight: 700, fontSize: 13 }}>
+                                {t('cancel')}
+                              </button>
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {s.notes && <p style={{ fontSize: 13, color: C.muted, marginBottom: 12, fontStyle: 'italic' }}>{s.notes}</p>}
+
+                        {/* Screenshots */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: isAdmin ? 12 : 0 }}>
                           {s.screenshots.map((src, i) => (
-                            <a key={i} href={src} target="_blank" rel="noopener noreferrer" style={{ display: 'block' }}>
-                              <img
-                                src={src}
-                                alt={`screenshot ${i + 1}`}
-                                style={{
-                                  maxWidth: 280, maxHeight: 180,
-                                  objectFit: 'contain',
-                                  borderRadius: 8,
-                                  border: `1px solid ${C.border}`,
-                                  cursor: 'zoom-in',
-                                }}
-                              />
+                            <a key={i} href={src} target="_blank" rel="noopener noreferrer">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={src} alt={`screenshot ${i + 1}`} style={{ maxWidth: 280, maxHeight: 180, objectFit: 'contain', borderRadius: 8, border: `1px solid ${C.border}`, cursor: 'zoom-in', display: 'block' }} />
                             </a>
                           ))}
                         </div>
+
+                        {/* Admin action buttons */}
+                        {isAdmin && editingId !== s.id && (
+                          <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+                            <button onClick={() => startEdit(s)} style={{ padding: '6px 14px', borderRadius: 6, border: `1px solid rgba(124,58,237,0.4)`, cursor: 'pointer', background: 'rgba(124,58,237,0.1)', color: C.purpleLight, fontWeight: 700, fontSize: 12 }}>
+                              ✏️ {t('edit')}
+                            </button>
+                            <button onClick={() => deleteSubmission(s.id)} style={{ padding: '6px 14px', borderRadius: 6, border: `1px solid rgba(248,113,113,0.4)`, cursor: 'pointer', background: 'rgba(248,113,113,0.1)', color: C.red, fontWeight: 700, fontSize: 12 }}>
+                              🗑 {t('delete')}
+                            </button>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -903,12 +891,7 @@ export default function MigazionePage() {
         )}
       </div>
 
-      {/* Footer */}
-      <footer style={{
-        textAlign: 'center', padding: '20px 16px',
-        borderTop: `1px solid ${C.border}`,
-        color: C.faint, fontSize: 12,
-      }}>
+      <footer style={{ textAlign: 'center', padding: '20px 16px', borderTop: `1px solid ${C.border}`, color: C.faint, fontSize: 12 }}>
         © {new Date().getFullYear()} k698 · Guns of Glory
       </footer>
     </div>
