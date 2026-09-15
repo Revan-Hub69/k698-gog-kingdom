@@ -337,25 +337,38 @@ const C = {
 const LANGS: Lang[] = ['EN', 'IT', 'PL', 'ZH', 'DE', 'FR', 'RU', 'ES'];
 type Tab = 'guide' | 'upload' | 'list';
 
-// ─── Step guide image placeholder ───────────────────────────────────────────
-// Will show a number badge if no real image
+// ─── Step guide image ────────────────────────────────────────────────────────
+// Shows the real screenshot if available in /public/images/migration-stepN.png
+// otherwise shows a numbered placeholder
 function StepImage({ n }: { n: number }) {
+  const [hasImg, setHasImg] = useState(true);
+  const src = `/images/migration-step${n}.png`;
   return (
     <div style={{
       width: '100%', aspectRatio: '16/9',
       background: 'rgba(124,58,237,0.08)',
       border: `1px solid ${C.border}`,
-      borderRadius: 12,
+      borderRadius: 12, overflow: 'hidden',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0,
+      flexShrink: 0, position: 'relative',
     }}>
-      <span style={{
-        fontSize: 48, fontWeight: 900,
-        background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        opacity: 0.4,
-      }}>{n}</span>
+      {hasImg ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={`step ${n}`}
+          onError={() => setHasImg(false)}
+          style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+        />
+      ) : (
+        <span style={{
+          fontSize: 48, fontWeight: 900,
+          background: 'linear-gradient(135deg, #7c3aed, #3b82f6)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          opacity: 0.4,
+        }}>{n}</span>
+      )}
     </div>
   );
 }
@@ -570,20 +583,21 @@ export default function MigazionePage() {
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 16px 64px' }}>
 
         {/* ── Hero ───────────────────────────────────────────────────────────── */}
-        <div style={{ textAlign: 'center', padding: '48px 0 32px' }}>
-          {/* glows */}
+        <div style={{ textAlign: 'center', padding: '48px 0 32px', position: 'relative' }}>
+          {/* glow decoration */}
           <div style={{
-            position: 'absolute', left: '50%', transform: 'translateX(-50%)',
-            width: 400, height: 120, background: 'rgba(124,58,237,0.15)',
-            borderRadius: '50%', filter: 'blur(40px)', pointerEvents: 'none',
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400, height: 120, background: 'rgba(124,58,237,0.12)',
+            borderRadius: '50%', filter: 'blur(50px)', pointerEvents: 'none', zIndex: 0,
           }} />
-          <h1 style={{
+          <h1 style={{ position: 'relative', zIndex: 1,
             fontSize: 'clamp(22px, 5vw, 36px)', fontWeight: 900,
             lineHeight: 1.2, marginBottom: 12,
             background: 'linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #60a5fa 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           }}>{t('title')}</h1>
-          <p style={{ fontSize: 14, color: C.muted, maxWidth: 500, margin: '0 auto', lineHeight: 1.6 }}>
+          <p style={{ position: 'relative', zIndex: 1, fontSize: 14, color: C.muted, maxWidth: 500, margin: '0 auto', lineHeight: 1.6 }}>
             {t('subtitle')}
           </p>
           <div style={{ marginTop: 20, height: 2, width: 80, background: 'linear-gradient(90deg, #7c3aed, #3b82f6)', borderRadius: 2, margin: '20px auto 0' }} />
