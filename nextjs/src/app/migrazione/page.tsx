@@ -433,6 +433,7 @@ export default function MigazionePage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loadingList, setLoadingList] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
+  const [lightbox, setLightbox] = useState<string | null>(null); // URL of image to show fullscreen
 
   // Admin edit state
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -475,6 +476,19 @@ export default function MigazionePage() {
     } catch { /* silent */ }
     finally { setLoadingList(false); }
   }
+
+  // Parse power string to number for sorting: "850M" → 850_000_000, "1.2B" → 1_200_000_000
+  function parsePower(p: string): number {
+    const s = p.trim().toUpperCase().replace(/\s/g, '').replace(',', '.');
+    const num = parseFloat(s);
+    if (isNaN(num)) return 0;
+    if (s.endsWith('B')) return num * 1_000_000_000;
+    if (s.endsWith('M')) return num * 1_000_000;
+    if (s.endsWith('K')) return num * 1_000;
+    return num;
+  }
+
+  const sortedSubmissions = [...submissions].sort((a, b) => parsePower(b.power) - parsePower(a.power));
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>, idx: number) {
     const file = e.target.files?.[0];
@@ -831,8 +845,7 @@ export default function MigazionePage() {
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {/* rank index shown as sequential position in list */}
-                {submissions.map((s, rankIdx) => (
-                  <div key={s.id} style={{
+                {sortedSubmissions.map((s, rankIdx) => (                  <div key={s.id} style={{
                     background: C.surface,
                     border: `1px solid ${expanded === s.id ? C.borderStrong : C.border}`,
                     borderRadius: 10, overflow: 'visible',
@@ -895,10 +908,10 @@ export default function MigazionePage() {
                         {/* Screenshots */}
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: isAdmin ? 12 : 0 }}>
                           {s.screenshots.map((src, i) => (
-                            <a key={i} href={src} target="_blank" rel="noopener noreferrer">
+                            <div key={i} onClick={e => { e.stopPropagation(); setLightbox(src); }} style={{ cursor: 'zoom-in' }}>
                               {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={src} alt={`screenshot ${i + 1}`} style={{ maxWidth: 280, maxHeight: 180, objectFit: 'contain', borderRadius: 8, border: `1px solid ${C.border}`, cursor: 'zoom-in', display: 'block' }} />
-                            </a>
+                              <img src={src} alt={`screenshot ${i + 1}`} style={{ maxWidth: 280, maxHeight: 180, objectFit: 'contain', borderRadius: 8, border: `1px solid ${C.border}`, display: 'block' }} />
+                            </div>
                           ))}
                         </div>
 
@@ -926,6 +939,43 @@ export default function MigazionePage() {
       <footer style={{ textAlign: 'center', padding: '20px 16px', borderTop: `1px solid ${C.border}`, color: C.faint, fontSize: 12 }}>
         © {new Date().getFullYear()} k698 · Guns of Glory
       </footer>
+
+      {/* ── Lightbox ──────────────────────────────────────────────────────── */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 99999,
+            background: 'rgba(0,0,0,0.92)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'zoom-out', padding: 16,
+          }}
+        >
+          {/* × close button */}
+          <button
+            onClick={() => setLightbox(null)}
+            style={{
+              position: 'absolute', top: 16, right: 16,
+              width: 36, height: 36, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.15)', border: 'none',
+              color: '#fff', fontSize: 20, fontWeight: 900,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}
+          >×</button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={lightbox}
+            alt="screenshot"
+            onClick={e => e.stopPropagation()}
+            style={{
+              maxWidth: '100%', maxHeight: '90vh',
+              borderRadius: 12, objectFit: 'contain',
+              boxShadow: '0 8px 48px rgba(0,0,0,0.8)',
+              cursor: 'default',
+            }}
+          />
+        </div>
+      )}
 
       <style>{`
         @keyframes screenshotPulse {
