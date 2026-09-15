@@ -98,3 +98,14 @@ model Farm {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }
+
+// Migration Power Submissions (no auth required)
+model MigrationSubmission {
+  id           Int      @id @default(autoincrement())
+  playerName   String
+  position     String   // position in kingdom, e.g. "1234"
+  power        String   // power as string to preserve formatting
+  screenshots  String[] // base64 or URLs, array
+  notes        String?
+  createdAt    DateTime @default(now())
+}
